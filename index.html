@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CSS only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css.css">
+    <title>Vanilla JS</title>
+
+</head>
+
+<body>
+    <!-- date + time + say hello -->
+    <div id="container">
+        <div>
+            <!-- date -->
+            <div id="date">
+            </div>
+            <!-- time -->
+            <div id="time">
+            </div>
+            <!-- say hello -->
+            <form id="name-form">
+                <input required maxlength="15" type="text" placeholder="이름을 입력해주세요." />
+                <input type="submit" value="+">
+            </form>
+            <div id="greeting" class="hidden">
+            </div>
+            <hr />
+        </div>
+        <!-- to do list -->
+        <div id="todoContainer">
+            <p>Today To-do list</p>
+            <div id="todo-list">
+            </div>
+            <form id="todo-form">
+                <input type="text" placeholder="당신의 오늘 할 일은?" />
+                <input type="submit" value="+">
+            </form>
+        </div>
+        <!-- motivations -->
+        <div id="motivations">
+            <p></p>
+            <p></p>
+        </div>
+    </div>
+</body>
+
+
+<!-- JavaScript Bundle with Popper -->
+<script src="js/script.js"></script>
+<script src="js/timendate.js"></script>
+<script src="js/greeting.js"></script>
+<script src="js/motivations.js"> </script>
+<script src="js/background.js"></script>
+
+</html>

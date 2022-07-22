@@ -8,6 +8,7 @@ const params = {
     page: 1
 }
 
+
 // fetch api 함수 만들기
 const fetchApi = async (path, callback) => {
     const mvInfoResponse = await fetch(`${base_url}${path}?api_key=${params.api_key}&language=${params.language}&page=${params.page}`)
@@ -21,8 +22,6 @@ const funRandom = (length) => Math.floor(Math.random() * length)
 
 //ad-mv info 함수 (movie/popular)
 function getAdMvInfo(mvInfo) {
-    const viewAd = document.getElementById("ad-img");
-    const viewAdTitle = document.querySelectorAll("#ad-mv div p");
     // 랜덤 함수
     const random = funRandom(mvInfo.length);
     const randomInfo = mvInfo[random];
@@ -42,65 +41,54 @@ function getAdMvInfo(mvInfo) {
     getOverview();
 
     // 랜덤으로 이미지 불러오기
+    const viewAd = document.getElementById("ad-img");
+    const viewAdTitle = document.querySelectorAll("#ad-mv div p")
     const randomImgUrl = `${img_path}${mvInfo[random]["backdrop_path"]}`;
     viewAd.src = randomImgUrl;
-
     // 영화 안내 바꾸기 - 제목 & 소개
     viewAdTitle[0].innerHTML = mvRandomTitle;
     viewAdTitle[1].innerHTML = overView;
-
 }
-// top_rated - contents1
-function getNowMvInfo(mvInfo) {
-    const viewCon = document.querySelectorAll(".contents1 img.item")
+
+const viewCon = [{
+    id: 1,
+    item: ".contents1 img.item"
+},
+{
+    id: 2,
+    item: ".contents2 img.item"
+},
+{
+    id: 3,
+    item: ".contents3 img.item"
+}]
+
+// img 가져와서 저장하는 함수
+function getImgMvInfo(mvInfo) {
     const mvIdArr = [];
     const mvPathArr = [];
     const mvUrlArr = [];
+    let allCon = viewCon;
 
     //map 함수 활용 -> id, path 배열 만들기
     mvInfo.map((item) => mvIdArr.push(item["id"]))
     mvInfo.map((item) => mvPathArr.push(item["backdrop_path"]))
     mvPathArr.map((item) => mvUrlArr.push(`${img_path}${item}`))
 
-    for (let i = 0; i < 6; i++) {
-        viewCon[i].src = mvUrlArr[i];
-    }
+    viewMvImg(mvUrlArr, allCon);
 }
 
-// top_rated - contents2
-function getTopMvInfo(mvInfo) {
-    const viewCon = document.querySelectorAll(".contents2 img.item")
-    const mvIdArr = [];
-    const mvPathArr = [];
-    const mvUrlArr = [];
-
-    //map 함수 활용 -> id, path, url array 만들기
-    mvInfo.map((item) => mvIdArr.push(item["id"]))
-    mvInfo.map((item) => mvPathArr.push(item["backdrop_path"]))
-    mvPathArr.map((item) => mvUrlArr.push(`${img_path}${item}`))
-
-    for (let i = 0; i < 6; i++) {
-        viewCon[i].src = mvUrlArr[i];
+// img 불러와서 html에 띄우는 함수
+function viewMvImg(mvUrlArr, viewCon) {
+    let Item = viewCon[0]["item"];
+    let Items = document.querySelectorAll(Item);
+    for (let i = 0; i < Items.length; i++) {
+        Items[i].src = mvUrlArr[i];
     }
+    viewCon.shift();
 }
 
-// upcoming - contents3
-function getUpMvInfo(mvInfo) {
-    const viewCon = document.querySelectorAll(".contents3 img.item")
-    const mvIdArr = [];
-    const mvPathArr = [];
-    const mvUrlArr = [];
-
-    //map 함수 활용 -> id, path 배열 만들기
-    mvInfo.map((item) => mvIdArr.push(item["id"]))
-    mvInfo.map((item) => mvPathArr.push(item["backdrop_path"]))
-    mvPathArr.map((item) => mvUrlArr.push(`${img_path}${item}`))
-
-    for (let i = 0; i < 6; i++) {
-        viewCon[i].src = mvUrlArr[i];
-    }
-}
 fetchApi("/movie/popular", getAdMvInfo);
-fetchApi("/movie/top_rated", getTopMvInfo);
-fetchApi("/movie/upcoming", getUpMvInfo);
-fetchApi("/movie/now_playing", getNowMvInfo);
+fetchApi("/movie/now_playing", getImgMvInfo);
+fetchApi("/movie/top_rated", getImgMvInfo);
+fetchApi("/movie/upcoming", getImgMvInfo);

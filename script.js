@@ -1,15 +1,5 @@
-// fetch("https://api.themoviedb.org/3/movie/550?api_key=07f254918690b891a7fc234d10daef8e")
-// .then(function(res){
-//   return res.json();
-// })
-// .then(function(json){
-//   console.log(json);
-// });
-
-
 // api 불러오기 - 기본 api 정보
 const base_url = "https://api.themoviedb.org/3";
-let path = "/movie/popular";
 let img_path = "https://image.tmdb.org/t/p/original";
 
 const params = {
@@ -18,26 +8,33 @@ const params = {
     page: 1
 }
 
-//ad-mv info 함수 (movie/popular)
-const viewAd = document.getElementById("ad-img");
-const viewAdTitle = document.querySelectorAll("#ad-mv div p");
-
-const getAdMvInfo = async () => {
+// fetch api 함수 만들기
+const fetchApi = async (path, callback) => {
     const mvInfoResponse = await fetch(`${base_url}${path}?api_key=${params.api_key}&language=${params.language}&page=${params.page}`)
     const allMvInfo = await mvInfoResponse.json();
     const mvInfo = allMvInfo["results"];
+    callback(mvInfo);
+}
 
+// 랜덤 함수
+const funRandom = (length) => Math.floor(Math.random() * length)
+
+//ad-mv info 함수 (movie/popular)
+function getAdMvInfo(mvInfo) {
+    const viewAd = document.getElementById("ad-img");
+    const viewAdTitle = document.querySelectorAll("#ad-mv div p");
     // 랜덤 함수
-    const random = Math.floor(Math.random() * mvInfo.length);
+    const random = funRandom(mvInfo.length);
+    const randomInfo = mvInfo[random];
     // 랜덤 id, title
-    const mvRandomId = mvInfo[random]["id"];
-    const mvRandomTitle = mvInfo[random]["title"];
-    let overView = mvInfo[random]["overview"];
+    const mvRandomId = randomInfo["id"];
+    const mvRandomTitle = randomInfo["title"];
+    let overView = randomInfo["overview"];
 
     // Overview
     function getOverview() {
         if (String(overView).length != 0) {
-            overView = `${overView.substring(0, 280)}...`;
+            overView = `${overView.substring(0, 200)}...`;
         } else {
             overView = overView;
         }
@@ -53,83 +50,57 @@ const getAdMvInfo = async () => {
     viewAdTitle[1].innerHTML = overView;
 
 }
-
 // top_rated - contents1
-const getTopMvInfo = async () => {
+function getNowMvInfo(mvInfo) {
     const viewCon = document.querySelectorAll(".contents1 img.item")
-    path = "/movie/top_rated";
-    const mvInfoResponse = await fetch(`${base_url}${path}?api_key=${params.api_key}&language=${params.language}&page=${params.page}`)
-    const allMvInfo = await mvInfoResponse.json();
-    const mvInfo = allMvInfo["results"];
     const mvIdArr = [];
     const mvPathArr = [];
-
+    const mvUrlArr = [];
 
     //map 함수 활용 -> id, path 배열 만들기
     mvInfo.map((item) => mvIdArr.push(item["id"]))
     mvInfo.map((item) => mvPathArr.push(item["backdrop_path"]))
-
-    const mvUrlArr = [];
     mvPathArr.map((item) => mvUrlArr.push(`${img_path}${item}`))
-    viewCon[0].src = mvUrlArr[0];
-    viewCon[1].src = mvUrlArr[1];
-    viewCon[2].src = mvUrlArr[2];
-    viewCon[3].src = mvUrlArr[3];
-    viewCon[4].src = mvUrlArr[4];
-    viewCon[5].src = mvUrlArr[5];
+
+    for (let i = 0; i < 6; i++) {
+        viewCon[i].src = mvUrlArr[i];
+    }
 }
 
-// upcoming - contents2
-const getUpMvInfo= async () => {
+// top_rated - contents2
+function getTopMvInfo(mvInfo) {
     const viewCon = document.querySelectorAll(".contents2 img.item")
-    path = "/movie/upcoming";
-    const mvInfoResponse = await fetch(`${base_url}${path}?api_key=${params.api_key}&language=${params.language}&page=${params.page}`)
-    const allMvInfo = await mvInfoResponse.json();
-    const mvInfo = allMvInfo["results"];
     const mvIdArr = [];
     const mvPathArr = [];
+    const mvUrlArr = [];
 
-
-    //map 함수 활용 -> id, path 배열 만들기
+    //map 함수 활용 -> id, path, url array 만들기
     mvInfo.map((item) => mvIdArr.push(item["id"]))
     mvInfo.map((item) => mvPathArr.push(item["backdrop_path"]))
-
-    const mvUrlArr = [];
     mvPathArr.map((item) => mvUrlArr.push(`${img_path}${item}`))
-    viewCon[0].src = mvUrlArr[0];
-    viewCon[1].src = mvUrlArr[1];
-    viewCon[2].src = mvUrlArr[2];
-    viewCon[3].src = mvUrlArr[3];
-    viewCon[4].src = mvUrlArr[4];
-    viewCon[5].src = mvUrlArr[5];
+
+    for (let i = 0; i < 6; i++) {
+        viewCon[i].src = mvUrlArr[i];
+    }
 }
 
-// now_playing - contents3
-const getNowMvInfo= async () => {
+// upcoming - contents3
+function getUpMvInfo(mvInfo) {
     const viewCon = document.querySelectorAll(".contents3 img.item")
-    path = "/movie/now_playing";
-    const mvInfoResponse = await fetch(`${base_url}${path}?api_key=${params.api_key}&language=${params.language}&page=${params.page}`)
-    const allMvInfo = await mvInfoResponse.json();
-    const mvInfo = allMvInfo["results"];
     const mvIdArr = [];
     const mvPathArr = [];
-
+    const mvUrlArr = [];
 
     //map 함수 활용 -> id, path 배열 만들기
     mvInfo.map((item) => mvIdArr.push(item["id"]))
     mvInfo.map((item) => mvPathArr.push(item["backdrop_path"]))
-
-    const mvUrlArr = [];
     mvPathArr.map((item) => mvUrlArr.push(`${img_path}${item}`))
-    viewCon[0].src = mvUrlArr[0];
-    viewCon[1].src = mvUrlArr[1];
-    viewCon[2].src = mvUrlArr[2];
-    viewCon[3].src = mvUrlArr[3];
-    viewCon[4].src = mvUrlArr[4];
-    viewCon[5].src = mvUrlArr[5];
-}
 
-getAdMvInfo();
-getTopMvInfo();
-getUpMvInfo();
-getNowMvInfo();
+    for (let i = 0; i < 6; i++) {
+        viewCon[i].src = mvUrlArr[i];
+    }
+}
+fetchApi("/movie/popular", getAdMvInfo);
+fetchApi("/movie/top_rated", getTopMvInfo);
+fetchApi("/movie/upcoming", getUpMvInfo);
+fetchApi("/movie/now_playing", getNowMvInfo);

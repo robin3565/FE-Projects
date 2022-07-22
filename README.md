@@ -37,6 +37,7 @@
     - `x` 버튼을 누르면 할 일이 지워진다.
 
 ### 추가 기능
+![image](https://user-images.githubusercontent.com/107474891/180376538-abae146f-ea8f-4d9e-9f66-d7cd7fc3ecb9.png)
 **랜덤으로 바뀌는 명언**
 - 명언을 모은 Object 생성
 - 해당 Object에서 하나씩 랜덤으로 명언을 호출한다.

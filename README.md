@@ -18,7 +18,7 @@
     - JS 함수 활용하기
     
 ### 프로젝트 간단 구조 & 기능
-
+![image](https://user-images.githubusercontent.com/107474891/180375472-136df855-7fc6-4b2e-9625-91450cc5dfda.png)
 - 날짜(YY-MM-DD)
     - 오늘 날짜를 보여준다.
     - Month, Day가 10보다 작은 경우 앞에 0을 붙여줘야 한다.

@@ -3,15 +3,12 @@ import styled from 'styled-components'
 import './Bookmark.css'
 import BookMarkModal from '../modal/BookMarkModal';
 import { verContext } from '../../EngVerBtn/utils/verContext';
+import BookmarkBasic from './BookmarkBasic';
+import BookmarkCustom from './BookmarkCustom';
 
 const Bookmark = () => {
-    const { info } = useContext(verContext);
     const [isOpen, setIsOpen] = useState(false);
-
-    const PlusClick = () => {
-        isOpen == false ? setIsOpen(true) : setIsOpen(false);
-    }
-
+    const { info } = useContext(verContext);
     return (
         <>
             <BookMarkBanner>
@@ -19,13 +16,9 @@ const Bookmark = () => {
                     <BookmarksWrap key={item.name}>
                         <BookmarkList className='bookmark__item'>
                             {item.type == false ?
-                                <BookmarkBasicItem onClick={PlusClick}>
-                                    <PlusImg src='/assets/add_24dp.png' />
-                                </BookmarkBasicItem>
+                                <BookmarkBasic isOpen={isOpen} setIsOpen={setIsOpen} />
                                 :
-                                <BookmarkCustomItem href={item.url}>
-                                    <PlusImg src={`/assets/con${item.imgUrl}.png`} />
-                                </BookmarkCustomItem>
+                                <BookmarkCustom url={item.url} imgUrl={item.imgUrl} />
                             }
                         </BookmarkList>
                         <div>
@@ -64,36 +57,6 @@ const BookmarkList = styled.div`
     padding: 20px;
     width: 25px;
     height: 25px;
-`
-
-const BookmarkBasicItem = styled.a`
-    width: 55px;
-    height: 55px;
-    box-sizing: border-box;
-    border-radius: 50%;
-    display:block;
-    position: relative;
-    padding: 0;
-    margin: -15px 0px 0px -15px;
-`
-
-const BookmarkCustomItem = styled.a`
-    width: 55px;
-    height: 55px;
-    box-sizing: border-box;
-    display:block;
-    border-radius: 50%;
-    position: relative;
-    padding: 0;
-    margin: -15px 0px 0px -15px;
-`
-
-const PlusImg = styled.img`
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    margin: 0 auto;
-    margin: 12.5px 0px 0px 12.5px;
 `
 const BookMarkString = styled.p`
     margin: 0 25px;

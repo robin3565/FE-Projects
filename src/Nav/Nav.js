@@ -36,6 +36,7 @@ const BGBtnWrapper = styled.div`
     margin-right: 3em;
 `
 const BGBtn = styled.img`
+    cursor: pointer;
     width:40px;
     height:40px;
 `

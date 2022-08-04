@@ -1,13 +1,7 @@
 {
   "short_name": "React App",
   "name": "Getting Started Example",
-  "description": "Build an Extension!",
   "version": "1.0",
-  "manifest_version": 3,
-  "permissions": ["storage"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "icons": [
     {
       "src": "favicon.ico",
@@ -29,5 +23,4 @@
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
-  
 }

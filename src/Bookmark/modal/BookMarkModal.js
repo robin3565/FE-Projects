@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { verContext } from "../../EngVerBtn/utils/verContext"
 import "./BookMarkModal.css"
@@ -16,7 +16,7 @@ function BookMarkModal({ setIsOpen }) {
         e.preventDefault();
         setInfo([{ name: name, url: url, type: true, imgUrl: info.length}, ...info]);
         alert("저장 완료 :D")
-        closeBookmark(false);
+        closeBookmark();
     }
 
     return (

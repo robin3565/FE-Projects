@@ -1,33 +1,42 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from "../../api/axios";
 import './Background.css'
-
+import { verContext } from '../../EngVerBtn/utils/verContext';
 
 const Background = () => {
     const [backImgUrl, setBackImgUrl] = useState("");
-    const [backImgList, setBackImgList] = useState([]);
+    const {query} = useContext(verContext);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [query]);
 
-    const callback = (backImgList) => {
-        backImgList.map((item, index) => (
-            item[index].width / item[index].heigtht > 1 ? setBackImgUrl(item[index].urls['full']) : null
-        ))
-    };
+    const callback = (imgData) => {
+        let index = 0;
+        while(true) {
+            if(imgData[index].width / imgData[index].height > 1) {
+                setBackImgUrl(imgData[index].urls['full']);
+                break;
+            }
+            index ++;
+        }
+    }
 
     const fetchData = async () => {
-        const imgData = await axios.get();
-        setBackImgList([...backImgList, imgData.data])
-        callback(backImgList);
+        const imgData = await axios.get('', {
+            params: {
+                query : {query}
+            }
+        });
+        callback(imgData.data);
     };
 
     return (
         <>
             <div className='backgroundImg'
                 style={{
-                    backgroundImage: `url(${backImgUrl})`,
+                    backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) )`,
+                    backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(${backImgUrl})`,
                     backgroundPosition: "top center",
                     backgroundSize: "cover",
                 }} />

@@ -5,7 +5,6 @@ const instance = axios.create({
     params: {
         client_id: 'x1m0eDEJ4cNLpPnO6NKt-jc-LBauxaBRyL9DZWC-PhI',
         count: 30,
-        query: 'london',
     }
 });
 

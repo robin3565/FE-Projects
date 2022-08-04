@@ -1,33 +1,27 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
+import "./TodayClock.css"
+import getCurrentTime from '../utils/getCurrenTime';
 
 export default function TodayClock() {
   const getNow = () => new Date();
-  const [currentTime, setCurrentTime] = useState(getNow())
-
-  const todayClock = [
-    { text: '년', value: currentTime.getFullYear() },
-    { text: '월', value: currentTime.getMonth() + 1 },
-    { text: '일', value: currentTime.getDate() },
-    { text: '요일', value: currentTime.getDay() },
-    { text: '시', value: currentTime.getHours() },
-    { text: '분', value: currentTime.getMinutes() }
-  ];
+  const [currentTime, setCurrentTime] = useState(getNow());
+  const [month_, date_, minutes_, hours_] = getCurrentTime(currentTime);
 
   useEffect(() => {
     const resetClock = setInterval(() => {
       setCurrentTime(getNow());
-    }, 1000);
+    }, 30000);
   }, [setCurrentTime])
 
   return (
-    <>
-      <div>
-        {currentTime.getFullYear()}년 {currentTime.getMonth() + 1}월 {currentTime.getDate()}일
+    <div className='todayClock'>
+      <div className='todayClock__day'>
+        {currentTime.getFullYear()}년 {month_}월 {date_}일
       </div>
-      <div>
-        {currentTime.getHours()} : {currentTime.getMinutes()}
+      <div className='todayClock__time'>
+        {hours_}시 {minutes_}분
       </div>
-    </>
+    </div>
   )
 }

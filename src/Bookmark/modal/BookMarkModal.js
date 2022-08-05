@@ -15,6 +15,7 @@ function BookMarkModal({ setIsOpen }) {
     const createBookMark = (e) => {
         e.preventDefault();
         setInfo([{ name: name, url: url, type: true, imgUrl: info.length}, ...info]);
+        localStorage.setItem('data', JSON.stringify([{ name: name, url: url, type: true, imgUrl: info.length}, ...info]));
         alert("저장 완료 :D")
         closeBookmark();
     }
@@ -29,6 +30,7 @@ function BookMarkModal({ setIsOpen }) {
                         <div>
                             <p>이름</p>
                             <InfoInput
+                                maxlength='6'
                                 type="text"
                                 name={name}
                                 onChange={
@@ -39,6 +41,7 @@ function BookMarkModal({ setIsOpen }) {
                             <p>URL</p>
                             <InfoInput
                                 type="text"
+                                placeholder="https://"
                                 name={url}
                                 onChange={
                                     (e) => setUrl(e.target.value)

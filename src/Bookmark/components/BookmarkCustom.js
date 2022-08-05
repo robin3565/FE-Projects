@@ -2,10 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 
 const BookmarkCustom = (props) => {
+
   return (
-    <BookmarkCustomItem href={props.url}>
-      <PlusImg src={`/assets/con${props.imgUrl}.png`} />
-    </BookmarkCustomItem>
+      <BookmarkCustomItem href={props.url}>
+        <PlusImg src={`/assets/con${props.imgUrl}.png`} />
+      </BookmarkCustomItem>
   )
 }
 
@@ -15,7 +16,7 @@ const BookmarkCustomItem = styled.a`
     width: 55px;
     height: 55px;
     box-sizing: border-box;
-    display:block;
+    display: block;
     border-radius: 50%;
     position: relative;
     padding: 0;

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import './Bookmark.css'
 import BookMarkModal from '../modal/BookMarkModal';
@@ -9,23 +9,31 @@ import BookmarkCustom from './BookmarkCustom';
 const Bookmark = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { info } = useContext(verContext);
+    let data = JSON.parse(localStorage.getItem('data'));
+    data && data.length > 0 && data.pop();
+
     return (
         <>
             <BookMarkBanner>
-                {info.map(item =>
+                {data && data.length > 0 ? data.map(item => (
                     <BookmarksWrap key={item.name}>
-                        <BookmarkList className='bookmark__item'>
-                            {item.type == false ?
-                                <BookmarkBasic isOpen={isOpen} setIsOpen={setIsOpen} />
-                                :
-                                <BookmarkCustom url={item.url} imgUrl={item.imgUrl} />
-                            }
-                        </BookmarkList>
-                        <div>
-                            <BookMarkString>{item.name}</BookMarkString>
-                        </div>
-                    </BookmarksWrap>
-                )}
+                    <BookmarkList className='bookmark__item'>
+                        <BookmarkCustom url={item.url} imgUrl={item.imgUrl} />
+                    </BookmarkList>
+                    <div>
+                        <BookMarkString>{item.name}</BookMarkString>
+                    </div>
+                </BookmarksWrap>
+                )) : null}
+                {/*  */}
+                <BookmarksWrap key={info.name}>
+                    <BookmarkList className='bookmark__item'>
+                        <BookmarkBasic isOpen={isOpen} setIsOpen={setIsOpen} />
+                    </BookmarkList>
+                    <div>
+                        <BookMarkString>바로가기 추가</BookMarkString>
+                    </div>
+                </BookmarksWrap>
             </BookMarkBanner>
             {
                 isOpen && <BookMarkModal setIsOpen={setIsOpen} />

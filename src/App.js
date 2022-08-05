@@ -1,11 +1,11 @@
-import TodayMotivation from './Motivation/components/TodayMotivation';
-import Background from './Background/components/Background';
+import Background from './Background/Background';
 import Bookmark from './Bookmark/components/Bookmark';
 import Nav from './Nav/Nav';
 import { useState } from 'react';
 import { stateContext } from './utils/stateContext';
 import motivations from './utils/motivations.json';
-import Footer from './Footer/components/Footer';
+import Footer from './Footer/Footer';
+import TodayMotivation from './Motivation/TodayMotivation';
 
 function App() {
   const [ver, setVer] = useState(false);

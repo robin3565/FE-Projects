@@ -1,7 +1,7 @@
+import axios from '../api/axios';
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components';
-import axios from "../../api/axios";
-import { stateContext } from '../../utils/stateContext'
+import { stateContext } from '../utils/stateContext'
 
 const Background = () => {
     const [backImgUrl, setBackImgUrl] = useState("");

@@ -12,9 +12,9 @@ export default function Nav(props) {
         <NavBar>
             <TodayClock>{props.Children}</TodayClock>
             <BGBtnWrapper>
-                <BGBtn src={`/assets/london.png`} name="london" onClick={seletBG}/>
-                <BGBtn src={`/assets/france.png`} name="france" onClick={seletBG}/>
-                <BGBtn src={`/assets/korea.png`} name="korea" onClick={seletBG}/>
+                <BGBtn src={`assets/london.png`} name="london" onClick={seletBG}/>
+                <BGBtn src={`assets/france.png`} name="france" onClick={seletBG}/>
+                <BGBtn src={`assets/korea.png`} name="korea" onClick={seletBG}/>
             </BGBtnWrapper>
         </NavBar>
     )

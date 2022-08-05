@@ -7,7 +7,7 @@ const BookmarkBasic = (props) => {
     }
     return (
         <BookmarkBasicItem onClick={PlusClick}>
-            <PlusImg src='/assets/add_24dp.png' />
+            <PlusImg src='assets/add_24dp.png' />
         </BookmarkBasicItem>
     )
 }

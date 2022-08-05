@@ -1,11 +1,3 @@
-.switch-button {
-    position: relative;
-    display: inline-block;
-    width: 55px;
-    height: 30px;
-    margin-right: 8em;
-}
-
 .switch-button input {
     opacity: 0;
     width: 0;
@@ -40,8 +32,8 @@
 }
 
 .switch-button input:checked+.onoff-switch {
-    background-color: #F2D522;
-    box-shadow: inset 1px 5px 1px #E3AE56;
+    background-color: #bde0fe;
+    box-shadow: inset 1px 5px 1px #a2d2ff;
 }
 
 .switch-button input:checked+.onoff-switch:before {

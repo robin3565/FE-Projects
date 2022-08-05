@@ -1,10 +1,10 @@
 import React, { Children, useContext } from 'react'
 import styled from 'styled-components'
 import TodayClock from '../Clock/components/TodayClock'
-import { verContext } from '../EngVerBtn/utils/verContext';
+import { stateContext } from '../utils/stateContext';
 
 export default function Nav(props) {
-    const {setQuery} = useContext(verContext);
+    const {setQuery} = useContext(stateContext);
     const seletBG = (e) => {
         setQuery(e.target.name);
     }
@@ -37,6 +37,6 @@ const BGBtnWrapper = styled.div`
 `
 const BGBtn = styled.img`
     cursor: pointer;
-    width:40px;
-    height:40px;
+    width:35px;
+    height:35px;
 `

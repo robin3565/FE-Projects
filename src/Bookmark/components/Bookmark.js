@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
-import './Bookmark.css'
+import '../../styles/Bookmark.css'
 import BookMarkModal from '../modal/BookMarkModal';
-import { verContext } from '../../EngVerBtn/utils/verContext';
 import BookmarkBasic from './BookmarkBasic';
 import BookmarkCustom from './BookmarkCustom';
+import { stateContext } from '../../utils/stateContext';
 
 const Bookmark = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { info } = useContext(verContext);
+    const { info } = useContext(stateContext);
     let data = JSON.parse(localStorage.getItem('data'));
     data && data.length > 0 && data.pop();
 
@@ -46,6 +46,8 @@ export default Bookmark
 
 const BookMarkBanner = styled.div`
     display: flex;
+    width:50%;
+    margin: 0 auto;
     justify-content: center;
     justify-items: center;
 `

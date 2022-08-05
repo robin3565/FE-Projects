@@ -1,12 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import "./TodayClock.css"
 import getCurrentTime from '../utils/getCurrenTime';
+import styled from 'styled-components';
 
 export default function TodayClock() {
   const getNow = () => new Date();
   const [currentTime, setCurrentTime] = useState(getNow());
-  const [month_, date_, minutes_, hours_] = getCurrentTime(currentTime);
+  const [month, date, minutes, hours] = getCurrentTime(currentTime);
 
   useEffect(() => {
     const resetClock = setInterval(() => {
@@ -15,13 +15,21 @@ export default function TodayClock() {
   }, [setCurrentTime])
 
   return (
-    <div className='todayClock'>
-      <div className='todayClock__day'>
-        {currentTime.getFullYear()}년 {month_}월 {date_}일
+    <ClockSection>
+      <div>
+        {currentTime.getFullYear()}년 {month}월 {date}일
       </div>
-      <div className='todayClock__time'>
-        {hours_}시 {minutes_}분
+      <div>
+        {hours}시 {minutes}분
       </div>
-    </div>
+    </ClockSection>
   )
 }
+
+const ClockSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+`

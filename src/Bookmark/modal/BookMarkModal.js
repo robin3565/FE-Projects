@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { verContext } from "../../EngVerBtn/utils/verContext"
-import "./BookMarkModal.css"
+import { stateContext } from '../../utils/stateContext';
+import '../../styles/BookMarkModal.css'
 
 function BookMarkModal({ setIsOpen }) {
-    const { info, setInfo } = useContext(verContext)
+    const { info, setInfo } = useContext(stateContext)
     const [name, setName] = useState("");
     const [url, setUrl] = useState("");
 
@@ -14,8 +14,8 @@ function BookMarkModal({ setIsOpen }) {
 
     const createBookMark = (e) => {
         e.preventDefault();
-        setInfo([{ name: name, url: url, type: true, imgUrl: info.length}, ...info]);
-        localStorage.setItem('data', JSON.stringify([{ name: name, url: url, type: true, imgUrl: info.length}, ...info]));
+        setInfo([{ name: name, url: url, type: true, imgUrl: info.length }, ...info]);
+        localStorage.setItem('data', JSON.stringify([{ name: name, url: url, type: true, imgUrl: info.length }, ...info]));
         alert("저장 완료 :D")
         closeBookmark();
     }

@@ -1,11 +1,11 @@
 import React, { useContext, useMemo } from 'react'
 import styled from 'styled-components'
-import { verContext } from '../../EngVerBtn/utils/verContext';
-import motivations from '../utils/motivations.json'
-import getEngVer from '../utils/getEngVer'
+import { stateContext } from '../../utils/stateContext'
+import getEngVer from '../../EngVerBtn/utils/getEngVer'
+import motivations from '../../utils/motivations.json'
 
 export default function TodayMotivation() {
-    const { ver , num } = useContext(verContext)
+    const { ver , num } = useContext(stateContext)
     const [todayMotivation_, todayName_] = getEngVer(motivations, ver, num)
 
     return (

@@ -14,7 +14,7 @@ function App() {
   const [query, setQuery] = useState('calm');
 
   return (
-    <stateContext.Provider value={{ ver, setVer, num, setNum, info, setInfo, query, setQuery }}>
+    <stateContext.Provider value={{ ver, setVer, num, setNum, info, setInfo, query, setQuery}}>
       <Background />
       <Nav />
       <TodayMotivation />

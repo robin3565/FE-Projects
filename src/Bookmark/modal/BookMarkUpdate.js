@@ -1,59 +1,68 @@
-import React, { useContext, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { useContext, useState } from 'react';
+import styled from 'styled-components';
+import '../../styles/BookMarkModal.css';
+import removeData from '../utils/removeData';
 import { stateContext } from '../../utils/stateContext';
-import '../../styles/BookMarkModal.css'
 
-function BookMarkModal({ setIsOpen }) {
+const BookMarkUpdate = ({ setIsUpdate, props }) => {
     const { info, setInfo } = useContext(stateContext)
-    const [name, setName] = useState("");
-    const [url, setUrl] = useState("");
+    const [name, setName] = useState(props[0].name);
+    const [originalName] = useState(props[0].name);
 
+    const [url, setUrl] = useState(props[0].url);
     const closeBookmark = () => {
-        setIsOpen(false);
+        setIsUpdate(false);
     }
 
-    const createBookMark = (e) => {
+    const removeBookMark = () => {
+        setInfo(info.filter(item => item.name !== name));
+        removeData(name);
+        closeBookmark();
+    }
+
+
+    const updateBookMark = (e) => {
         e.preventDefault();
+        if(originalName != name) {
+            removeData(originalName);
+        }
         setInfo([{ name: name, url: url, type: true, imgUrl: info.length }, ...info]);
         localStorage.setItem(name, JSON.stringify([{ name: name, url: url, type: true, imgUrl: info.length }]));
         alert("저장 완료 :D")
         closeBookmark();
     }
-
+    
     return (
         <Presentation role="presentation">
             <WrapperModal>
                 <Modal className='modal'>
-                    <ModalClose onClick={closeBookmark}>X</ModalClose>
+                    <ModalClose  onClick={closeBookmark}>X</ModalClose>
                     <ModalContent>
-                        <p>바로가기 추가</p>
+                        <p>바로가기 수정</p>
                         <div>
                             <p>이름</p>
                             <InfoInput
                                 maxlength='6'
                                 type="text"
-                                name={name}
-                                onChange={
-                                    (e) => setName(e.target.value)
-                                } />
+                                name={originalName}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)} />
                         </div>
                         <div>
                             <p>URL</p>
                             <InfoInput
                                 type="text"
-                                placeholder="https://"
                                 name={url}
-                                onChange={
-                                    (e) => setUrl(e.target.value)
-                                } />
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}/>
                         </div>
                         <div className='modal__buttons'>
                             <input
                                 className="btn"
-                                value="완료"
+                                value="수정"
                                 type="submit"
-                                onClick={createBookMark} />
-                            <button className="btn" onClick={closeBookmark}>취소</button>
+                                onClick={updateBookMark}/>
+                            <button className="btn" onClick={removeBookMark}>삭제</button>
                         </div>
                     </ModalContent>
                 </Modal>
@@ -115,4 +124,4 @@ const InfoInput = styled.input`
     margin: 0 10px;
 `
 
-export default BookMarkModal
+export default BookMarkUpdate

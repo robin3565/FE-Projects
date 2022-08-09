@@ -5,7 +5,7 @@ const BookmarkCustom = (props) => {
 
   return (
       <BookmarkCustomItem href={props.url}>
-        <PlusImg src={`/assets/con${props.imgUrl}.png`} />
+        <PlusImg src={`assets/con${props.imgUrl}.png`} />
       </BookmarkCustomItem>
   )
 }

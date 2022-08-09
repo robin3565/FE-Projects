@@ -8,7 +8,7 @@ const BookMarkUpdate = ({ setIsUpdate, props }) => {
     const { info, setInfo } = useContext(stateContext)
     const [name, setName] = useState(props[0].name);
     const [originalName] = useState(props[0].name);
-
+    const [originalUrl] = useState(props[0].url);
     const [url, setUrl] = useState(props[0].url);
     const closeBookmark = () => {
         setIsUpdate(false);
@@ -20,23 +20,30 @@ const BookMarkUpdate = ({ setIsUpdate, props }) => {
         closeBookmark();
     }
 
+    const updateInfo = () => {
+        setInfo([{ name: name, url: url, type: true, imgUrl: info.length }, ...info]);
+        localStorage.setItem(name, JSON.stringify([{ name: name, url: url, type: true, imgUrl: info.length }]));
+        alert("수정 완료 :D");
+        closeBookmark();
+    }
 
     const updateBookMark = (e) => {
         e.preventDefault();
-        if(originalName != name) {
+        if (originalUrl == url && originalName == name) closeBookmark();
+        else if (originalName != name) {
             removeData(originalName);
+            updateInfo();
         }
-        setInfo([{ name: name, url: url, type: true, imgUrl: info.length }, ...info]);
-        localStorage.setItem(name, JSON.stringify([{ name: name, url: url, type: true, imgUrl: info.length }]));
-        alert("저장 완료 :D")
-        closeBookmark();
+        else {
+            updateInfo();
+        }
     }
-    
+
     return (
         <Presentation role="presentation">
             <WrapperModal>
                 <Modal className='modal'>
-                    <ModalClose  onClick={closeBookmark}>X</ModalClose>
+                    <ModalClose onClick={closeBookmark}>X</ModalClose>
                     <ModalContent>
                         <p>바로가기 수정</p>
                         <div>
@@ -54,14 +61,14 @@ const BookMarkUpdate = ({ setIsUpdate, props }) => {
                                 type="text"
                                 name={url}
                                 value={url}
-                                onChange={(e) => setUrl(e.target.value)}/>
+                                onChange={(e) => setUrl(e.target.value)} />
                         </div>
                         <div className='modal__buttons'>
                             <input
                                 className="btn"
                                 value="수정"
                                 type="submit"
-                                onClick={updateBookMark}/>
+                                onClick={updateBookMark} />
                             <button className="btn" onClick={removeBookMark}>삭제</button>
                         </div>
                     </ModalContent>

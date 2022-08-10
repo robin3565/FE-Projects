@@ -12,8 +12,9 @@ const Bookmark = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [props, setProps] = useState("");
     const [isUpdate, setIsUpdate] = useState(false);
-    const { info, setInfo } = useContext(stateContext);
+    const { info } = useContext(stateContext);
     const value = getData();
+
     useEffect(() => {
         getData();
     }, [info])
@@ -38,7 +39,7 @@ const Bookmark = () => {
                     </BookmarksWrap>
                 )) : null}
                 {/*  */}
-                <BookmarksWrap className='bookmark__item' key={info.name}>
+                <BookmarksWrap className='bookmark__item'>
                     <BookmarkBasicList>
                         <BookmarkBasic isOpen={isOpen} setIsOpen={setIsOpen} />
                     </BookmarkBasicList>
@@ -59,19 +60,13 @@ const Bookmark = () => {
 
 export default Bookmark
 
-const BookMarkUpdateBtn = styled.img`
-    display: inline;
-    margin: 0 0 0 auto;
-    padding: 3px 0 0 0;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-`
-
 const BookMarkBanner = styled.div`
     display: flex;
-    width:50%;
+    width:40%;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin: 0 auto;
+    min-width: 700px;
     justify-content: center;
     justify-items: center;
     padding: 30px;
@@ -81,12 +76,22 @@ const BookmarksWrap = styled.div`
     display: flex;
     flex-direction: column;
     justify-items: center;
+    flex-shrink: 0;
     border-radius: 10px;
     margin: 0 3px;
     padding: 0;
     height: 150px;
     width: 150px;
 
+`
+
+const BookMarkUpdateBtn = styled.img`
+    display: inline;
+    margin: 0 0 0 auto;
+    padding: 3px 0 0 0;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
 `
 
 const BookmarkList = styled.div`

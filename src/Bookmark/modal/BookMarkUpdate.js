@@ -7,9 +7,11 @@ import { stateContext } from '../../utils/stateContext';
 const BookMarkUpdate = ({ setIsUpdate, props }) => {
     const { info, setInfo } = useContext(stateContext)
     const [name, setName] = useState(props[0].name);
-    const [originalName] = useState(props[0].name);
-    const [originalUrl] = useState(props[0].url);
     const [url, setUrl] = useState(props[0].url);
+    const originalName = props[0].name;
+    const originalUrl = props[0].url;
+
+    
     const closeBookmark = () => {
         setIsUpdate(false);
     }
@@ -29,8 +31,8 @@ const BookMarkUpdate = ({ setIsUpdate, props }) => {
 
     const updateBookMark = (e) => {
         e.preventDefault();
-        if (originalUrl == url && originalName == name) closeBookmark();
-        else if (originalName != name) {
+        if (originalUrl === url && originalName === name) closeBookmark();
+        else if (originalName !== name) {
             removeData(originalName);
             updateInfo();
         }
@@ -59,7 +61,7 @@ const BookMarkUpdate = ({ setIsUpdate, props }) => {
                             <p>URL</p>
                             <InfoInput
                                 type="text"
-                                name={url}
+                                name={originalUrl}
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)} />
                         </div>

@@ -7,10 +7,7 @@ const day = String(date.getDate()).padStart(2,"0");
 const hours = date.getHours();
 const minutes = String(date.getMinutes()).padStart(2, "0");
 
-// 시간 가져오기
 const getTime = () => {
-    // todayDate.innerHTML = `${year}-${month < 10 ? `0${month}` : `${month}`}-${day < 10 ? `0${day}` : `${day}`}`
-    // nowTime.innerHTML = `${hours}:${minutes < 10 ? `0${minutes}` : `${minutes}`}`
     todayDate.innerHTML = `${year}-${month}-${day}`
     nowTime.innerHTML = `${hours}:${minutes}`
 }

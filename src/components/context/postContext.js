@@ -10,13 +10,13 @@ export const usePostState = () => {
     return useContext(PostContext);
 }
 
-
 export const PostProvider = ({ children }) => {
-    const uploadImg = async (fileUrl, state) => {
+    const uploadImg = async (fileUrl, state, content) => {
         const docRef = await addDoc(collection(dbService, "posts"), {
             username: state.id,
             photoUrl: state.photoUrl,
             timestamp: serverTimestamp(),
+            contents: content,
         });
 
         const imgRef = ref(storageService, `posts/${docRef.id}/image`);

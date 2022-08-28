@@ -11,7 +11,6 @@ import {
 import { VscSmiley } from "react-icons/vsc";
 
 
-
 const PostItem = ({ item }) => {
   return (
     <FeedStyle>
@@ -66,7 +65,7 @@ const PostItem = ({ item }) => {
                   className='feed-user-id'>
                   {item?.username}
                 </span>
-                8 3D Illustration Resources. follow for more ---- @creative__programmer like 📤 Share 🔖 Save</p>
+                {item?.contents}</p>
             </div>
             <p
               className='feed-comments-all'>
@@ -83,7 +82,7 @@ const PostItem = ({ item }) => {
             </div>
           </div>
 
-          <div
+          <form
             className='feed-comment'>
             <VscSmiley
               className='feed-btn' />
@@ -91,7 +90,7 @@ const PostItem = ({ item }) => {
               className='feed-comment-input'
               placeholder='댓글 달기'
               type="text" />
-          </div>
+          </form>
         </div>
       </div>
     </FeedStyle>

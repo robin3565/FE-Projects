@@ -9,7 +9,9 @@ const RecommendUsers = () => {
     return (
         <RecommendUsersStyle>
             <div
-                className="main-user-wrapper"/>
+                className='recommend-wrapper'>
+                <div
+                    className="main-user-wrapper" />
                 <div
                     className="main-user-info">
                     <Link to="/profile">
@@ -18,50 +20,58 @@ const RecommendUsers = () => {
                                 className="main-user-profile" />
                             : <FaUserCircle className="main-user-profile-null" />}
                     </Link>
-                    <Link to="/profile">
+                    <StyledLink to="/profile">
                         {state.id ? state.id : "MyUserName"}
-                    </Link>
+                    </StyledLink>
                 </div>
                 {/* <p>전환</p> */}
 
-            <div
-                className="main-recommend-line">
-                <span>회원님을 위한 추천</span>
-                <span>모두 보기</span>
-            </div>
-
-            <div
-                id="recommed-list">
                 <div
-                    className="recommend-user-wrapper">
-                    <div
-                        className="recommend-user-profile" />
-                    <div
-                        className="recommend-user-info">
-                        <p>UserName</p>
-                        <p>Instagram 신규 가입</p>
-                    </div>
+                    className="main-recommend-line">
+                    <span>회원님을 위한 추천</span>
+                    <span>모두 보기</span>
                 </div>
-                <p>팔로우</p>
 
+                <div
+                    id="recommed-list">
+                    <div
+                        className="recommend-user-wrapper">
+                        <div
+                            className="recommend-user-profile" />
+                        <div
+                            className="recommend-user-info">
+                            <p>UserName</p>
+                            <p>Instagram 신규 가입</p>
+                        </div>
+                    </div>
+                    <p>팔로우</p>
+
+                </div>
+                <MainFooterStyle>
+                    <p>
+                        © 2022 INSTAGRAM FROM META
+                    </p>
+                </MainFooterStyle>
             </div>
-            <MainFooterStyle>
-                <p>
-                    © 2022 INSTAGRAM FROM META
-                </p>
-            </MainFooterStyle>
         </RecommendUsersStyle>
     )
 }
 
 export default RecommendUsers
 
-const RecommendUsersStyle = styled.div`
-    max-height: 400px;
-    width: 350px;
-    margin: 25px;
-    margin-top: 43px;
+const StyledLink = styled(Link)`
+    text-decoration-line: none;
+    color: #2D2D2D;
+    font-weight: 500;
+`
 
+const RecommendUsersStyle = styled.div`
+    .recommend-wrapper {
+        max-height: 400px;
+        width: 350px;
+        margin: 25px;
+        margin-top: 43px;
+    }
 
     #recommed-list {
         display: flex;
@@ -123,5 +133,5 @@ const RecommendUsersStyle = styled.div`
 `
 const MainFooterStyle = styled.footer`
     font-size: 0.9em;
-    color: #DDDDDD;
+    color: gray;
 `

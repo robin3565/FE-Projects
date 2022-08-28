@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase/firestore";
 import { dbService } from "../../firebase/config"
-import FeedItem from './FeedItem';
+import PostItem from './PostItem';
+import { usePostState } from "../context/postContext";
 
-const Feeds = () => {
+const PostList = () => {
+  const { postState } = usePostState();
   const [feedData, setFeedData] = useState([]);
 
   let lastDoc = null;
@@ -37,13 +39,16 @@ const Feeds = () => {
 
   useEffect(() => {
     getDatas();
+  }, [postState.posted])
+ 
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-  }, [dbService])
+  }, [])
 
   return (
     <>
       {feedData?.map((item, idx) => {
-        return <FeedItem
+        return <PostItem
           key={idx}
           item={item} />
       })
@@ -52,5 +57,5 @@ const Feeds = () => {
   )
 }
 
-export default Feeds
+export default PostList
 

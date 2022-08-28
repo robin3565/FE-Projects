@@ -4,18 +4,18 @@ import AuthLogin from "../auth/AuthLogin";
 import AuthSignUp from '../auth/AuthSignUp';
 import PrivateRoute from './PrivateRoute';
 import Profile from '../profile/Profile';
-import Main from '../main/Main'
-import Nav from '../global/Nav'
+import Feed from '../main/Feed'
+import Home from '../main/Home';
 
 const Router = () => {
     return (
         <>
             <Routes>
-                    <Route path="/" element={<Nav/>}>
+                    <Route path="/" element={<Home/>}>
                         <Route
                             path="/" element={
                                 <PrivateRoute>
-                                    <Main />
+                                    <Feed />
                                 </PrivateRoute>
                             } />
                         <Route path="/profile" element={

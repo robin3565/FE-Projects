@@ -28,14 +28,18 @@ code {
   width: 50%;
 }
 
-
 .profile-wrapper {
   margin: auto;
   width: 48%;
   padding: 30px;
   display: flex;
-  flex-direction: row;
-  border-bottom: 1px solid #DDDDDD;
+  flex-direction: column;
+  border: 1px solid #ddd;
+}
+
+.my-feed-img {
+  width: 32%;
+  object-fit: cover;
 }
 
 @media (max-width: 575px) {

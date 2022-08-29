@@ -1,17 +1,65 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import {
   IoPaperPlaneOutline,
   IoHeartOutline,
+  IoHeart,
   IoChatbubbleOutline,
   IoAddCircleOutline
 } from "react-icons/io5";
 import { VscSmiley } from "react-icons/vsc";
-
+import { updateDoc, doc } from 'firebase/firestore';
+import { dbService } from '../../firebase/config';
+import { useAuthState } from '../context/authContext'
 
 const PostItem = ({ item }) => {
+  const [post, setPost] = useState(item.data);
+  const [newComment, setNewComment] = useState("")
+  const { state } = useAuthState();
+  const user = state.id
+  let likes = [];
+  let comments = [];
+
+  const handleComment = async (e) => {
+    e.preventDefault();
+    comments = post.comments;
+    comments.push({
+      id: user,
+      comment: newComment,
+    });
+    await updateDoc(doc(dbService, "posts", item.id), {
+      "comments": comments,
+    }).then(() => {
+      setPost({ ...post, comments: comments })
+    })
+    setNewComment("");
+  }
+
+  const handleLikes = async () => {
+    if (!post.likes.includes(user)) {
+      likes = post.likes;
+      likes.push(user)
+      await updateDoc(doc(dbService, "posts", item.id), {
+        "likes": likes,
+      })
+        .then(() => {
+          setPost({ ...post, likes: likes })
+        })
+    } else {
+      likes = post.likes;
+      likes = likes.filter((item) => item !== user)
+      await updateDoc(doc(dbService, "posts", item.id), {
+        "likes": likes,
+      })
+        .then(() => {
+          setPost({ ...post, likes: likes })
+        })
+    }
+
+  }
+
   return (
     <FeedStyle>
       <div
@@ -20,18 +68,18 @@ const PostItem = ({ item }) => {
           className='feed-user-wrapper'>
           <div
             className="feed-user">
-            {item.photoUrl
+            {item.data.photoUrl
               ? <div className="post-user-img" />
               : <FaUserCircle
                 className='post-user-null post-user-img' />
             }
-            <p>{item?.username}</p>
+            <p>{post.username}</p>
           </div>
           <HiOutlineDotsHorizontal
             className='post-user-btn' />
         </div>
         <img
-          src={item.image}
+          src={post.image}
           className="feed-img" />
 
         <div
@@ -42,8 +90,18 @@ const PostItem = ({ item }) => {
               className="feed-btn-group">
               <div
                 className="feed-btn-left">
-                <IoHeartOutline
-                  className='feed-btn' />
+                {post.likes && post.likes.includes(user)
+                  ? (
+                    <IoHeart
+                      onClick={handleLikes}
+                      className='feed-btn' />
+                  )
+                  : (
+                    <IoHeartOutline
+                      onClick={handleLikes}
+                      className='feed-btn' />
+                  )}
+
                 <IoChatbubbleOutline
                   className='feed-btn' />
                 <IoPaperPlaneOutline
@@ -55,7 +113,14 @@ const PostItem = ({ item }) => {
 
             <p
               className='feed-likes'>
-              좋아요 {item.likes}개
+              {post.likes
+                ? (
+                  <span>좋아요 {post.likes.length}개</span>
+                )
+                :
+                (
+                  <span>좋아요 0개</span>
+                )}
             </p>
 
             <div
@@ -63,33 +128,48 @@ const PostItem = ({ item }) => {
               <p>
                 <span
                   className='feed-user-id'>
-                  {item?.username}
+                  {item?.data.username}
                 </span>
-                {item?.contents}</p>
+                {item?.data.contents}</p>
             </div>
-            <p
-              className='feed-comments-all'>
-              댓글 n개 모두 보기
-            </p>
+            {
+              post.comments.length > 1 && (
+                <p
+                  className='feed-comments-all'>
+                  댓글 {post.comments.length}개 모두 보기
+                </p>
+              )
+            }
             <div
-              className='feed-content'>
+              className='feed-content feed-comment'>
               <p>
                 <span
                   className='feed-user-id'>
-                  {item?.username}
+                  {post.comments[post.comments.length - 1] && (
+                  post.comments[post.comments.length - 1].id
+                )}
                 </span>
-                8 3D Illustration Resources.</p>
+                {post.comments[post.comments.length - 1] && (
+                  post.comments[post.comments.length - 1].comment
+                )}</p>
             </div>
           </div>
 
           <form
-            className='feed-comment'>
+            className='feed-comment-wrapper'
+            onSubmit={handleComment}>
             <VscSmiley
               className='feed-btn' />
             <input
               className='feed-comment-input'
               placeholder='댓글 달기'
-              type="text" />
+              type="text"
+              value={newComment || ''}
+              onChange={(e) => setNewComment(e.target.value)} />
+            <input
+              className='feed-comment-submit'
+              type="submit"
+              value="게시"/>
           </form>
         </div>
       </div>
@@ -189,6 +269,7 @@ const FeedStyle = styled.div`
 
   .feed-likes {
     margin-top: 10px;
+    font-weight: 600;
   }
   
   .feed-user-id {
@@ -201,7 +282,7 @@ const FeedStyle = styled.div`
     flex-direction: row;
   }
 
-  .feed-comment {
+  .feed-comment-wrapper {
     border-top: 1px solid #dbdbdb;
     display: flex;
     flex-direction: row;
@@ -216,5 +297,15 @@ const FeedStyle = styled.div`
     outline: none;
     width: 100%;
     height: 100%;
+    font-size: 1em;
+  }
+
+  .feed-comment-submit {
+    border: none;
+    background-color: transparent;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #0095f6;
+    cursor: pointer;
   }
 `

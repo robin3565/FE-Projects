@@ -6,15 +6,11 @@ import { useAuthState } from '../context/authContext';
 import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
-const Modal = () => {
-    const { postState, postDispatch, uploadImg } = usePostState();
+const PlusModal = () => {
+    const { postState, postDispatch, uploadImg, onToggle } = usePostState();
     const { state } = useAuthState();
     const [content, setContent] = useState("")
     const [fileUrl, setFileUrl] = useState("");
-
-    const onToggle = () => {
-        postDispatch({ type: "LOADING", loading: !postState.loading, uploadPage: 1 })
-    }
 
     const onClose = () => {
         setFileUrl(null);
@@ -130,7 +126,7 @@ const Modal = () => {
     )
 }
 
-export default Modal
+export default PlusModal
 
 const ModalStyle = styled.div`
     background-color: rgba(0, 0, 0, 0.4);
@@ -141,22 +137,6 @@ const ModalStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`
-
-const SecondModalStyle = styled.div`
-    .second-form {
-        width: 1000px;
-        height: 700px;
-        background-color: white;
-        border-radius: 10px;
-    }
-    
-    .second-form form {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;        
-    }
 
     .uploading-nav {
         border-bottom: 1px solid gray;
@@ -183,6 +163,23 @@ const SecondModalStyle = styled.div`
         margin-right: 10px;
     }
 
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;        
+    }
+`
+
+const SecondModalStyle = styled.div`
+    .second-form {
+        width: 1000px;
+        height: 700px;
+        background-color: white;
+        border-radius: 10px;
+    }
+    
     .btn-submit {
         margin-right: 10px;
         padding: 6px 10px;
@@ -256,39 +253,6 @@ const FirstModalStyle = styled.div`
     height: 700px;
     background-color: white;
     border-radius: 10px;
-
-    .uploading-nav {
-        border-bottom: 1px solid gray;
-        width: 100%;
-        text-align: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        max-height: 50px;
-    }
-
-    .uploading-nav p {
-        flex-grow: 1;
-        padding: 14px;
-        font-we
-    }
-
-    .uploading-nav .btn-cancle {
-        color: #262626;
-        width: 26px;
-        height: 26px;
-        cursor: pointer;
-        margin-right: 10px;
-    }
-
-    form {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;        
-        
-    }
 
     .uploading-file-wrapper {
         width: 100%;

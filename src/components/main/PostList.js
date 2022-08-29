@@ -18,7 +18,12 @@ const PostList = () => {
     const querySnapshot = await getDocs(q);
 
     let posts = [];
-    querySnapshot.forEach(doc => posts.push(doc.data()));
+    querySnapshot.forEach(doc => 
+      posts.push({
+        id: doc.id,
+        data: doc.data(),
+      }));
+
     setFeedData(prev => [...prev, ...posts])
     lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
 

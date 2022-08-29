@@ -11,12 +11,15 @@ export const usePostState = () => {
 }
 
 export const PostProvider = ({ children }) => {
+
     const uploadImg = async (fileUrl, state, content) => {
         const docRef = await addDoc(collection(dbService, "posts"), {
             username: state.id,
             photoUrl: state.photoUrl,
             timestamp: serverTimestamp(),
             contents: content,
+            likes: [],
+            comments: []
         });
 
         const imgRef = ref(storageService, `posts/${docRef.id}/image`);
@@ -26,7 +29,6 @@ export const PostProvider = ({ children }) => {
                 const downloadUrl = await getDownloadURL(imgRef)
                 await updateDoc(doc(dbService, "posts", docRef.id), {
                     image: downloadUrl,
-                    likes: 0,
                 }).then(()=>{
                     postDispatch({type: "POSTED", uploadPage: 1})
                     setTimeout(() => {
@@ -35,6 +37,10 @@ export const PostProvider = ({ children }) => {
                 })
                 // console.log(downloadUrl);
             });
+    }
+
+    const onToggle = () => {
+        postDispatch({ type: "LOADING", loading: !postState.loading, uploadPage: 1 })
     }
 
     const init = {
@@ -46,7 +52,7 @@ export const PostProvider = ({ children }) => {
     const [postState, postDispatch] = useReducer(postReducer, init);
 
     return (
-        <PostContext.Provider value={{ postState, postDispatch, uploadImg }}>
+        <PostContext.Provider value={{ postState, postDispatch, uploadImg, onToggle}}>
             {children}
         </PostContext.Provider>
     )

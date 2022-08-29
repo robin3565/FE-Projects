@@ -3,16 +3,10 @@ import { FaUserCircle } from 'react-icons/fa';
 import { MdOutlineKeyboardArrowDown, MdOutlineMailOutline, MdHomeFilled, MdExplore, MdFavoriteBorder, MdAddCircleOutline } from "react-icons/md";
 import { Link, Outlet } from 'react-router-dom'
 import { usePostState } from '../context/postContext';
-import Modal from "./Modal";
+import PlusModal from "./PlusModal";
 
 const Home = () => {
-    const { postState, postDispatch } = usePostState();
-    
-    console.log(postState.loading)
-
-    const onToggle = () => {
-        postDispatch({ type: "LOADING", loading: !postState.loading, uploadPage: 1 })
-    }
+    const { postState, onToggle } = usePostState();
 
     return (
         <HomeStyle>
@@ -67,7 +61,7 @@ const Home = () => {
             </NavStyle>
             <Outlet />
             {
-                postState.loading && <Modal/>
+                postState.loading && <PlusModal/>
             }
         </HomeStyle>
     )

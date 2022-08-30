@@ -1,16 +1,19 @@
 import styled from 'styled-components'
 import { BsCamera } from "react-icons/bs";
-import { usePostState } from '../context/postContext';
+import { usePostState } from '../../context/postContext';
+import { Link } from 'react-router-dom'
 
 
 const MyFeed = ({ item }) => {
   const { postState, postDispatch, onToggle } = usePostState();
-
   return (
     <>
-      <img
-        className='my-feed-img'
-        src={item.content.image}/>
+      <Link to={`/posts/${item.id}`}>
+        <img
+          className='my-feed-img'
+          src={item.content.image} />
+      </Link>
+
       {/* <div
         className='myfeed-null-wrapper'>
         <BsCamera

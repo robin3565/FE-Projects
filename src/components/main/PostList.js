@@ -1,24 +1,59 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase/firestore";
 import { dbService } from "../../firebase/config"
 import PostItem from './PostItem';
-import { usePostState } from "../context/postContext";
+import { usePostState } from "../../context/postContext";
+import throttle from "lodash.throttle";
 
 const PostList = () => {
-  const { postState } = usePostState();
   const [feedData, setFeedData] = useState([]);
+  const { postState } = usePostState();
 
+  useEffect(() => {
+    setFeedData([]);
+    getDatas();
+  }, [postState.posted])
+
+
+  useEffect(() => {
+    // getDatas();
+    window.addEventListener('scroll', handleScroll);
+  }, [])
+
+  let handleScroll = () => {
+    const { innerHeight } = window;
+    const { scrollHeight } = document.body;
+    const { scrollTop } = document.documentElement;
+    console.log(scrollHeight)
+    if (innerHeight + scrollTop + 100 >= scrollHeight) {
+      getDatas();
+    }
+  }
+
+  handleScroll = throttle(handleScroll, 1000)
+
+  
   let lastDoc = null;
-  const getDatas = async () => {
-    const q = query(collection(dbService, "posts"),
-      orderBy("timestamp"),
-      startAfter(lastDoc),
-      limit(5));
-
+  const getQuery = (postRef, lastDoc) => {
+    if (lastDoc === null) {
+      return query(postRef,
+        orderBy("timestamp", "desc"),
+        limit(5));
+    } else {
+      return query(postRef,
+        orderBy("timestamp", "desc"),
+        startAfter(lastDoc),
+        limit(5));
+    }
+  }
+  
+  const getDatas = useCallback(async () => {
+    const postRef = collection(dbService, "posts");
+    const q = getQuery(postRef, lastDoc);
     const querySnapshot = await getDocs(q);
 
     let posts = [];
-    querySnapshot.forEach(doc => 
+    querySnapshot.forEach(doc =>
       posts.push({
         id: doc.id,
         data: doc.data(),
@@ -31,24 +66,8 @@ const PostList = () => {
       console.log('empty')
       window.removeEventListener('scroll', handleScroll)
     }
-  };
+  });
 
-  const handleScroll = () => {
-    const { innerHeight } = window;
-    const { scrollHeight } = document.body;
-    const { scrollTop } = document.documentElement;
-    if (innerHeight + scrollTop + 1 >= scrollHeight) {
-      getDatas();
-    }
-  }
-
-  useEffect(() => {
-    getDatas();
-  }, [postState.posted])
- 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-  }, [])
 
   return (
     <>
@@ -63,4 +82,3 @@ const PostList = () => {
 }
 
 export default PostList
-

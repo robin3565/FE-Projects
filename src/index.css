@@ -30,16 +30,17 @@ code {
 
 .profile-wrapper {
   margin: auto;
-  width: 48%;
+  width: 1000px;
   padding: 30px;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ddd;
 }
 
 .my-feed-img {
-  width: 32%;
+  width: 315px;
+  height: 315px;
   object-fit: cover;
+  margin: 10px 0;
 }
 
 @media (max-width: 575px) {
@@ -68,5 +69,6 @@ code {
   .profile-wrapper {
     width: 85%;
   }
+
 
 }

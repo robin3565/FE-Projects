@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
@@ -7,57 +8,60 @@ import {
   IoHeartOutline,
   IoHeart,
   IoChatbubbleOutline,
-  IoAddCircleOutline
+  IoBookmarkOutline
 } from "react-icons/io5";
 import { VscSmiley } from "react-icons/vsc";
-import { updateDoc, doc } from 'firebase/firestore';
-import { dbService } from '../../firebase/config';
-import { useAuthState } from '../context/authContext'
+import { useAuthState } from '../../context/authContext'
+import { v4 as uuid } from 'uuid';
+import { usePostState } from '../../context/postContext';
 
 const PostItem = ({ item }) => {
-  const [post, setPost] = useState(item.data);
-  const [newComment, setNewComment] = useState("")
   const { state } = useAuthState();
-  const user = state.id
+  const { updateComment, updateLike } = usePostState();
+  const [post, setPost] = useState(item.data);
+  const [newComment, setNewComment] = useState("");
+  const user = state.id;
+  const photoUrl = state.photoUrl;
+
   let likes = [];
   let comments = [];
+  let content = item.data.contents;
 
-  const handleComment = async (e) => {
+  const submitComment = async (e) => {
     e.preventDefault();
+    if (newComment === "") return;
+
     comments = post.comments;
     comments.push({
-      id: user,
+      userId: user,
+      photoUrl: photoUrl,
       comment: newComment,
+      id: uuid(),
     });
-    await updateDoc(doc(dbService, "posts", item.id), {
-      "comments": comments,
-    }).then(() => {
-      setPost({ ...post, comments: comments })
-    })
-    setNewComment("");
+
+    updateComment(comments, item.id)
+      .then(() => {
+        setPost({ ...post, comments: comments })
+        setNewComment("");
+      })
   }
 
   const handleLikes = async () => {
     if (!post.likes.includes(user)) {
       likes = post.likes;
       likes.push(user)
-      await updateDoc(doc(dbService, "posts", item.id), {
-        "likes": likes,
-      })
+      updateLike(likes, item.id)
         .then(() => {
           setPost({ ...post, likes: likes })
         })
     } else {
       likes = post.likes;
       likes = likes.filter((item) => item !== user)
-      await updateDoc(doc(dbService, "posts", item.id), {
-        "likes": likes,
-      })
+      updateLike(likes, item.id)
         .then(() => {
           setPost({ ...post, likes: likes })
         })
     }
-
   }
 
   return (
@@ -66,20 +70,24 @@ const PostItem = ({ item }) => {
         className='feed-wrapper'>
         <div
           className='feed-user-wrapper'>
-          <div
-            className="feed-user">
-            {item.data.photoUrl
-              ? <div className="post-user-img" />
-              : <FaUserCircle
-                className='post-user-null post-user-img' />
-            }
-            <p>{post.username}</p>
-          </div>
+
+          <StyledLink1 to={`/${user}`}>
+            <div
+              className="feed-user">
+              {item.data.photoUrl
+                ? <div className="post-user-img" />
+                : <FaUserCircle
+                  className='post-user-null post-user-img' />
+              }
+              <p>{post.username}</p>
+            </div>
+          </StyledLink1>
           <HiOutlineDotsHorizontal
             className='post-user-btn' />
         </div>
         <img
           src={post.image}
+          onDoubleClick={handleLikes}
           className="feed-img" />
 
         <div
@@ -101,63 +109,70 @@ const PostItem = ({ item }) => {
                       onClick={handleLikes}
                       className='feed-btn' />
                   )}
-
-                <IoChatbubbleOutline
-                  className='feed-btn' />
+                <Link to={`/posts/${item.id}`}>
+                  <IoChatbubbleOutline
+                    className='feed-btn' />
+                </Link>
                 <IoPaperPlaneOutline
                   className='feed-btn' />
               </div>
-              <IoAddCircleOutline
-                className='feed-btn' />
+              <IoBookmarkOutline
+                className='feed-btn bookmark-btn' />
             </div>
 
             <p
               className='feed-likes'>
               {post.likes
-                ? (
-                  <span>좋아요 {post.likes.length}개</span>
-                )
+                ?
+                (<span>좋아요 {post.likes.length}개</span>)
                 :
-                (
-                  <span>좋아요 0개</span>
-                )}
+                (<span>좋아요 0개</span>)}
             </p>
 
             <div
               className="feed-content">
-              <p>
-                <span
-                  className='feed-user-id'>
-                  {item?.data.username}
-                </span>
-                {item?.data.contents}</p>
+              <span
+                className='feed-user-id'>
+                {item?.data.username}
+              </span>
+
+              {
+                content.length > 25 ? (
+                  <>
+                    <span>{content.substr(0, 90)}...</span>
+                    <StyledLink1 to={`/posts/${item.id}`}>더 보기</StyledLink1>
+                  </>
+                )
+                  :
+                  (
+                    <span>{content}</span>
+                  )
+              }
             </div>
             {
               post.comments.length > 1 && (
-                <p
-                  className='feed-comments-all'>
-                  댓글 {post.comments.length}개 모두 보기
-                </p>
+                <StyledLink2 to={`/posts/${item.id}`}>
+                    댓글 {post.comments?.length}개 모두 보기
+                </StyledLink2>
               )
             }
             <div
-              className='feed-content feed-comment'>
-              <p>
-                <span
-                  className='feed-user-id'>
-                  {post.comments[post.comments.length - 1] && (
-                  post.comments[post.comments.length - 1].id
+              className='feed-comment'>
+              <form>
+                {post.comments[post.comments?.length - 1] && (
+                  <>
+                    <span
+                      className='feed-user-id'>{post.comments[post.comments?.length - 1].userId}</span>
+                    <span>{post.comments[post.comments?.length - 1].comment}</span>
+                  </>
                 )}
-                </span>
-                {post.comments[post.comments.length - 1] && (
-                  post.comments[post.comments.length - 1].comment
-                )}</p>
+              </form>
             </div>
           </div>
 
           <form
             className='feed-comment-wrapper'
-            onSubmit={handleComment}>
+            onSubmit={submitComment}>
             <VscSmiley
               className='feed-btn' />
             <input
@@ -165,11 +180,13 @@ const PostItem = ({ item }) => {
               placeholder='댓글 달기'
               type="text"
               value={newComment || ''}
-              onChange={(e) => setNewComment(e.target.value)} />
+              onChange={(e) => {
+                setNewComment(e.target.value)
+              }} />
             <input
               className='feed-comment-submit'
               type="submit"
-              value="게시"/>
+              value="게시" />
           </form>
         </div>
       </div>
@@ -179,11 +196,22 @@ const PostItem = ({ item }) => {
 
 export default PostItem
 
+const StyledLink1 = styled(Link)`
+    text-decoration-line: none;
+    color: #2d2d2d;
+    font-weight: 600;
+`
+
+const StyledLink2 = styled(Link)`
+    text-decoration-line: none;
+    color: #9b9b9b;
+    font-weight: 500;
+`
 
 const FeedStyle = styled.div`
   border: 1px solid #dbdbdb;
   border-radius: 10px;
-  height: 80vh;
+  height: 78vh;
   max-height: 85vh;
   margin-bottom: 10px;
   background-color: white;
@@ -194,7 +222,7 @@ const FeedStyle = styled.div`
   }
 
   .feed-user-wrapper {
-    height: 60px;
+    height: 55px;
     border-bottom: 1px solid #dbdbdb;
     display: flex;  
     justify-content: space-between;
@@ -220,7 +248,6 @@ const FeedStyle = styled.div`
     height: 30px;
     width: 30px;
     margin: 0 10px;
-    cursor: pointer;
   }
 
   .post-user-null {
@@ -228,21 +255,8 @@ const FeedStyle = styled.div`
   }
 
   .feed-img {
+    width: 50wh;
     height: 50vh;
-    max-height: 60vh;
-  }
-
-  .feed-content-top {
-    padding: 10px;
-  }
-
-  .feed-content {
-    margin: 5px 0;
-  }
-
-  .feed-comments-all {
-    color: #9b9b9b;
-    font-weight: 500;
   }
 
   .feed-btn-group {
@@ -251,13 +265,7 @@ const FeedStyle = styled.div`
     justify-content: space-between;
     background-color: white;
   }
-
-  .feed-btn-left {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-  }
-
+  
   .feed-btn {
     color: #262626;
     width: 26px;
@@ -265,7 +273,38 @@ const FeedStyle = styled.div`
     cursor: pointer;
     margin-right: 10px;
   }
+  
+  .feed-content-top {
+    padding: 10px;
+    height: 16vh;
+  }
 
+  .feed-content {
+    margin: 5px 0;
+  }
+
+  .feed-comment {
+    margin: 5px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .feed-comment-btn {
+    color: #bbb;
+    cursor: pointer;
+  }
+
+  .feed-btn-left {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+  }
+
+  .bookmark-btn {
+    margin: 0;
+  }
 
   .feed-likes {
     margin-top: 10px;
@@ -275,11 +314,6 @@ const FeedStyle = styled.div`
   .feed-user-id {
     font-weight: 700;
     padding-right: 7px;
-  }
-
-  .feed-content {
-    display: flex;
-    flex-direction: row;
   }
 
   .feed-comment-wrapper {
@@ -308,4 +342,5 @@ const FeedStyle = styled.div`
     color: #0095f6;
     cursor: pointer;
   }
+
 `

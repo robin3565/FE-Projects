@@ -20,7 +20,6 @@ const StoryStyles = styled.div`
   background-color: white;
   border: 1px solid #dbdbdb;
   border-radius: 10px;
-  margin: 1.2em 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

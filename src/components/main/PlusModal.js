@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 import { MdImage } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
-import { usePostState } from '../context/postContext';
-import { useAuthState } from '../context/authContext';
+import { usePostState } from '../../context/postContext';
+import { useAuthState } from '../../context/authContext';
 import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
 const PlusModal = () => {
     const { postState, postDispatch, uploadImg, onToggle } = usePostState();
     const { state } = useAuthState();
-    const [content, setContent] = useState("")
+    const [content, setContent] = useState("");
     const [fileUrl, setFileUrl] = useState("");
 
     const onClose = () => {
@@ -49,7 +49,7 @@ const PlusModal = () => {
                                 <IoCloseOutline
                                     className="btn-cancle"
                                     onClick={onClose} />
-                                { postState.uploadPage === 2 &&
+                                {postState.uploadPage === 2 &&
                                     <input
                                         className='btn-submit'
                                         value='공유하기'
@@ -71,7 +71,7 @@ const PlusModal = () => {
                                         className='uploading-user-info'>
                                         <FaUserCircle
                                             className='post-user-null post-user-img' />
-                                        <span>UserName</span>
+                                        <span>{state.id}</span>
                                     </div>
                                     <div
                                         className='uploading-content'>

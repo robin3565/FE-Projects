@@ -1,8 +1,8 @@
 import { createContext, useContext, useReducer } from "react";
 import { postReducer } from "./postReducer";
-import { dbService, storageService } from "../../firebase/config"
+import { dbService, storageService } from "../firebase/config"
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { updateDoc, doc, addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { setDoc, doc, updateDoc } from 'firebase/firestore'
 
 const PostContext = createContext();
 
@@ -13,22 +13,19 @@ export const usePostState = () => {
 export const PostProvider = ({ children }) => {
 
     const uploadImg = async (fileUrl, state, content) => {
-        const docRef = await addDoc(collection(dbService, "posts"), {
-            username: state.id,
-            photoUrl: state.photoUrl,
-            timestamp: serverTimestamp(),
-            contents: content,
-            likes: [],
-            comments: []
-        });
-
-        const imgRef = ref(storageService, `posts/${docRef.id}/image`);
-
+        const time = new Date().getTime();
+        const imgRef = ref(storageService, `posts/${state.uid}${time}/image`);
         await uploadString(imgRef, fileUrl, "data_url")
             .then(async (snapshot) => {
                 const downloadUrl = await getDownloadURL(imgRef)
-                await updateDoc(doc(dbService, "posts", docRef.id), {
+                await setDoc(doc(dbService, "posts", `${state.uid}${time}`), {
+                    username: state.id,
+                    photoUrl: state.photoUrl,
+                    timestamp: time,
+                    contents: content,
                     image: downloadUrl,
+                    likes: [],
+                    comments: [],
                 }).then(()=>{
                     postDispatch({type: "POSTED", uploadPage: 1})
                     setTimeout(() => {
@@ -37,6 +34,18 @@ export const PostProvider = ({ children }) => {
                 })
                 // console.log(downloadUrl);
             });
+    }
+
+    const updateComment = async (comments, postId) => {
+        await updateDoc(doc(dbService, "posts", postId), {
+            "comments": comments,
+          })
+    }
+
+    const updateLike = async (likes, postId) => {
+        await updateDoc(doc(dbService, "posts", postId), {
+            "likes": likes,
+          })
     }
 
     const onToggle = () => {
@@ -52,7 +61,7 @@ export const PostProvider = ({ children }) => {
     const [postState, postDispatch] = useReducer(postReducer, init);
 
     return (
-        <PostContext.Provider value={{ postState, postDispatch, uploadImg, onToggle}}>
+        <PostContext.Provider value={{ postState, postDispatch, updateComment, updateLike, uploadImg, onToggle}}>
             {children}
         </PostContext.Provider>
     )

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
-import { useAuthState } from '../context/authContext';
+import { useAuthState } from '../../context/authContext';
 import MyFeed from './MyFeed';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { dbService } from '../../firebase/config';
@@ -58,14 +58,14 @@ const Profile = () => {
                 className='profile-bottom'>
                 <li>
                   <span>게시물</span>
+                  <span>{myfeeds.length}</span>
+                </li>
+                <li>
+                  <span>팔로워</span>
                   <span>0</span>
                 </li>
                 <li>
-                  <span>게시물</span>
-                  <span>0</span>
-                </li>
-                <li>
-                  <span>게시물</span>
+                  <span>팔로잉</span>
                   <span>0</span>
                 </li>
               </ul>
@@ -95,16 +95,16 @@ const Profile = () => {
 export default Profile
 
 const ProfileStyle = styled.div`
+  margin: auto;  
+  width: 100wh;
+
   .myfeed-imgs {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding-top: 20px;
     justify-content: space-between;
-  }
-
-  .myfeed-wrapper {
-    width: 100%;
+    width: 1000px;
   }
 
   .profile-user {

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useAuthState } from '../context/authContext';
+import { useAuthState } from '../../context/authContext';
 import { FaUserCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const RecommendUsers = () => {
                     className="main-user-wrapper" />
                 <div
                     className="main-user-info">
-                    <Link to="/profile">
+                    <Link to={`/${state.id}`}>
                         {state.photoUrl
                             ? <div
                                 className="main-user-profile" />

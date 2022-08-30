@@ -1,7 +1,7 @@
 import Router from "./Router";
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from '../context/authContext';
 import { PostProvider } from "../context/postContext";
+import { AuthProvider } from "../context/authContext";
 
 function App() {
   return (

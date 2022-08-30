@@ -1,9 +1,7 @@
 import styled from "styled-components"
 import PostList from "./PostList"
-import Comments from './Comments'
 import RecommendUsers from "./RecommendUsers"
 import Story from './Story'
-
 
 const Feed = () => {
     return (
@@ -12,10 +10,8 @@ const Feed = () => {
                 className="feed-wrapper">
                 <div
                     className="post-wrapper">
-                    <Story />
-                    <PostList>
-                        <Comments />
-                    </PostList>
+                    {/* <Story /> */}
+                    <PostList/>
                 </div>
                 <RecommendUsers />
             </div>
@@ -35,5 +31,7 @@ const FeedStyle = styled.div`
 
     .post-wrapper {
         width: 460px;
+        margin: 10px 0;
+        margin-top: 40px;
     }
 `

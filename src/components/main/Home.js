@@ -1,13 +1,21 @@
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
-import { MdOutlineKeyboardArrowDown, MdOutlineMailOutline, MdHomeFilled, MdExplore, MdFavoriteBorder, MdAddCircleOutline } from "react-icons/md";
+import {
+    MdOutlineKeyboardArrowDown,
+    MdOutlineMailOutline,
+    MdHomeFilled,
+    MdOutlineExplore,
+    MdFavoriteBorder,
+    MdAddCircleOutline
+} from "react-icons/md";
 import { Link, Outlet } from 'react-router-dom'
-import { usePostState } from '../context/postContext';
+import { usePostState } from '../../context/postContext';
 import PlusModal from "./PlusModal";
+import { useAuthState } from '../../context/authContext';
 
 const Home = () => {
     const { postState, onToggle } = usePostState();
-
+    const { state } = useAuthState();
     return (
         <HomeStyle>
             <NavStyle>
@@ -43,15 +51,17 @@ const Home = () => {
                                 onClick={onToggle} />
                         </li>
                         <li>
-                            <MdExplore
-                                className="nav-btn" />
+                            <Link to="/explore">
+                                <MdOutlineExplore
+                                        className="nav-btn" />
+                            </Link>
                         </li>
                         <li>
                             <MdFavoriteBorder
                                 className="nav-btn" />
                         </li>
                         <li>
-                            <Link to="/profile">
+                            <Link to={`/${state.id}`}>
                                 <FaUserCircle
                                     className="nav-btn nav-btn-profile" />
                             </Link>
@@ -61,7 +71,7 @@ const Home = () => {
             </NavStyle>
             <Outlet />
             {
-                postState.loading && <PlusModal/>
+                postState.loading && <PlusModal />
             }
         </HomeStyle>
     )

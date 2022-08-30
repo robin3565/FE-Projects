@@ -1,6 +1,6 @@
 import { useState } from "react"
 import styled from "styled-components"
-import { useAuthState } from "../context/authContext"
+import { useAuthState } from "../../context/authContext"
 import AuthFooter from "./AuthFooter"
 import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, FacebookAuthProvider, signInWithPopup } from "firebase/auth";

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { useAuthState } from '../context/authContext'
+import { useAuthState } from "../../context/authContext"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { authService, dbService } from "../../firebase/config";
 import handleError from '../global/error'

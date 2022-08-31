@@ -15,10 +15,10 @@ import { useAuthState } from '../../context/authContext'
 import { v4 as uuid } from 'uuid';
 import { usePostState } from '../../context/postContext';
 
-const PostItem = ({ item }) => {
+const FeedItem = ({ item }) => {
   const { state } = useAuthState();
   const { updateComment, updateLike } = usePostState();
-  const [post, setPost] = useState(item.data);
+  const [feeds, setFeeds] = useState(item.data);
   const [newComment, setNewComment] = useState("");
   const user = state.id;
   const photoUrl = state.photoUrl;
@@ -31,7 +31,7 @@ const PostItem = ({ item }) => {
     e.preventDefault();
     if (newComment === "") return;
 
-    comments = post.comments;
+    comments = feeds.comments;
     comments.push({
       userId: user,
       photoUrl: photoUrl,
@@ -41,101 +41,103 @@ const PostItem = ({ item }) => {
 
     updateComment(comments, item.id)
       .then(() => {
-        setPost({ ...post, comments: comments })
+        setFeeds({ ...feeds, comments: comments })
         setNewComment("");
       })
   }
 
   const handleLikes = async () => {
-    if (!post.likes.includes(user)) {
-      likes = post.likes;
+    if (!feeds.likes.includes(user)) {
+      likes = feeds.likes;
       likes.push(user)
       updateLike(likes, item.id)
         .then(() => {
-          setPost({ ...post, likes: likes })
+          setFeeds({ ...feeds, likes: likes })
         })
     } else {
-      likes = post.likes;
+      likes = feeds.likes;
       likes = likes.filter((item) => item !== user)
       updateLike(likes, item.id)
         .then(() => {
-          setPost({ ...post, likes: likes })
+          setFeeds({ ...feeds, likes: likes })
         })
     }
   }
 
   return (
-    <FeedStyle>
+    <FeedItemStyle>
       <div
-        className='feed-wrapper'>
+        className='feed'>
         <div
-          className='feed-user-wrapper'>
+          className='feed__user'>
 
-          <StyledLink1 to={`/${user}`}>
+          <StyledLink1 to={`/${feeds.username}`}>
             <div
-              className="feed-user">
+              className="feed__user--info">
               {item.data.photoUrl
-                ? <div className="post-user-img" />
+                ? <div className="user--profile" />
                 : <FaUserCircle
-                  className='post-user-null post-user-img' />
+                  className='user--profile-null user--profile' />
               }
-              <p>{post.username}</p>
+              <p>{feeds.username}</p>
             </div>
           </StyledLink1>
           <HiOutlineDotsHorizontal
-            className='post-user-btn' />
+            className='feed__user--btn' />
         </div>
-        <img
-          src={post.image}
-          onDoubleClick={handleLikes}
-          className="feed-img" />
+        <div
+          className='feed__item'>
+          <img
+            src={feeds.image}
+            onDoubleClick={handleLikes}
+            className="feed__item--img" />
+        </div>
 
         <div
-          className='feed-content-wrapper'>
+          className='feed__content'>
           <div
-            className='feed-content-top'>
+            className='feed__content--inner'>
             <div
-              className="feed-btn-group">
+              className="feed__content--icons">
               <div
-                className="feed-btn-left">
-                {post.likes && post.likes.includes(user)
+                className="content__icons--left">
+                {feeds.likes && feeds.likes.includes(user)
                   ? (
                     <IoHeart
                       onClick={handleLikes}
-                      className='feed-btn' />
+                      className='content__icon' />
                   )
                   : (
                     <IoHeartOutline
                       onClick={handleLikes}
-                      className='feed-btn' />
+                      className='content__icon' />
                   )}
                 <Link to={`/posts/${item.id}`}>
                   <IoChatbubbleOutline
-                    className='feed-btn' />
+                    className='content__icon' />
                 </Link>
                 <IoPaperPlaneOutline
-                  className='feed-btn' />
+                  className='content__icon' />
               </div>
               <IoBookmarkOutline
-                className='feed-btn bookmark-btn' />
+                className='content__icon content__bookmark--icon' />
             </div>
 
-            <p
-              className='feed-likes'>
-              {post.likes
+            <div
+              className='content__likes'>
+              {feeds.likes
                 ?
-                (<span>좋아요 {post.likes.length}개</span>)
+                (<p>좋아요 {feeds.likes.length}개</p>)
                 :
-                (<span>좋아요 0개</span>)}
-            </p>
+                (<p>좋아요 0개</p>)}
+            </div>
 
             <div
-              className="feed-content">
+              className="content__item">
               <span
-                className='feed-user-id'>
+                className='content__item--user'>
                 {item?.data.username}
               </span>
-
               {
                 content.length > 25 ? (
                   <>
@@ -150,20 +152,20 @@ const PostItem = ({ item }) => {
               }
             </div>
             {
-              post.comments.length > 1 && (
+              feeds.comments.length > 1 && (
                 <StyledLink2 to={`/posts/${item.id}`}>
-                    댓글 {post.comments?.length}개 모두 보기
+                  댓글 {feeds.comments?.length}개 모두 보기
                 </StyledLink2>
               )
             }
             <div
-              className='feed-comment'>
+              className='content__item--comment'>
               <form>
-                {post.comments[post.comments?.length - 1] && (
+                {feeds.comments[feeds.comments?.length - 1] && (
                   <>
                     <span
-                      className='feed-user-id'>{post.comments[post.comments?.length - 1].userId}</span>
-                    <span>{post.comments[post.comments?.length - 1].comment}</span>
+                      className='content__item--user'>{feeds.comments[feeds.comments?.length - 1].userId}</span>
+                    <span>{feeds.comments[feeds.comments?.length - 1].comment}</span>
                   </>
                 )}
               </form>
@@ -171,12 +173,12 @@ const PostItem = ({ item }) => {
           </div>
 
           <form
-            className='feed-comment-wrapper'
+            className='feed__comment--form'
             onSubmit={submitComment}>
             <VscSmiley
-              className='feed-btn' />
+              className='content__icon' />
             <input
-              className='feed-comment-input'
+              className='feed__comment--input'
               placeholder='댓글 달기'
               type="text"
               value={newComment || ''}
@@ -184,17 +186,147 @@ const PostItem = ({ item }) => {
                 setNewComment(e.target.value)
               }} />
             <input
-              className='feed-comment-submit'
+              className='feed__comment--submit'
               type="submit"
               value="게시" />
           </form>
         </div>
       </div>
-    </FeedStyle>
+    </FeedItemStyle>
   )
 }
 
-export default PostItem
+export default FeedItem
+
+const FeedItemStyle = styled.article`
+  width: 100%;
+  height: 750px;
+  margin-bottom: 15px;
+
+  .feed {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    flex-direction: column;
+  }
+
+  .feed__user {
+    height: 55px;
+    border-bottom: 1px solid #dbdbdb;
+    display: flex;  
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .feed__user--info {
+    display: flex;  
+    align-items: center;
+  }
+
+  .feed__user--btn {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    color: #262626;
+    cursor: pointer;
+  }
+
+  .feed__item {
+    width: 470px;
+    height: 470px;
+  }
+
+  .feed__item--img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .feed__content {
+    width: 100%;
+  }
+
+  .feed__content--inner {
+    padding: 10px;
+    height: 160px;
+  }
+
+  .feed__content--icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .content__icons--left {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+  }
+  
+  .content__icon {
+    color: #262626;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .content__bookmark--icon {
+    margin: 0;
+  }
+
+  .content__likes {
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  .content__item {
+    margin: 5px 0;
+  }
+  
+  .content__item--user{
+    font-weight: 700;
+    padding-right: 7px;
+  }
+
+  .content__item--comment {
+    margin: 5px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .feed__comment--form {
+    border-top: 1px solid #dbdbdb;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    padding: 5px 10px;
+  }
+
+  .feed__comment--input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    font-size: 1em;
+  }
+
+  .feed__comment--submit {
+    border: none;
+    background-color: transparent;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #0095f6;
+    cursor: pointer;
+  }
+`
 
 const StyledLink1 = styled(Link)`
     text-decoration-line: none;
@@ -206,141 +338,4 @@ const StyledLink2 = styled(Link)`
     text-decoration-line: none;
     color: #9b9b9b;
     font-weight: 500;
-`
-
-const FeedStyle = styled.div`
-  border: 1px solid #dbdbdb;
-  border-radius: 10px;
-  height: 78vh;
-  max-height: 85vh;
-  margin-bottom: 10px;
-  background-color: white;
-
-  .feed-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .feed-user-wrapper {
-    height: 55px;
-    border-bottom: 1px solid #dbdbdb;
-    display: flex;  
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .feed-user {
-    display: flex;  
-    align-items: center;
-  }
-
-  .post-user-btn{
-    margin-right: 15px;
-    width: 20px;
-    height: 20px;
-    color: #262626;
-    cursor: pointer;
-  }
-
- .post-user-img {
-    border: 1px solid #dbdbdb;
-    border-radius: 10em;
-    height: 30px;
-    width: 30px;
-    margin: 0 10px;
-  }
-
-  .post-user-null {
-      color: #DDDDDD;
-  }
-
-  .feed-img {
-    width: 50wh;
-    height: 50vh;
-  }
-
-  .feed-btn-group {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: white;
-  }
-  
-  .feed-btn {
-    color: #262626;
-    width: 26px;
-    height: 26px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .feed-content-top {
-    padding: 10px;
-    height: 16vh;
-  }
-
-  .feed-content {
-    margin: 5px 0;
-  }
-
-  .feed-comment {
-    margin: 5px 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .feed-comment-btn {
-    color: #bbb;
-    cursor: pointer;
-  }
-
-  .feed-btn-left {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-  }
-
-  .bookmark-btn {
-    margin: 0;
-  }
-
-  .feed-likes {
-    margin-top: 10px;
-    font-weight: 600;
-  }
-  
-  .feed-user-id {
-    font-weight: 700;
-    padding-right: 7px;
-  }
-
-  .feed-comment-wrapper {
-    border-top: 1px solid #dbdbdb;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    padding: 5px 10px;
-  }
-
-  .feed-comment-input {
-    border: none;
-    outline: none;
-    width: 100%;
-    height: 100%;
-    font-size: 1em;
-  }
-
-  .feed-comment-submit {
-    border: none;
-    background-color: transparent;
-    font-size: 0.95em;
-    font-weight: 600;
-    color: #0095f6;
-    cursor: pointer;
-  }
-
 `

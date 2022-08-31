@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from "react"
 import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase/firestore";
 import { dbService } from "../../firebase/config"
-import PostItem from './PostItem';
+import FeedItem from './FeedItem';
 import { usePostState } from "../../context/postContext";
 import throttle from "lodash.throttle";
+import styled from "styled-components";
+import Loader from "../global/Loader";
 
-const PostList = () => {
+const FeedList = () => {
   const [feedData, setFeedData] = useState([]);
   const { postState } = usePostState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setFeedData([]);
@@ -32,7 +35,7 @@ const PostList = () => {
 
   handleScroll = throttle(handleScroll, 1000)
 
-  
+
   let lastDoc = null;
   const getQuery = (postRef, lastDoc) => {
     if (lastDoc === null) {
@@ -46,11 +49,12 @@ const PostList = () => {
         limit(5));
     }
   }
-  
+
   const getDatas = useCallback(async () => {
     const postRef = collection(dbService, "posts");
     const q = getQuery(postRef, lastDoc);
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(q)
+      .then(setLoading(false))
 
     let posts = [];
     querySnapshot.forEach(doc =>
@@ -70,15 +74,34 @@ const PostList = () => {
 
 
   return (
-    <>
-      {feedData?.map((item, idx) => {
-        return <PostItem
-          key={idx}
-          item={item} />
-      })
-      }
-    </>
+    <FeedListStyle>
+      {loading ?
+        (
+          <div
+            className="feed__loader">
+            <Loader />
+          </div>
+        )
+        : (
+          feedData?.map((item, idx) => {
+            return <FeedItem
+              key={idx}
+              item={item} />
+          })
+        )}
+    </FeedListStyle>
   )
 }
 
-export default PostList
+export default FeedList
+
+const FeedListStyle = styled.div`
+    width: 470px;
+    margin-top: 40px;
+
+    .feed__loader {
+      margin: 0 auto;
+      width: 50px;
+      height: 50px;
+    }
+`

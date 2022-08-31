@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
-import { useAuthState } from '../../context/authContext';
 import MyFeed from './MyFeed';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { dbService } from '../../firebase/config';
+import Loader from '../global/Loader';
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
-  const { state } = useAuthState([]);
   const [myfeeds, setMyfeeds] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const params = useParams();
 
   const getDatas = async () => {
     const postsRef = collection(dbService, "posts");
-    const q = query(postsRef, where("username", "==", state.id));
-    const querySnapshot = await getDocs(q);
+    const q = query(postsRef, where("username", "==", params.userId));
+    const querySnapshot = await getDocs(q)
     const feed = [];
     querySnapshot.forEach(doc =>
       feed.push({
@@ -21,11 +23,16 @@ const Profile = () => {
         content: doc.data(),
       }))
     setMyfeeds([...myfeeds, ...feed])
+    setLoading(false);
   }
 
   useEffect(() => {
     getDatas();
   }, [])
+
+  useEffect(() => {
+    setMyfeeds([]);
+  }, [params])
 
   return (
     <>
@@ -45,7 +52,7 @@ const Profile = () => {
                 className='profile-top'>
                 <p
                   className='profile-id'>
-                  {state?.id}
+                  {params?.userId}
                 </p>
                 <button>
                   프로필 편집
@@ -77,11 +84,15 @@ const Profile = () => {
             <div
               className='myfeed-imgs'>
               {
-                myfeeds?.map((item, idx) => {
-                  return <MyFeed
-                    key={idx}
-                    item={item} />
-                }
+                loading ? (
+                  <Loader />
+                ) : (
+                  myfeeds?.map((item, idx) => {
+                    return <MyFeed
+                      key={idx}
+                      item={item} />
+                  }
+                  )
                 )
               }
             </div>

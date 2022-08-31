@@ -40,41 +40,42 @@ const PlusModal = () => {
             {fileUrl ? (
                 <SecondModalStyle>
                     <div
-                        className='second-form'>
+                        className='plus-modal-next-form'>
                         <form
+                            className='plus-modal-form'
                             onSubmit={handleImg}>
                             <div
-                                className="uploading-nav">
+                                className="plus-modal__nav">
                                 <p>새 게시물 만들기</p>
                                 <IoCloseOutline
-                                    className="btn-cancle"
+                                    className="plus-modal__btn-cancle"
                                     onClick={onClose} />
                                 {postState.uploadPage === 2 &&
                                     <input
-                                        className='btn-submit'
+                                        className='plus-modal__btn-submit'
                                         value='공유하기'
                                         type="submit" />
                                 }
                             </div>
 
                             <div
-                                className="uploading-img-wrapper">
+                                className="form__upload">
                                 <div
-                                    className="uploading-img">
+                                    className="form__upload--img">
                                     <img
                                         className="uploaded-img"
                                         src={fileUrl} />
                                 </div>
                                 <div
-                                    className="uploading-content-wrapper">
+                                    className="form__upload--content">
                                     <div
-                                        className='uploading-user-info'>
+                                        className='upload__user'>
                                         <FaUserCircle
-                                            className='post-user-null post-user-img' />
+                                            className='upload__user--null upload__user--img' />
                                         <span>{state.id}</span>
                                     </div>
                                     <div
-                                        className='uploading-content'>
+                                        className='upload__content'>
                                         <textarea
                                             type="submit"
                                             placeholder="문구 입력..."
@@ -90,26 +91,29 @@ const PlusModal = () => {
                 :
                 (
                     <FirstModalStyle>
-                        <form>
+                        <form
+                            className='plus-modal-form'>
                             <div
-                                className="uploading-nav">
+                                className="plus-modal__nav">
                                 <p>새 게시물 만들기</p>
                                 <IoCloseOutline
-                                    className="btn-cancle"
+                                    className="plus-modal__btn-cancle"
                                     onClick={onClose} />
                             </div>
 
                             <div
-                                className="uploading-file-wrapper">
+                                className="plus-modal__file">
                                 <div
-                                    className='uploading-section'>
+                                    className='file__inner'>
                                     <MdImage
-                                        className="uploading-btn-img" />
+                                        className="file__img" />
                                     <p
-                                        className="uploading-sub">
+                                        className="file__title">
                                         사진과 동영상을 여기에 끌어다 놓으세요.
                                     </p>
-                                    <label className="input-file-button" htmlFor="input-file">
+                                    <label 
+                                        className="file__input--button" 
+                                        htmlFor="input-file">
                                         컴퓨터에서 선택
                                     </label>
                                     <input
@@ -138,7 +142,7 @@ const ModalStyle = styled.div`
     justify-content: center;
     align-items: center;
 
-    .uploading-nav {
+    .plus-modal__nav {
         border-bottom: 1px solid gray;
         width: 100%;
         text-align: center;
@@ -148,14 +152,14 @@ const ModalStyle = styled.div`
         align-items: center;
     }
 
-    .uploading-nav p {
+    .plus-modal__nav p {
         flex-grow: 1;
         padding: 15px;
         font-size: 1.1em;
         font-weight: 600;
     }
 
-    .uploading-nav .btn-cancle {
+    .plus-modal__btn-cancle {
         color: #262626;
         width: 26px;
         height: 26px;
@@ -164,7 +168,7 @@ const ModalStyle = styled.div`
     }
 
     
-    form {
+    .plus-modal-form {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -173,14 +177,15 @@ const ModalStyle = styled.div`
 `
 
 const SecondModalStyle = styled.div`
-    .second-form {
+
+    .plus-modal-next-form {
         width: 1000px;
         height: 700px;
         background-color: white;
         border-radius: 10px;
     }
     
-    .btn-submit {
+    .plus-modal__btn-submit {
         margin-right: 10px;
         padding: 6px 10px;
         color:#0095f6;
@@ -191,13 +196,13 @@ const SecondModalStyle = styled.div`
         cursor: pointer;
     }
 
-    .uploading-img-wrapper {
+    .form__upload {
         width: 100%;
         height: 650px;
         display: flex;
     }
 
-    .uploading-img {
+    .form__upload--img {
         width: 699px;
         height: 648px;
     }
@@ -209,7 +214,7 @@ const SecondModalStyle = styled.div`
         border-radius: 0 0 0 10px;
     }
 
-    .uploading-content-wrapper {
+    .form__upload--content {
         width: 299px;
         height: 100%;
         border-left: 1px solid gray;
@@ -217,13 +222,13 @@ const SecondModalStyle = styled.div`
         flex-direction: column;
     }
     
-    .uploading-user-info {
+    .upload__user {
         display: flex;
         align-items: center;
         margin: 20px 10px;
     }
 
-    .post-user-img {
+    .upload__user--img {
         border: 1px solid #dbdbdb;
         border-radius: 10em;
         height: 30px;
@@ -232,16 +237,19 @@ const SecondModalStyle = styled.div`
         cursor: pointer;
     }
     
-    .post-user-null {
+    .upload__user--null {
         color: #DDDDDD;
     }
 
+    .upload__content {
+        padding: 0 19px;
+    }
+
     textarea {
-        min-height: 168px;
+        min-height: 200px;
         width: 85%;
         border: none;
         outline: none;
-        padding: 0 19px;
         resize: none;
         font: 15px 'Roboto';
     }
@@ -254,40 +262,34 @@ const FirstModalStyle = styled.div`
     background-color: white;
     border-radius: 10px;
 
-    .uploading-file-wrapper {
+    .plus-modal__file {
         width: 100%;
         height: 650px;
         text-align: center;
     }
 
-    .uploading-section {
+    .file__inner {
         width: 100%;
         margin-top: 200px;
     }
 
-    .uploaded-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 0 0 10px 10px;
-    }
-
-    .uploading-btn-img {
+    
+    .file__img {
         width: 100px;
         height: 100px;
     }
-
-    .input-file-button{
+    
+    .file__title {
+        font-size: 1.4em;
+        font-weight: 200;
+        margin-bottom: 20px;
+    }
+    
+    .file__input--button{
         padding: 6px 25px;
         background-color:#0095f6;
         border-radius: 4px;
         color: white;
         cursor: pointer;
       }
-
-    .uploading-sub {
-        font-size: 1.4em;
-        font-weight: 200;
-        margin-bottom: 20px;
-    }
 `

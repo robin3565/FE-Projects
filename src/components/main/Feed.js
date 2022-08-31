@@ -1,5 +1,6 @@
 import styled from "styled-components"
-import PostList from "./PostList"
+import Loader from "../global/Loader"
+import FeedList from "./FeedList"
 import RecommendUsers from "./RecommendUsers"
 import Story from './Story'
 
@@ -7,12 +8,9 @@ const Feed = () => {
     return (
         <FeedStyle>
             <div
-                className="feed-wrapper">
-                <div
-                    className="post-wrapper">
+                className="main__feed">
                     {/* <Story /> */}
-                    <PostList/>
-                </div>
+                    <FeedList/>
                 <RecommendUsers />
             </div>
         </FeedStyle>
@@ -21,17 +19,11 @@ const Feed = () => {
 
 export default Feed
 
-const FeedStyle = styled.div`
+const FeedStyle = styled.main`
     margin: auto;  
     width: 100wh;
 
-    .feed-wrapper {
+    .main__feed {
         display: flex;
-    }
-
-    .post-wrapper {
-        width: 460px;
-        margin: 10px 0;
-        margin-top: 40px;
     }
 `

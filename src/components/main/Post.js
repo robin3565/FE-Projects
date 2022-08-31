@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { dbService } from '../../firebase/config';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
-import { BiHeart } from "react-icons/bi";
 import {
     IoPaperPlaneOutline,
     IoHeartOutline,
@@ -70,7 +69,8 @@ const Post = () => {
     });
 
     let likes = [];
-    const handleLikes = async() => {
+    const handleLikes = useCallback(async() => {
+        console.log(postLike)
         if (!postLike.includes(userId)) {
             likes = postLike;
             likes.push(userId)
@@ -86,8 +86,7 @@ const Post = () => {
               setPost({ ...post, likes: likes })
             })
           }
-
-    }
+    })
 
     const removeComment = useCallback(async (e) => {
         if (window.confirm("정말 삭제할까요?")) {
@@ -108,63 +107,63 @@ const Post = () => {
 
 
     return (
-        <ModalStyle>
+        <PostModalStyle>
             <IoClose
-                className="btn-cancle"
+                className="post__btn-cancle"
                 onClick={() => navigate(-1)} />
             <div
-                className='post-wrapper'>
+                className='post'>
                 <div
-                    className="post-img-wrapper">
+                    className="post__inner">
                     <div
-                        className="post-img">
+                        className="post__img">
                         <img
-                            className="uploaded-img"
+                            className="post__uploaded-img"
                             src={postImg} />
                     </div>
                     <div
-                        className="post-content-wrapper">
+                        className="post__content">
                         <div
-                            className='post-content-top'>
+                            className='post__user'>
                             <div
-                                className='post-user-info'>
+                                className='post__user-inner'>
                                 <FaUserCircle
-                                    className='post-user-null post-user-img' />
+                                    className='post__user-null post__user-img' />
                                 <span
-                                    className='post-user-id'>{postUser}</span>
+                                    className='post__user-id'>{postUser}</span>
                             </div>
                             <HiOutlineDotsHorizontal
                                 className='post-btn' />
                         </div>
                         <div
-                            className='post-content-bottom'>
+                            className='post__content-inner'>
                             <div
-                                className='post-user-info'>
+                                className='post__user-inner'>
                                 <FaUserCircle
-                                    className='post-user-null post-user-img' />
+                                    className='post__user-null post__user-img' />
                                 <span
-                                    className='post-user-id'>{postUser}</span>
+                                    className='post__user-id'>{postUser}</span>
                             </div>
                             <article
-                                className='post-content'>
+                                className='article__content'>
                                 {postContent}
                             </article>
                             <ul
-                                className='post-comments-wrapper'>
+                                className='article__comments'>
                                 {
                                     postComments.map((item, idx) => (
                                         <li
                                             key={idx}
-                                            className='post-comment-item'>
+                                            className='comments__item'>
                                             <div
-                                                className='post-content-left'>
+                                                className='comments__item-inner'>
                                                 <div>
                                                     <div
-                                                        className='post-user-info'>
+                                                        className='post__user-inner'>
                                                         <FaUserCircle
-                                                            className='post-user-null post-user-img' />
+                                                            className='post__user-null post__user-img' />
                                                         <span
-                                                            className='post-user-id'>{item.userId}</span>
+                                                            className='post__user-id'>{item.userId}</span>
                                                     </div>
                                                 </div>
                                                 <p>
@@ -172,7 +171,7 @@ const Post = () => {
                                                 </p>
                                             </div>
                                             <div
-                                                className='post-content-right'>
+                                                className='comments__item-right'>
                                                 {/* <BiHeart
                                                     className='content-btn' /> */}
                                                 {
@@ -181,7 +180,7 @@ const Post = () => {
                                                             <HiOutlineDotsHorizontal
                                                                 id={item.id}
                                                                 onClick={removeComment}
-                                                                className='content-btn' />
+                                                                className='comments__btn' />
                                                         </>
                                                     )
                                                 }
@@ -192,9 +191,9 @@ const Post = () => {
                             </ul>
                         </div>
                         <div
-                            className='post-bottom'>
+                            className='post__icons'>
                             <div
-                                className="post-btn-group">
+                                className="post__icons-inner">
                                 <div>
                                     {postLike && postLike.includes(userId)
                                         ? (
@@ -213,10 +212,10 @@ const Post = () => {
                                         className='post-btn' />
                                 </div>
                                 <IoBookmarkOutline
-                                    className='post-btn bookmark-btn' />
+                                    className='post-btn post-bookmark-btn' />
                             </div>
                             <p
-                                className='post-likes'>
+                                className='post__likes'>
                                 {postLike
                                     ?
                                     (<span>좋아요 {postLike.length}개</span>)
@@ -225,12 +224,12 @@ const Post = () => {
                             </p>
                         </div>
                         <form
-                            className='post-comment-wrapper'
+                            className='form__comments'
                             onSubmit={submitComment}>
                             <VscSmiley
                                 className='post-btn' />
                             <input
-                                className='post-comment-input'
+                                className='comments__input'
                                 placeholder='댓글 달기'
                                 type="text"
                                 value={newComment}
@@ -238,20 +237,20 @@ const Post = () => {
                                     setNewComment(e.target.value)
                                 }} />
                             <input
-                                className='post-comment-submit'
+                                className='comments__submit'
                                 type="submit"
                                 value="게시" />
                         </form>
                     </div>
                 </div>
             </div>
-        </ModalStyle>
+        </PostModalStyle>
     )
 }
 
 export default Post
 
-const ModalStyle = styled.div`
+const PostModalStyle = styled.div`
     background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
     width: 100%;
@@ -260,8 +259,8 @@ const ModalStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    .btn-cancle {
+
+    .post__btn-cancle {
         color: #fff;
         width: 30px;
         height: 30px;
@@ -272,21 +271,28 @@ const ModalStyle = styled.div`
         cursor: pointer;
     }
 
-    .post-wrapper {
-      width: 1400px;
-      height: 840px;
-      background-color: white;
-      border-radius: 10px;
+    .post {
+        width: 1400px;
+        height: 840px;
+        background-color: white;
+        border-radius: 10px;
     }
-
-    .post-img {
+    
+    .post__img {
         width: 840px;
         height: 840px;
     }
 
-    .post-img-wrapper {
+    .post__inner {
         width: 100%;
         display: flex;
+    }
+    
+    .post__uploaded-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px 0 0 10px;
     }
 
     .btn-submit {
@@ -300,21 +306,15 @@ const ModalStyle = styled.div`
         cursor: pointer;
     }
 
-    .uploaded-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 10px 0 0 10px;
-    }
 
-    .post-content-wrapper {
+    .post__content {
         width: 560px;
         height: 100%;
         display: flex;
         flex-direction: column;
     }
     
-    .post-content-top {
+    .post__user {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -322,7 +322,7 @@ const ModalStyle = styled.div`
         border-bottom: 1px solid #ccc;
     }
     
-    .post-user-info {
+    .post__user-inner {
         display: flex;
         align-items: center;
         margin-right: 10px;
@@ -336,7 +336,7 @@ const ModalStyle = styled.div`
         margin-right: 10px;
     }
 
-    .post-btn-group {
+    .post__icons-inner {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -344,7 +344,7 @@ const ModalStyle = styled.div`
       }
     
 
-    .post-user-img {
+    .post__user-img {
         border: 1px solid #dbdbdb;
         border-radius: 10em;
         height: 30px;
@@ -352,26 +352,28 @@ const ModalStyle = styled.div`
         margin: 0 10px;
         cursor: pointer;
     }
-
-    .post-content-bottom {
-        padding: 20px;
-        height: 560px;
-        border-bottom: 1px solid #ccc;
-    }
-
-    .post-user-null {
+    .post__user-null {
         color: #DDDDDD;
     }
 
-    .post-user-id {
+    .post__user-id {
         font-weight: 500;
     }
 
-    .post-content {
-        padding: 10px 50px;
+    .post__content-inner {
+        padding: 20px;
+        height: 560px;
+        border-bottom: 1px solid #ccc;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
 
-    .post-comment-item {
+    .article__content {
+        padding: 10px 50px;
+        min-height: 20px;
+    }
+
+    .comments__item {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -379,67 +381,62 @@ const ModalStyle = styled.div`
         margin: 15px 0;
     }
 
-    .post-content-left {
+    .comments__item-inner {
         display: flex;
         flex-direction: row;
         align-items: center;
     }
     
-    .post-content-right {
+    .post__item-right {
         display: flex;
         flex-direction: row;
         margin-right: 4px;
     }
 
-    .post-bottom {
+    .post__icons {
         padding: 10px;
         height: 80px;
         border-bottom: 1px solid #ccc;
     }
 
-    .post-btn-group {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .content-btn {
+    .comments__btn {
         margin-right: 2px;
         cursor: pointer;
     }
 
-    .post-likes {
+    .post__likes {
         margin-top: 10px;
         font-weight: 600;
     }
 
-    .bookmark-btn {
+    .post-bookmark-btn {
         margin: 0;
       }
 
-    .post-comment-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    padding: 5px 10px;
+    .form__comments {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        height: 30px;
+        padding: 5px 10px;
     }
 
-    .post-comment-input {
-    border: none;
-    outline: none;
-    width: 100%;
-    height: 100%;
-    font-size: 1em;
+    .comments__input {
+        border: none;
+        outline: none;
+        width: 100%;
+        height: 100%;
+        font-size: 1em;
     }
 
-    .post-comment-submit {
-    border: none;
-    background-color: transparent;
-    font-size: 0.95em;
-    font-weight: 600;
-    color: #0095f6;
-    cursor: pointer;
+    .comments__submit {
+        border: none;
+        background-color: transparent;
+        font-size: 0.95em;
+        font-weight: 600;
+        color: #0095f6;
+        cursor: pointer;
     }
 
 `

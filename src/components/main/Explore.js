@@ -2,9 +2,11 @@ import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { dbService } from '../../firebase/config';
+import Loader from '../global/Loader';
 
 const Explore = () => {
     const [exFeeds, setExFeeds] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const getFeedDatas = async () => {
         const feeds = []
@@ -15,33 +17,38 @@ const Explore = () => {
                 content: doc.data(),
             }))
         setExFeeds([...exFeeds, ...feeds])
+        setLoading(false)
     }
 
     useEffect(() => {
         getFeedDatas();
     }, [])
-
-    console.log(exFeeds)
-
     return (
-        <ExploreStyle>
-            <div
-                className='explore-wrapper'>
-                <div
-                    className='explore-feed'>
-                    {
-                        exFeeds.map((item, idx) => (
-                            <>
-                                <img
-                                    key={idx}
-                                    className='explore-img'
-                                    src={item.content.image} />
-                            </>
-                        ))
-                    }
-                </div>
-            </div>
-        </ExploreStyle>
+        <>
+            {loading ? (
+                <Loader />
+            ) : (
+                <ExploreStyle>
+                    <div
+                        className='explore-wrapper'>
+                        <div
+                            className='explore-feed'>
+                            {
+                                exFeeds.map((item, idx) => (
+                                    <>
+                                        <img
+                                            key={idx}
+                                            className='explore-img'
+                                            src={item.content.image} />
+                                    </>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </ExploreStyle>
+            )
+            }
+        </>
     )
 }
 
@@ -61,6 +68,7 @@ const ExploreStyle = styled.div`
         width: 300px;
         height: 300px;
         padding: 7.5px;
+        object-fit: cover;
     }
 
 `

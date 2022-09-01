@@ -1,9 +1,9 @@
 export const postReducer = (state, action) => {
     switch(action.type) {
-        case "LOADING":
+        case "POP_MODAL":
             return {
                 ...state,
-                loading: action.loading,
+                isModal: action.isModal,
                 uploadPage: action.uploadPage,
             }
         case "POSTED":
@@ -21,6 +21,11 @@ export const postReducer = (state, action) => {
             return {
                 ...state,
                 uploadPage: action.uploadPage,
+            }
+        case "REMOVE":
+            return {
+                ...state,
+                posted: true,
             }
     }
 }

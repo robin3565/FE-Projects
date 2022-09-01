@@ -17,6 +17,8 @@ import {
 import { VscSmiley } from "react-icons/vsc";
 import { usePostState } from '../../context/postContext';
 import { v4 as uuid } from 'uuid';
+import EditModal from './EditModal';
+import { EditModalPortal } from '../../app/Portal';
 
 const Post = () => {
     const navigate = useNavigate();
@@ -28,6 +30,12 @@ const Post = () => {
     const [newComment, setNewComment] = useState("")
     const userId = state.id;
     const photoUrl = state.photoUrl;
+    const [isEditing, setEditing] = useState(false);
+
+    const handleModal = () => {
+        document.body.style.overflow = "hidden";
+        setEditing(prev => !prev);
+      }
 
     let comments = [];
     const submitComment = (e) => {
@@ -41,40 +49,40 @@ const Post = () => {
             comment: newComment,
             id: uuid(),
         });
-        
+
         updateComment(comments, postId)
-        .then(() => {
-        setPost({ ...post, comments: comments })
-        setNewComment("");
-    })
+            .then(() => {
+                setPost({ ...post, comments: comments })
+                setNewComment("");
+            })
     }
 
     const postRef = doc(dbService, "posts", postId);
     const getPostData = useCallback(async () => {
         const docSnap = await getDoc(postRef);
-        const { comments, likes } = docSnap.data();
+        const { comments } = docSnap.data();
 
         setPost(docSnap.data())
         setPostComments(comments);
     });
 
     let likes = [];
-    const handleLikes = useCallback(async() => {
+    const handleLikes = useCallback(async () => {
         if (!post.likes.includes(userId)) {
             likes = post.likes;
             likes.push(userId)
             updateLike(likes, postId)
-            .then(() => {
-              setPost({ ...post, likes: likes })
-            })
-          } else {
+                .then(() => {
+                    setPost({ ...post, likes: likes })
+                })
+        } else {
             likes = post.likes;
             likes = likes.filter((item) => item !== userId)
             updateLike(likes, postId)
-            .then(() => {
-              setPost({ ...post, likes: likes })
-            })
-          }
+                .then(() => {
+                    setPost({ ...post, likes: likes })
+                })
+        }
     })
 
     const removeComment = useCallback(async (e) => {
@@ -96,146 +104,158 @@ const Post = () => {
 
 
     return (
-        <PostModalStyle>
-            <IoClose
-                className="post__btn-cancle"
-                onClick={() => navigate(-1)} />
-            <div
-                className='post'>
+        <>
+            <PostModalStyle>
+                <IoClose
+                    className="post__btn-cancle"
+                    onClick={() => navigate(-1)} />
                 <div
-                    className="post__inner">
+                    className='post'>
                     <div
-                        className="post__img">
-                        <img   
-                            width={840}
-                            height={840}
-                            className="post__uploaded-img"
-                            src={post.image} />
-                    </div>
-                    <div
-                        className="post__content">
+                        className="post__inner">
                         <div
-                            className='post__user'>
-                            <div
-                                className='post__user-inner'>
-                                <FaUserCircle
-                                    className='post__user-null post__user-img' />
-                                <span
-                                    className='post__user-id'>{post.username}</span>
-                            </div>
-                            <HiOutlineDotsHorizontal
-                                className='post-btn' />
+                            className="post__img">
+                            <img
+                                width={840}
+                                height={840}
+                                className="post__uploaded-img"
+                                src={post.image} />
                         </div>
                         <div
-                            className='post__content-inner'>
+                            className="post__content">
                             <div
-                                className='post__user-inner'>
-                                <FaUserCircle
-                                    className='post__user-null post__user-img' />
-                                <span
-                                    className='post__user-id'>{post.username}</span>
-                            </div>
-                            <article
-                                className='article__content'>
-                                {post.contents}
-                            </article>
-                            <ul
-                                className='article__comments'>
-                                {
-                                    postComments.map((item, idx) => (
-                                        <li
-                                            key={idx}
-                                            className='comments__item'>
-                                            <div
-                                                className='comments__item-inner'>
-                                                <div>
-                                                    <div
-                                                        className='post__user-inner'>
-                                                        <FaUserCircle
-                                                            className='post__user-null post__user-img' />
-                                                        <span
-                                                            className='post__user-id'>{item.userId}</span>
-                                                    </div>
-                                                </div>
-                                                <p>
-                                                    {item.comment}
-                                                </p>
-                                            </div>
-                                            <div
-                                                className='comments__item-right'>
-                                                {/* <BiHeart
-                                                    className='content-btn' /> */}
-                                                {
-                                                    userId === item.userId && (
-                                                        <>
-                                                            <HiOutlineDotsHorizontal
-                                                                id={item.id}
-                                                                onClick={removeComment}
-                                                                className='comments__btn' />
-                                                        </>
-                                                    )
-                                                }
-                                            </div>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                        </div>
-                        <div
-                            className='post__icons'>
-                            <div
-                                className="post__icons-inner">
-                                <div>
-                                    {post.likes?.includes(userId)
-                                        ? (
-                                            <IoHeart
-                                                onClick={handleLikes}
-                                                className='post-btn' />
-                                        )
-                                        : (
-                                            <IoHeartOutline
-                                                onClick={handleLikes}
-                                                className='post-btn' />
-                                        )}
-                                    <IoChatbubbleOutline
-                                        className='post-btn' />
-                                    <IoPaperPlaneOutline
-                                        className='post-btn' />
+                                className='post__user'>
+                                <div
+                                    className='post__user-inner'>
+                                    <FaUserCircle
+                                        className='post__user-null post__user-img' />
+                                    <span
+                                        className='post__user-id'>{post.username}</span>
                                 </div>
-                                <IoBookmarkOutline
-                                    className='post-btn post-bookmark-btn' />
+                                <HiOutlineDotsHorizontal
+                                    onClick={handleModal}
+                                    className='post-btn' />
                             </div>
-                            <p
-                                className='post__likes'>
-                                {post.likes
-                                    ?
-                                    (<span>좋아요 {post.likes.length}개</span>)
-                                    :
-                                    (<span>좋아요 0개</span>)}
-                            </p>
+                            <div
+                                className='post__content-inner'>
+                                <div
+                                    className='post__user-inner'>
+                                    <FaUserCircle
+                                        className='post__user-null post__user-img' />
+                                    <span
+                                        className='post__user-id'>{post.username}</span>
+                                </div>
+                                <article
+                                    className='article__content'>
+                                    {post.contents}
+                                </article>
+                                <ul
+                                    className='article__comments'>
+                                    {
+                                        postComments.map((item, idx) => (
+                                            <li
+                                                key={idx}
+                                                className='comments__item'>
+                                                <div
+                                                    className='comments__item-inner'>
+                                                    <div>
+                                                        <div
+                                                            className='post__user-inner'>
+                                                            <FaUserCircle
+                                                                className='post__user-null post__user-img' />
+                                                            <span
+                                                                className='post__user-id'>{item.userId}</span>
+                                                        </div>
+                                                    </div>
+                                                    <p>
+                                                        {item.comment}
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className='comments__item-right'>
+                                                    {/* <BiHeart
+                                                    className='content-btn' /> */}
+                                                    {
+                                                        userId === item.userId && (
+                                                            <>
+                                                                <HiOutlineDotsHorizontal
+                                                                    id={item.id}
+                                                                    onClick={removeComment}
+                                                                    className='comments__btn' />
+                                                            </>
+                                                        )
+                                                    }
+                                                </div>
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            </div>
+                            <div
+                                className='post__icons'>
+                                <div
+                                    className="post__icons-inner">
+                                    <div>
+                                        {post.likes?.includes(userId)
+                                            ? (
+                                                <IoHeart
+                                                    onClick={handleLikes}
+                                                    className='post-btn' />
+                                            )
+                                            : (
+                                                <IoHeartOutline
+                                                    onClick={handleLikes}
+                                                    className='post-btn' />
+                                            )}
+                                        <IoChatbubbleOutline
+                                            className='post-btn' />
+                                        <IoPaperPlaneOutline
+                                            className='post-btn' />
+                                    </div>
+                                    <IoBookmarkOutline
+                                        className='post-btn post-bookmark-btn' />
+                                </div>
+                                <p
+                                    className='post__likes'>
+                                    {post.likes
+                                        ?
+                                        (<span>좋아요 {post.likes.length}개</span>)
+                                        :
+                                        (<span>좋아요 0개</span>)}
+                                </p>
+                            </div>
+                            <form
+                                className='form__comments'
+                                onSubmit={submitComment}>
+                                <VscSmiley
+                                    className='post-btn' />
+                                <input
+                                    className='comments__input'
+                                    placeholder='댓글 달기'
+                                    type="text"
+                                    value={newComment}
+                                    onChange={(e) => {
+                                        setNewComment(e.target.value)
+                                    }} />
+                                <input
+                                    className='comments__submit'
+                                    type="submit"
+                                    value="게시" />
+                            </form>
                         </div>
-                        <form
-                            className='form__comments'
-                            onSubmit={submitComment}>
-                            <VscSmiley
-                                className='post-btn' />
-                            <input
-                                className='comments__input'
-                                placeholder='댓글 달기'
-                                type="text"
-                                value={newComment}
-                                onChange={(e) => {
-                                    setNewComment(e.target.value)
-                                }} />
-                            <input
-                                className='comments__submit'
-                                type="submit"
-                                value="게시" />
-                        </form>
                     </div>
                 </div>
-            </div>
-        </PostModalStyle>
+            </PostModalStyle>
+            {
+                isEditing && (
+                    <EditModalPortal>
+                        <EditModal
+                            item={postId} 
+                            setEditing={setEditing}/>
+                    </EditModalPortal>
+                )
+            }
+        </>
     )
 }
 
@@ -246,7 +266,6 @@ const PostModalStyle = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { PlusModalPortal } from '../../app/Portal';
+import PlusModal from "./PlusModal";
 import { FaUserCircle } from 'react-icons/fa';
 import {
     MdOutlineKeyboardArrowDown,
@@ -10,18 +12,22 @@ import {
 } from "react-icons/md";
 import { Link, Outlet } from 'react-router-dom'
 import { usePostState } from '../../context/postContext';
-import PlusModal from "./PlusModal";
 import { useAuthState } from '../../context/authContext';
 import { useCallback, useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { dbService } from '../../firebase/config';
 
 const Home = () => {
-    const { postState, onToggle } = usePostState();
+    const { postState, postDispatch } = usePostState();
     const { state } = useAuthState();
     const [userInfo, setUserInfo] = useState([]);
     const [searchedId, setSearchedId] = useState("");
     const [filteredId, setFiltetedId] = useState([]);
+
+    const onToggle = () => {
+        postDispatch({ type: "POP_MODAL", isModal: !postState.isModal, uploadPage: 1 });
+        document.body.style.overflow = "hidden";
+    }
 
     const getUserData = useCallback(async () => {
         const querySnapshot = await getDocs(collection(dbService, "userInfo"));
@@ -137,11 +143,15 @@ const Home = () => {
                         </nav>
                     </div>
                 </HeaderStyle>
-                <Outlet />
                 {
-                    postState.loading && <PlusModal />
+                    postState.isModal && (
+                        <PlusModalPortal>
+                            <PlusModal 
+                                onToggle = {onToggle}/>
+                        </PlusModalPortal>
+                    )
                 }
-
+                <Outlet />
             </HomeStyle>
         </div>
     )

@@ -15,6 +15,7 @@ import { useAuthState } from '../../context/authContext'
 import { v4 as uuid } from 'uuid';
 import { usePostState } from '../../context/postContext';
 import EditModal from './EditModal';
+import { EditModalPortal } from '../../app/Portal';
 
 const FeedItem = ({ item }) => {
   const { state } = useAuthState();
@@ -24,11 +25,6 @@ const FeedItem = ({ item }) => {
   const user = state.id;
   const photoUrl = state.photoUrl;
   const [isEditing, setEditing] = useState(false);
-
-  const handleEdit = () => {
-    console.log(isEditing)
-    setEditing(prev => !prev)
-  }
 
   let likes = [];
   let comments = [];
@@ -53,6 +49,11 @@ const FeedItem = ({ item }) => {
       })
   }
 
+  const handleModal = () => {
+    document.body.style.overflow = "hidden";
+    setEditing(prev => !prev);
+  }
+
   const handleLikes = async () => {
     if (!feeds.likes.includes(user)) {
       likes = feeds.likes;
@@ -73,9 +74,6 @@ const FeedItem = ({ item }) => {
 
   return (
     <>
-    {
-      isEditing && <EditModal item={item}/>
-    }
       <FeedItemStyle>
         <div
           className='feed'>
@@ -96,7 +94,7 @@ const FeedItem = ({ item }) => {
             {feeds.username === user && (
               <HiOutlineDotsHorizontal
                 className='feed__user--btn'
-                onClick={handleEdit} />
+                onClick={handleModal} />
             )}
           </div>
           <div
@@ -209,6 +207,15 @@ const FeedItem = ({ item }) => {
           </div>
         </div>
       </FeedItemStyle>
+    {
+      isEditing && (
+        <EditModalPortal>
+          <EditModal
+            setEditing={setEditing}
+            item={item.id}/>
+        </EditModalPortal>
+      )
+    }
     </>
   )
 }

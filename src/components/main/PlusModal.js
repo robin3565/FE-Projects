@@ -3,11 +3,11 @@ import { MdImage } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { usePostState } from '../../context/postContext';
 import { useAuthState } from '../../context/authContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
 const PlusModal = () => {
-    const { postState, postDispatch, uploadImg, onToggle } = usePostState();
+    const { postState, postDispatch, uploadImg } = usePostState();
     const { state } = useAuthState();
     const [content, setContent] = useState("");
     const [fileUrl, setFileUrl] = useState("");
@@ -16,6 +16,12 @@ const PlusModal = () => {
         setFileUrl(null);
         onToggle();
     }
+    
+    const onToggle = () => {
+        postDispatch({ type: "POP_MODAL", loading: !postState.isModal, uploadPage: 1 });
+        document.body.style.overflow = "unset";
+    }
+
 
     const handleImg = async (e) => {
         e.preventDefault();
@@ -135,9 +141,12 @@ export default PlusModal
 const ModalStyle = styled.div`
     background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;

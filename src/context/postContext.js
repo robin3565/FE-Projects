@@ -1,8 +1,8 @@
 import { createContext, useContext, useReducer } from "react";
 import { postReducer } from "./postReducer";
 import { dbService, storageService } from "../firebase/config"
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { setDoc, doc, updateDoc } from 'firebase/firestore'
+import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
+import { setDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 const PostContext = createContext();
 
@@ -25,8 +25,8 @@ export const PostProvider = ({ children }) => {
                     image: downloadUrl,
                     likes: [],
                     comments: [],
-                }).then(()=>{
-                    postDispatch({type: "POSTED", uploadPage: 1})
+                }).then(() => {
+                    postDispatch({ type: "POSTED", uploadPage: 1 })
                     setTimeout(() => {
                         postDispatch({ type: "REMOVE_POSTED" });
                     }, 2000);
@@ -35,24 +35,27 @@ export const PostProvider = ({ children }) => {
             });
     }
 
+    const removePost = async (postId) => {
+        await deleteDoc(doc(dbService, "posts", postId))
+            .then(() => {
+                const desertRef = ref(storageService, `posts/${postId}/image`);
+                deleteObject(desertRef)
+            })
+    }
+
     const updateComment = async (comments, postId) => {
         await updateDoc(doc(dbService, "posts", postId), {
             "comments": comments,
-          })
+        })
     }
 
     const updateLike = async (likes, postId) => {
         await updateDoc(doc(dbService, "posts", postId), {
             "likes": likes,
-          })
+        })
     }
-
-    const onToggle = () => {
-        postDispatch({ type: "LOADING", loading: !postState.loading, uploadPage: 1 })
-    }
-
     const init = {
-        loading: false,
+        isModal: false,
         posted: false,
         uploadPage: 1,
     }
@@ -60,7 +63,7 @@ export const PostProvider = ({ children }) => {
     const [postState, postDispatch] = useReducer(postReducer, init);
 
     return (
-        <PostContext.Provider value={{ postState, postDispatch, updateComment, updateLike, uploadImg, onToggle}}>
+        <PostContext.Provider value={{ postState, postDispatch, updateComment, updateLike, uploadImg, removePost }}>
             {children}
         </PostContext.Provider>
     )

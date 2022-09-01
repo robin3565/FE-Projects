@@ -35,7 +35,6 @@ const FeedList = () => {
 
   handleScroll = throttle(handleScroll, 1000)
 
-
   let lastDoc = null;
   const getQuery = (postRef, lastDoc) => {
     if (lastDoc === null) {

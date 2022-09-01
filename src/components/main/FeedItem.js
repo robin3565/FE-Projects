@@ -14,6 +14,7 @@ import { VscSmiley } from "react-icons/vsc";
 import { useAuthState } from '../../context/authContext'
 import { v4 as uuid } from 'uuid';
 import { usePostState } from '../../context/postContext';
+import EditModal from './EditModal';
 
 const FeedItem = ({ item }) => {
   const { state } = useAuthState();
@@ -22,6 +23,12 @@ const FeedItem = ({ item }) => {
   const [newComment, setNewComment] = useState("");
   const user = state.id;
   const photoUrl = state.photoUrl;
+  const [isEditing, setEditing] = useState(false);
+
+  const handleEdit = () => {
+    console.log(isEditing)
+    setEditing(prev => !prev)
+  }
 
   let likes = [];
   let comments = [];
@@ -65,134 +72,144 @@ const FeedItem = ({ item }) => {
   }
 
   return (
-    <FeedItemStyle>
-      <div
-        className='feed'>
+    <>
+    {
+      isEditing && <EditModal item={item}/>
+    }
+      <FeedItemStyle>
         <div
-          className='feed__user'>
-
-          <StyledLink1 to={`/${feeds.username}`}>
-            <div
-              className="feed__user--info">
-              {item.data.photoUrl
-                ? <div className="user--profile" />
-                : <FaUserCircle
-                  className='user--profile-null user--profile' />
-              }
-              <p>{feeds.username}</p>
-            </div>
-          </StyledLink1>
-          <HiOutlineDotsHorizontal
-            className='feed__user--btn' />
-        </div>
-        <div
-          className='feed__item'>
-          <img
-            src={feeds.image}
-            onDoubleClick={handleLikes}
-            className="feed__item--img" />
-        </div>
-
-        <div
-          className='feed__content'>
+          className='feed'>
           <div
-            className='feed__content--inner'>
-            <div
-              className="feed__content--icons">
+            className='feed__user'>
+
+            <StyledLink1 to={`/${feeds.username}`}>
               <div
-                className="content__icons--left">
-                {feeds.likes && feeds.likes.includes(user)
-                  ? (
-                    <IoHeart
-                      onClick={handleLikes}
-                      className='content__icon' />
-                  )
-                  : (
-                    <IoHeartOutline
-                      onClick={handleLikes}
-                      className='content__icon' />
-                  )}
-                <Link to={`/posts/${item.id}`}>
-                  <IoChatbubbleOutline
-                    className='content__icon' />
-                </Link>
-                <IoPaperPlaneOutline
-                  className='content__icon' />
+                className="feed__user--info">
+                {item.data.photoUrl
+                  ? <div className="user--profile" />
+                  : <FaUserCircle
+                    className='user--profile-null user--profile' />
+                }
+                <p>{feeds.username}</p>
               </div>
-              <IoBookmarkOutline
-                className='content__icon content__bookmark--icon' />
-            </div>
-
-            <div
-              className='content__likes'>
-              {feeds.likes
-                ?
-                (<p>좋아요 {feeds.likes.length}개</p>)
-                :
-                (<p>좋아요 0개</p>)}
-            </div>
-
-            <div
-              className="content__item">
-              <span
-                className='content__item--user'>
-                {item?.data.username}
-              </span>
-              {
-                content.length > 25 ? (
-                  <>
-                    <span>{content.substr(0, 90)}...</span>
-                    <StyledLink1 to={`/posts/${item.id}`}>더 보기</StyledLink1>
-                  </>
-                )
-                  :
-                  (
-                    <span>{content}</span>
-                  )
-              }
-            </div>
-            {
-              feeds.comments.length > 1 && (
-                <StyledLink2 to={`/posts/${item.id}`}>
-                  댓글 {feeds.comments?.length}개 모두 보기
-                </StyledLink2>
-              )
-            }
-            <div
-              className='content__item--comment'>
-              <form>
-                {feeds.comments[feeds.comments?.length - 1] && (
-                  <>
-                    <span
-                      className='content__item--user'>{feeds.comments[feeds.comments?.length - 1].userId}</span>
-                    <span>{feeds.comments[feeds.comments?.length - 1].comment}</span>
-                  </>
-                )}
-              </form>
-            </div>
+            </StyledLink1>
+            {feeds.username === user && (
+              <HiOutlineDotsHorizontal
+                className='feed__user--btn'
+                onClick={handleEdit} />
+            )}
+          </div>
+          <div
+            className='feed__item'>
+            <img
+              width={470}
+              height={470}
+              src={feeds.image}
+              onDoubleClick={handleLikes}
+              className="feed__item--img" />
           </div>
 
-          <form
-            className='feed__comment--form'
-            onSubmit={submitComment}>
-            <VscSmiley
-              className='content__icon' />
-            <input
-              className='feed__comment--input'
-              placeholder='댓글 달기'
-              type="text"
-              value={newComment || ''}
-              onChange={(e) => {
-                setNewComment(e.target.value)
-              }} />
-            <input
-              className='feed__comment--submit'
-              type="submit"
-              value="게시" />
-          </form>
+          <div
+            className='feed__content'>
+            <div
+              className='feed__content--inner'>
+              <div
+                className="feed__content--icons">
+                <div
+                  className="content__icons--left">
+                  {feeds.likes && feeds.likes.includes(user)
+                    ? (
+                      <IoHeart
+                        onClick={handleLikes}
+                        className='content__icon' />
+                    )
+                    : (
+                      <IoHeartOutline
+                        onClick={handleLikes}
+                        className='content__icon' />
+                    )}
+                  <Link to={`/posts/${item.id}`}>
+                    <IoChatbubbleOutline
+                      className='content__icon' />
+                  </Link>
+                  <IoPaperPlaneOutline
+                    className='content__icon' />
+                </div>
+                <IoBookmarkOutline
+                  className='content__icon content__bookmark--icon' />
+              </div>
+
+              <div
+                className='content__likes'>
+                {feeds.likes
+                  ?
+                  (<p>좋아요 {feeds.likes.length}개</p>)
+                  :
+                  (<p>좋아요 0개</p>)}
+              </div>
+
+              <div
+                className="content__item">
+                <span
+                  className='content__item--user'>
+                  {item?.data.username}
+                </span>
+                {
+                  content.length > 25 ? (
+                    <>
+                      <span>{content.substr(0, 90)}...</span>
+                      <StyledLink1 to={`/posts/${item.id}`}>더 보기</StyledLink1>
+                    </>
+                  )
+                    :
+                    (
+                      <span>{content}</span>
+                    )
+                }
+              </div>
+              {
+                feeds.comments.length > 1 && (
+                  <StyledLink2 to={`/posts/${item.id}`}>
+                    댓글 {feeds.comments?.length}개 모두 보기
+                  </StyledLink2>
+                )
+              }
+              <div
+                className='content__item--comment'>
+                <form>
+                  {feeds.comments[feeds.comments?.length - 1] && (
+                    <>
+                      <span
+                        className='content__item--user'>{feeds.comments[feeds.comments?.length - 1].userId}</span>
+                      <span>{feeds.comments[feeds.comments?.length - 1].comment}</span>
+                    </>
+                  )}
+                </form>
+              </div>
+            </div>
+
+            <form
+              className='feed__comment--form'
+              onSubmit={submitComment}>
+              <VscSmiley
+                className='content__icon' />
+              <input
+                className='feed__comment--input'
+                placeholder='댓글 달기'
+                type="text"
+                value={newComment || ''}
+                onChange={(e) => {
+                  setNewComment(e.target.value)
+                }} />
+              <input
+                className='feed__comment--submit'
+                type="submit"
+                value="게시" />
+            </form>
+          </div>
         </div>
-      </div>
-    </FeedItemStyle>
+      </FeedItemStyle>
+    </>
   )
 }
 

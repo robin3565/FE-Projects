@@ -50,98 +50,100 @@ const Home = () => {
 
 
     return (
-        <HomeStyle>
-            <HeaderStyle>
-                <div
-                    className="header">
+        <div>
+            <HomeStyle>
+                <HeaderStyle>
                     <div
-                        className="header__logo">
-                        <Link to="/">
-                            <img
-                                className='logo'
-                                src='logo.png' />
-                        </Link>
-                        <MdOutlineKeyboardArrowDown
-                            className="logo__btn" />
-                    </div>
-                    <div
-                        className='header__search'>
-                        <input
-                            className='search__input'
-                            type="text"
-                            placeholder="검색"
-                            onChange={filterUser} />
-                        <ul
-                            className='search__info'>
-                            {
-                                filteredId.map((item, idx) => (
-                                    <StyledLink
-                                        to={`/${item.id}`}
-                                        key={idx}>
-                                        <li
-                                            className='search__user'>
-                                            {item.photoUrl
-                                                ? <div className="user--profile" />
-                                                : <FaUserCircle
-                                                    className='user--profile-null user--profile' />
-                                            }
-                                            <p>{item.id}</p>
-                                        </li>
-                                    </StyledLink>
-                                ))
-                            }
-                        </ul>
-                    </div>
-                    <nav>
-                        <ul
-                            className='nav__list'>
-                            <li
-                                className='nav__item'>
-                                <Link to="/">
-                                    <MdHomeFilled
+                        className="header">
+                        <div
+                            className="header__logo">
+                            <Link to="/">
+                                <img
+                                    className='logo'
+                                    src='logo.png' />
+                            </Link>
+                            <MdOutlineKeyboardArrowDown
+                                className="logo__btn" />
+                        </div>
+                        <div
+                            className='header__search'>
+                            <input
+                                className='search__input'
+                                type="text"
+                                placeholder="검색"
+                                onChange={filterUser} />
+                            <ul
+                                className='search__info'>
+                                {
+                                    filteredId.map((item, idx) => (
+                                        <StyledLink
+                                            to={`/${item.id}`}
+                                            key={idx}>
+                                            <li
+                                                className='search__user'>
+                                                {item.photoUrl
+                                                    ? <div className="user--profile" />
+                                                    : <FaUserCircle
+                                                        className='user--profile-null user--profile' />
+                                                }
+                                                <p>{item.id}</p>
+                                            </li>
+                                        </StyledLink>
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                        <nav>
+                            <ul
+                                className='nav__list'>
+                                <li
+                                    className='nav__item'>
+                                    <Link to="/">
+                                        <MdHomeFilled
+                                            className="nav__item--btn" />
+                                    </Link>
+                                </li>
+                                <li
+                                    className='nav__item'>
+                                    <MdOutlineMailOutline
                                         className="nav__item--btn" />
-                                </Link>
-                            </li>
-                            <li
-                                className='nav__item'>
-                                <MdOutlineMailOutline
-                                    className="nav__item--btn" />
-                            </li>
-                            <li
-                                className='nav__item'>
-                                <MdAddCircleOutline
-                                    className="nav__item--btn"
-                                    onClick={onToggle} />
-                            </li>
-                            <li
-                                className='nav__item'>
-                                <Link to="/explore">
-                                    <MdOutlineExplore
+                                </li>
+                                <li
+                                    className='nav__item'>
+                                    <MdAddCircleOutline
+                                        className="nav__item--btn"
+                                        onClick={onToggle} />
+                                </li>
+                                <li
+                                    className='nav__item'>
+                                    <Link to="/explore">
+                                        <MdOutlineExplore
+                                            className="nav__item--btn" />
+                                    </Link>
+                                </li>
+                                <li
+                                    className='nav__item'>
+                                    <MdFavoriteBorder
                                         className="nav__item--btn" />
-                                </Link>
-                            </li>
-                            <li
-                                className='nav__item'>
-                                <MdFavoriteBorder
-                                    className="nav__item--btn" />
-                            </li>
-                            <li
-                                className='nav__item'>
-                                <Link to={`/${state.id}`}>
-                                    <FaUserCircle
-                                        className="nav__item--btn nav__item--profile" />
-                                </Link>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </HeaderStyle>
-            <Outlet />
-            {
-                postState.loading && <PlusModal />
-            }
+                                </li>
+                                <li
+                                    className='nav__item'>
+                                    <Link to={`/${state.id}`}>
+                                        <FaUserCircle
+                                            className="nav__item--btn nav__item--profile" />
+                                    </Link>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </HeaderStyle>
+                <Outlet />
+                {
+                    postState.loading && <PlusModal />
+                }
 
-        </HomeStyle>
+            </HomeStyle>
+        </div>
     )
 }
 

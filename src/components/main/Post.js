@@ -24,11 +24,6 @@ const Post = () => {
     const { state } = useAuthState();
     const { updateComment, updateLike } = usePostState();
     const [postComments, setPostComments] = useState([]);
-    const [postImg, setPostImg] = useState("");
-    const [postUserUrl, setUserUrl] = useState("");
-    const [postUser, setUser] = useState("");
-    const [postContent, setContent] = useState("");
-    const [postLike, setPostLike] = useState("");
     const [post, setPost] = useState({});
     const [newComment, setNewComment] = useState("")
     const userId = state.id;
@@ -57,29 +52,23 @@ const Post = () => {
     const postRef = doc(dbService, "posts", postId);
     const getPostData = useCallback(async () => {
         const docSnap = await getDoc(postRef);
-        const { comments, image, photoUrl, username, contents, likes } = docSnap.data();
+        const { comments, likes } = docSnap.data();
 
         setPost(docSnap.data())
         setPostComments(comments);
-        setPostImg(image);
-        setUserUrl(photoUrl);
-        setUser(username);
-        setContent(contents);
-        setPostLike(likes);
     });
 
     let likes = [];
     const handleLikes = useCallback(async() => {
-        console.log(postLike)
-        if (!postLike.includes(userId)) {
-            likes = postLike;
+        if (!post.likes.includes(userId)) {
+            likes = post.likes;
             likes.push(userId)
             updateLike(likes, postId)
             .then(() => {
               setPost({ ...post, likes: likes })
             })
           } else {
-            likes = postLike;
+            likes = post.likes;
             likes = likes.filter((item) => item !== userId)
             updateLike(likes, postId)
             .then(() => {
@@ -117,9 +106,11 @@ const Post = () => {
                     className="post__inner">
                     <div
                         className="post__img">
-                        <img
+                        <img   
+                            width={840}
+                            height={840}
                             className="post__uploaded-img"
-                            src={postImg} />
+                            src={post.image} />
                     </div>
                     <div
                         className="post__content">
@@ -130,7 +121,7 @@ const Post = () => {
                                 <FaUserCircle
                                     className='post__user-null post__user-img' />
                                 <span
-                                    className='post__user-id'>{postUser}</span>
+                                    className='post__user-id'>{post.username}</span>
                             </div>
                             <HiOutlineDotsHorizontal
                                 className='post-btn' />
@@ -142,11 +133,11 @@ const Post = () => {
                                 <FaUserCircle
                                     className='post__user-null post__user-img' />
                                 <span
-                                    className='post__user-id'>{postUser}</span>
+                                    className='post__user-id'>{post.username}</span>
                             </div>
                             <article
                                 className='article__content'>
-                                {postContent}
+                                {post.contents}
                             </article>
                             <ul
                                 className='article__comments'>
@@ -195,7 +186,7 @@ const Post = () => {
                             <div
                                 className="post__icons-inner">
                                 <div>
-                                    {postLike && postLike.includes(userId)
+                                    {post.likes?.includes(userId)
                                         ? (
                                             <IoHeart
                                                 onClick={handleLikes}
@@ -216,9 +207,9 @@ const Post = () => {
                             </div>
                             <p
                                 className='post__likes'>
-                                {postLike
+                                {post.likes
                                     ?
-                                    (<span>좋아요 {postLike.length}개</span>)
+                                    (<span>좋아요 {post.likes.length}개</span>)
                                     :
                                     (<span>좋아요 0개</span>)}
                             </p>

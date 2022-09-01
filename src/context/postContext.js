@@ -11,7 +11,6 @@ export const usePostState = () => {
 }
 
 export const PostProvider = ({ children }) => {
-
     const uploadImg = async (fileUrl, state, content) => {
         const time = new Date().getTime();
         const imgRef = ref(storageService, `posts/${state.uid}${time}/image`);

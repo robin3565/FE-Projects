@@ -8,6 +8,7 @@ import Post from '../components/main/Post';
 import AuthLogin from '../components/auth/AuthLogin'
 import AuthSignUp from '../components/auth/AuthSignUp'
 import Explore from '../components/main/Explore';
+import EditProfile from '../components/profile/EditProfile';
 
 const Router = () => {
     return (
@@ -20,25 +21,31 @@ const Router = () => {
                                     <Feed />
                                 </PrivateRoute>
                             } />
-                        <Route path="/:userId" element={
+                        <Route path="/:userId/" element={
                             <PrivateRoute>
                                 <Profile />
                             </PrivateRoute>
                         } />
-                        <Route path="/posts/:postId" element={
+                        <Route path="/posts/:postId/" element={
                             <PrivateRoute>
                                 <Post />
                             </PrivateRoute>
                         } />
                         <Route
-                            path="/explore" element={
+                            path="/explore/" element={
                                 <PrivateRoute>
                                     <Explore />
                                 </PrivateRoute>
                             } />
+                        <Route
+                            path="/accouts/edit/" element={
+                                <PrivateRoute>
+                                    <EditProfile />
+                                </PrivateRoute>
+                            } />
                     </Route>
-                <Route path="/login" element={<AuthLogin />} />
-                <Route path="/signup" element={<AuthSignUp />} />
+                <Route path="/login/" element={<AuthLogin />} />
+                <Route path="/signup/" element={<AuthSignUp />} />
             </Routes>
         </>
     )

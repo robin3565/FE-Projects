@@ -36,6 +36,15 @@ const Post = () => {
         document.body.style.overflow = "hidden";
         setEditing(prev => !prev);
       }
+      
+    const postRef = doc(dbService, "posts", postId);
+    const getPostData = useCallback(async () => {
+        const docSnap = await getDoc(postRef);
+        const { comments } = docSnap.data();
+
+        setPost(docSnap.data())
+        setPostComments(comments);
+    });
 
     let comments = [];
     const submitComment = (e) => {
@@ -56,15 +65,6 @@ const Post = () => {
                 setNewComment("");
             })
     }
-
-    const postRef = doc(dbService, "posts", postId);
-    const getPostData = useCallback(async () => {
-        const docSnap = await getDoc(postRef);
-        const { comments } = docSnap.data();
-
-        setPost(docSnap.data())
-        setPostComments(comments);
-    });
 
     let likes = [];
     const handleLikes = useCallback(async () => {
@@ -119,7 +119,8 @@ const Post = () => {
                                 width={840}
                                 height={840}
                                 className="post__uploaded-img"
-                                src={post.image} />
+                                src={post.image}
+                                onDoubleClick={handleLikes} />
                         </div>
                         <div
                             className="post__content">
@@ -173,8 +174,6 @@ const Post = () => {
                                                 </div>
                                                 <div
                                                     className='comments__item-right'>
-                                                    {/* <BiHeart
-                                                    className='content-btn' /> */}
                                                     {
                                                         userId === item.userId && (
                                                             <>
@@ -250,8 +249,10 @@ const Post = () => {
                 isEditing && (
                     <EditModalPortal>
                         <EditModal
+                            modalType={"post"}
                             item={postId} 
-                            setEditing={setEditing}/>
+                            setEditing={setEditing}
+                            post={post}/>
                     </EditModalPortal>
                 )
             }

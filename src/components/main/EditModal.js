@@ -1,31 +1,31 @@
-import React, { useEffect } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { usePostState } from '../../context/postContext'
 
-const EditModal = ({ item, setEditing }) => {
-  const { removePost } = usePostState();
+const EditModal = ({ item, setEditing, modalType, post }) => {
+  const { postDispatch, removePost } = usePostState();
   const navigate = useNavigate();
 
   const handleUnset = () => document.body.style.overflow = "unset"
 
+  const onUpdate = () => {
+    postDispatch({ type: "UPDATE_POSTED", imageUrl: post.image, content: post.contents });
+  }
+
   const handleModal = () => {
     setEditing(false);
     handleUnset();
-  }
-  const onRemove = async () => {
-    try {
-      removePost(item)
-      .then(() => {
-        navigate("/")
-        handleUnset();
-      })
-    } catch (err) {
-      console.log(err);
-    }
+  };
 
-  }
-
+  const onRemove = () => {
+    removePost(item)
+    .then(() => {
+      navigate("/")
+      handleUnset();
+    })
+  };
+  
   return (
     <EditModalStyle>
       <div
@@ -34,8 +34,19 @@ const EditModal = ({ item, setEditing }) => {
           className='edit__list'>
           <li
             className='edit__item'>
-            <StyledLink to={`/posts/${item.id}`}>게시물로 이동
-            </StyledLink></li>
+              {
+                modalType === "feed" ? (
+                  <StyledLink to={`/posts/${item}`}>
+                  게시물로 이동
+                  </StyledLink>
+                ) : (
+                  <p
+                    onClick={onUpdate}>
+                    수정
+                  </p>
+                )
+              }
+          </li>
           <li
             className='edit__item edit__remove'
             onClick={onRemove}>삭제</li>
@@ -65,6 +76,7 @@ const EditModalStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 0;
 
   .edit-modal {
     width: 450px;

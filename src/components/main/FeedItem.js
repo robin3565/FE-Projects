@@ -211,6 +211,7 @@ const FeedItem = ({ item }) => {
       isEditing && (
         <EditModalPortal>
           <EditModal
+            modalType={"feed"}
             setEditing={setEditing}
             item={item.id}/>
         </EditModalPortal>

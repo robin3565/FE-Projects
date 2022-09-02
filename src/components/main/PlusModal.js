@@ -5,45 +5,84 @@ import { usePostState } from '../../context/postContext';
 import { useAuthState } from '../../context/authContext';
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const PlusModal = () => {
-    const { postState, postDispatch, uploadImg } = usePostState();
+    const { postState, postDispatch, uploadImg, updateContent } = usePostState();
     const { state } = useAuthState();
-    const [content, setContent] = useState("");
-    const [fileUrl, setFileUrl] = useState("");
+    const [content, setContent] = useState(postState.content ? postState.content : "");
+    const postId = useParams();
+    const navigate = useNavigate();
 
     const onClose = () => {
-        setFileUrl(null);
-        onToggle();
-    }
-    
-    const onToggle = () => {
-        postDispatch({ type: "POP_MODAL", loading: !postState.isModal, uploadPage: 1 });
+        postDispatch({ type: "CLOSE_MODAL"});
         document.body.style.overflow = "unset";
     }
 
-
-    const handleImg = async (e) => {
+    console.log(postState.type)
+    const handleImg = (e) => {
         e.preventDefault();
-        try {
-            uploadImg(fileUrl, state, content);
-            onClose();
-        } catch (err) { console.log(err) };
+        if(postState.type === "POSTED") {
+            uploadImg(postState.imageUrl, state, content)
+                .then(() => onClose());
+        } else if (postState.type = "UPDATE_POSTED") {
+            updateContent(content, postId.postId)
+                .then(() => {
+                    onClose();
+                    navigate((-1));
+                });
+        }
     }
 
     const onFileChange = (e) => {
         const reader = new FileReader();
         // 받은 파일 중 첫 번째 파일만 가져온다.
         reader.readAsDataURL(e.target.files[0]);
-        postDispatch({ type: "POSTING_PAGE", uploadPage: postState.uploadPage + 1 })
         reader.onloadend = (finishedEvent) => {
-            setFileUrl(finishedEvent.target.result);
+            postDispatch({ type: "POSTED_2", uploadPage: postState.uploadPage + 1, imageUrl: finishedEvent.target.result})
         }
     }
 
     return (
         <ModalStyle>
-            {fileUrl ? (
+             {postState.isModal && postState.uploadPage === 1 ? (
+                <FirstModalStyle>
+                    <form
+                        className='plus-modal-form'>
+                        <div
+                            className="plus-modal__nav">
+                            <p>새 게시물 만들기</p>
+                            <IoCloseOutline
+                                className="plus-modal__btn-cancle"
+                                onClick={onClose} />
+                        </div>
+
+                        <div
+                            className="plus-modal__file">
+                            <div
+                                className='file__inner'>
+                                <MdImage
+                                    className="file__img" />
+                                <p
+                                    className="file__title">
+                                    사진과 동영상을 여기에 끌어다 놓으세요.
+                                </p>
+                                <label
+                                    className="file__input--button"
+                                    htmlFor="input-file">
+                                    컴퓨터에서 선택
+                                </label>
+                                <input
+                                    style={{ display: 'none' }}
+                                    id="input-file"
+                                    type="file"
+                                    onChange={onFileChange} />
+                            </div>
+                        </div>
+                    </form>
+                </FirstModalStyle>
+            ): null}
+            {postState.isModal && postState.uploadPage > 1 ? (
                 <SecondModalStyle>
                     <div
                         className='plus-modal-next-form'>
@@ -70,7 +109,7 @@ const PlusModal = () => {
                                     className="form__upload--img">
                                     <img
                                         className="uploaded-img"
-                                        src={fileUrl} />
+                                        src={postState.imageUrl} />
                                 </div>
                                 <div
                                     className="form__upload--content">
@@ -85,6 +124,7 @@ const PlusModal = () => {
                                         <textarea
                                             type="submit"
                                             placeholder="문구 입력..."
+                                            value={content}
                                             onChange={e => setContent(e.target.value)} />
                                     </div>
 
@@ -93,45 +133,7 @@ const PlusModal = () => {
                         </form>
                     </div>
                 </SecondModalStyle>
-            )
-                :
-                (
-                    <FirstModalStyle>
-                        <form
-                            className='plus-modal-form'>
-                            <div
-                                className="plus-modal__nav">
-                                <p>새 게시물 만들기</p>
-                                <IoCloseOutline
-                                    className="plus-modal__btn-cancle"
-                                    onClick={onClose} />
-                            </div>
-
-                            <div
-                                className="plus-modal__file">
-                                <div
-                                    className='file__inner'>
-                                    <MdImage
-                                        className="file__img" />
-                                    <p
-                                        className="file__title">
-                                        사진과 동영상을 여기에 끌어다 놓으세요.
-                                    </p>
-                                    <label 
-                                        className="file__input--button" 
-                                        htmlFor="input-file">
-                                        컴퓨터에서 선택
-                                    </label>
-                                    <input
-                                        style={{ display: 'none' }}
-                                        id="input-file"
-                                        type="file"
-                                        onChange={onFileChange} />
-                                </div>
-                            </div>
-                        </form>
-                    </FirstModalStyle>
-                )}
+            ) : null}
         </ModalStyle>
     )
 }
@@ -150,6 +152,7 @@ const ModalStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 
     .plus-modal__nav {
         border-bottom: 1px solid gray;
@@ -163,7 +166,7 @@ const ModalStyle = styled.div`
 
     .plus-modal__nav p {
         flex-grow: 1;
-        padding: 15px;
+        padding: 15px;g
         font-size: 1.1em;
         font-weight: 600;
     }

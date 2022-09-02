@@ -25,7 +25,7 @@ const Home = () => {
     const [filteredId, setFiltetedId] = useState([]);
 
     const onToggle = () => {
-        postDispatch({ type: "POP_MODAL", isModal: !postState.isModal, uploadPage: 1 });
+        postDispatch({ type: "POP_MODAL", uploadPage: 1 });
         document.body.style.overflow = "hidden";
     }
 
@@ -82,7 +82,8 @@ const Home = () => {
                                 className='search__info'>
                                 {
                                     filteredId.map((item, idx) => (
-                                        <StyledLink
+                                        <Link
+                                            className='search__link'
                                             to={`/${item.id}`}
                                             key={idx}>
                                             <li
@@ -94,7 +95,7 @@ const Home = () => {
                                                 }
                                                 <p>{item.id}</p>
                                             </li>
-                                        </StyledLink>
+                                        </Link>
                                     ))
                                 }
                             </ul>
@@ -146,8 +147,7 @@ const Home = () => {
                 {
                     postState.isModal && (
                         <PlusModalPortal>
-                            <PlusModal 
-                                onToggle = {onToggle}/>
+                            <PlusModal />
                         </PlusModalPortal>
                     )
                 }
@@ -159,10 +159,6 @@ const Home = () => {
 
 export default Home
 
-const StyledLink = styled(Link)`
-    text-decoration-line: none;
-    color: #2d2d2d;
-`
 const HomeStyle = styled.section`
     display: flex;
     flex-direction: column;
@@ -172,6 +168,11 @@ const HeaderStyle = styled.header`
     border-bottom: 1px solid #d6d6d6;
     background-color: white;
     width: 100%;
+
+    .search__link {
+        text-decoration-line: none;
+        color: #2d2d2d;
+    }
 
     .header__logo {
         display: flex;

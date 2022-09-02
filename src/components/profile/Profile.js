@@ -1,18 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
-import MyFeed from './MyFeed';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { dbService } from '../../firebase/config';
 import Loader from '../global/Loader';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import MyFeedItem from './MyFeedItem';
+import { RiSettings4Fill } from "react-icons/ri";
+import { BsCamera } from "react-icons/bs";
+import { usePostState } from '../../context/postContext';
+
 
 const Profile = () => {
+  const { postDispatch } = usePostState();
   const [myfeeds, setMyfeeds] = useState([]);
   const [loading, setLoading] = useState(true);
   const params = useParams();
 
-  const getDatas = async () => {
+  const onToggle = () => {
+    postDispatch({ type: "POP_MODAL", uploadPage: 1 });
+    document.body.style.overflow = "hidden";
+  }
+
+  const getDatas = useCallback(async () => {
     const postsRef = collection(dbService, "posts");
     const q = query(postsRef, where("username", "==", params.userId));
     const querySnapshot = await getDocs(q)
@@ -24,77 +34,106 @@ const Profile = () => {
       }))
     setMyfeeds([...myfeeds, ...feed])
     setLoading(false);
-  }
+  })
 
   useEffect(() => {
     getDatas();
   }, [])
 
-  useEffect(() => {
-    setMyfeeds([]);
-  }, [params])
-
   return (
     <>
       <ProfileStyle>
         <div
-          className='profile-wrapper'>
+          className='profile'>
           <div
-            className='profile-user'>
+            className='profile__inner'>
             <div
-              className='profile-img-wrapper'>
-              <FaUserCircle
-                className='profile-img profile-img-null' />
-            </div>
-            <div
-              className='profile-info-wrapper'>
+              className='profile__user'>
               <div
-                className='profile-top'>
-                <p
-                  className='profile-id'>
-                  {params?.userId}
-                </p>
-                <button>
-                  프로필 편집
-                </button>
-                <button>
-                  icon
-                </button>
+                className='user__img'>
+                <FaUserCircle
+                  className='profile-img profile-img-null' />
               </div>
-              <ul
-                className='profile-bottom'>
-                <li>
-                  <span>게시물</span>
-                  <span>{myfeeds.length}</span>
-                </li>
-                <li>
-                  <span>팔로워</span>
-                  <span>0</span>
-                </li>
-                <li>
-                  <span>팔로잉</span>
-                  <span>0</span>
-                </li>
-              </ul>
+              <div
+                className='profile__info'>
+                <div
+                  className='info__user'>
+                  <p
+                    className='info__username'>
+                    {params?.userId}
+                  </p>
+                  <Link to="/accouts/edit"
+                    className='info__btn--edit'>
+                    프로필 편집
+                  </Link>
+                  <RiSettings4Fill
+                    className='info__btn--set' />
+                </div>
+                <ul
+                  className='info__feed'>
+                  <li>
+                    <span>게시물</span>
+                    <span
+                      className='info__feed--num'>
+                      {myfeeds.length}
+                    </span>
+                  </li>
+                  <li>
+                    <span>팔로워</span>
+                    <span
+                      className='info__feed--num'>
+                      0
+                    </span>
+                  </li>
+                  <li>
+                    <span>팔로잉</span>
+                    <span
+                      className='info__feed--num'>
+                      0
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
 
-          <div
-            className='myfeed-wrapper'>
             <div
-              className='myfeed-imgs'>
-              {
-                loading ? (
-                  <Loader />
-                ) : (
-                  myfeeds?.map((item, idx) => {
-                    return <MyFeed
-                      key={idx}
-                      item={item} />
-                  }
+              className='profile__myfeed'>
+              <div
+                className='myfeed'>
+                {
+                  loading ? (
+                    <Loader />
+                  ) : myfeeds.length === 0 ? (
+                    <div
+                      className='myfeed__null'>
+                      <div
+                        className='myfeed__null--inner'>
+                        <BsCamera
+                          className='myfeed__btn' />
+                        <p
+                          className='myfeed__title'>
+                          사진 공유
+                        </p>
+                        <p
+                          className='myfeed__subtitle'>
+                          사진을 공유하면 회원님의 프로필에 표시됩니다.
+                        </p>
+                        <p
+                          onClick={onToggle}
+                          className='myfeed__file'>
+                          첫 사진 공유하기
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    myfeeds?.map((item, idx) => {
+                      return <MyFeedItem
+                        key={idx}
+                        item={item} />
+                    })
                   )
-                )
-              }
+                }
+              </div>
             </div>
           </div>
         </div>
@@ -105,27 +144,29 @@ const Profile = () => {
 
 export default Profile
 
-const ProfileStyle = styled.div`
-  margin: auto;  
+const ProfileStyle = styled.section`
   width: 100wh;
-
-  .myfeed-imgs {
+  margin: auto;
+  
+  .profile {
+    width: 980px;
+    padding: 30px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-top: 20px;
-    justify-content: space-between;
-    width: 1000px;
+    flex-direction: column;
   }
 
-  .profile-user {
+  .profile__inner {
+    width: 100%;
+  }
+
+  .profile__user {
     display: flex;
     flex-direction: row;
-    padding-bottom: 30px;
+    padding: 0 20px 30px 50px;
     border-bottom: 1px solid #DDDDDD;
   }
 
-  .profile-img-wrapper {
+  .user__img {
     flex-grow: 1;
     margin: auto;
   }
@@ -136,13 +177,13 @@ const ProfileStyle = styled.div`
     cursor: pointer;
   }
 
-  .profile-info-wrapper { 
+  .profile__info { 
     flex-grow: 3;
     display: flex;
     flex-direction: column;
   }
   
-  .profile-top {
+  .info__user {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -151,16 +192,32 @@ const ProfileStyle = styled.div`
     margin-bottom: 20px;
   }
 
-  .profile-id {
+  .info__username {
     font-size: 2em;
     font-weight: 100;
+  }
+
+  .info__btn--edit {
+    font-size: 0.9em;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    padding: 6px 12px;
+    background-color: transparent;
+    font-weight: 600;
+    text-decoration-line: none;
+    color: black;
+  }
+
+  .info__btn--set {
+    width: 30px;
+    height: 30px;
   }
 
   .profile-img-null {
       color: #DDDDDD;
   }
 
-  .profile-bottom {
+  .info__feed {
     list-style: none;
     display: flex;
     flex-wrap: nowrap;
@@ -168,7 +225,57 @@ const ProfileStyle = styled.div`
     justify-content: space-between;
   }
 
-  .profile-bottom li span {
-    margin-right: 3px;
+  .info__feed--num {
+    font-weight: 600;
+    margin-left: 3px;
   }
+
+  .profile__myfeed {
+    width: 100%;
+  }
+
+  .myfeed {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .myfeed__null {
+    width: 100%;
+    margin: auto;
+  }
+
+  .myfeed__null--inner {
+    margin: auto;
+    width: 48%;
+    text-align: center;
+  }
+
+  .myfeed__btn {
+    height: 80px;
+    width: 80px;
+    padding-top: 70px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  .myfeed__title {
+    font-size: 2em;
+    font-weight: 100;
+    margin-bottom: 10px;
+  }
+
+  .myfeed__subtitle {
+    margin-bottom: 10px;
+  }
+
+  .myfeed__file {
+    color: #0095f6;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
 `

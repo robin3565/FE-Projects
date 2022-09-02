@@ -40,12 +40,22 @@ export const PostProvider = ({ children }) => {
             .then(() => {
                 const desertRef = ref(storageService, `posts/${postId}/image`);
                 deleteObject(desertRef)
+                postDispatch({ type: "REMOVE" });
+                setTimeout(() => {
+                    postDispatch({ type: "REMOVE_POSTED" });
+                    }, 2000);
             })
     }
 
     const updateComment = async (comments, postId) => {
         await updateDoc(doc(dbService, "posts", postId), {
             "comments": comments,
+        })
+    }
+
+    const updateContent = async (content, postId) => {
+        await updateDoc(doc(dbService, "posts", postId), {
+            "contents": content,
         })
     }
 
@@ -58,12 +68,14 @@ export const PostProvider = ({ children }) => {
         isModal: false,
         posted: false,
         uploadPage: 1,
+        imageUrl: null,
+        content: "",
     }
 
     const [postState, postDispatch] = useReducer(postReducer, init);
 
     return (
-        <PostContext.Provider value={{ postState, postDispatch, updateComment, updateLike, uploadImg, removePost }}>
+        <PostContext.Provider value={{ postState, postDispatch, updateComment, updateLike, uploadImg, removePost, updateContent }}>
             {children}
         </PostContext.Provider>
     )

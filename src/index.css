@@ -28,15 +28,7 @@ code {
   width: 50%;
 }
 
-.profile-wrapper {
-  margin: auto;
-  width: 1000px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-}
-
-.my-feed-img {
+.my-feed__img {
   width: 315px;
   height: 315px;
   object-fit: cover;
@@ -87,27 +79,21 @@ code {
 }
 
 @media (max-width: 767px) {
-
-  .nav-search {
+  .search__input {
     display: none;
   }
 }
 
 @media (max-width: 991px) {
-
   .recommend-wrapper {
     display: none;
   }
+
 }
 
 @media (max-width: 1199px) {
   .header {
     width: 100%;
   }
-
-  .profile-wrapper {
-    width: 85%;
-  }
-
 
 }

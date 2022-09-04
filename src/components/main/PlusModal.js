@@ -19,7 +19,6 @@ const PlusModal = () => {
         document.body.style.overflow = "unset";
     }
 
-    console.log(postState.type)
     const handleImg = (e) => {
         e.preventDefault();
         if(postState.type === "POSTED") {

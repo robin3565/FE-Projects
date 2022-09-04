@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { useAuthState } from '../../context/authContext';
-import { FaUserCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const RecommendUsers = () => {
@@ -18,7 +17,9 @@ const RecommendUsers = () => {
                         {state.photoUrl
                             ? <div
                                 className="main-user-profile" />
-                            : <FaUserCircle className="main-user-profile-null" />}
+                            : <img
+                                src='user-null.jpg' 
+                                className="main-user-profile-null" />}
                     </Link>
                     <StyledLink to="/profile">
                         {state.id ? state.id : "MyUserName"}
@@ -119,7 +120,7 @@ const RecommendUsersStyle = styled.div`
     .main-user-profile-null {
         width: 62px;
         height: 62px;
-        border-radius: 6em;
+        border-radius: 70%;
         margin-right: 10px;
         color: #DDDDDD;
         cursor: pointer;

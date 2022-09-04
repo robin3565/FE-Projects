@@ -128,7 +128,8 @@ const Post = () => {
                                 className='post__user'>
                                 <div
                                     className='post__user-inner'>
-                                    <FaUserCircle
+                                    <img
+                                        src='/user-null.jpg'
                                         className='post__user-null post__user-img' />
                                     <span
                                         className='post__user-id'>{post.username}</span>
@@ -141,7 +142,8 @@ const Post = () => {
                                 className='post__content-inner'>
                                 <div
                                     className='post__user-inner'>
-                                    <FaUserCircle
+                                    <img
+                                        src='/user-null.jpg'
                                         className='post__user-null post__user-img' />
                                     <span
                                         className='post__user-id'>{post.username}</span>

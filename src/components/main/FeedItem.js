@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { FaUserCircle } from 'react-icons/fa';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import {
   IoPaperPlaneOutline,
@@ -85,7 +84,8 @@ const FeedItem = ({ item }) => {
                 className="feed__user--info">
                 {item.data.photoUrl
                   ? <div className="user--profile" />
-                  : <FaUserCircle
+                  : <img 
+                    src='user-null.jpg'
                     className='user--profile-null user--profile' />
                 }
                 <p>{feeds.username}</p>

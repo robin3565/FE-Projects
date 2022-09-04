@@ -51,8 +51,9 @@ const Profile = () => {
               className='profile__user'>
               <div
                 className='user__img'>
-                <FaUserCircle
-                  className='profile-img profile-img-null' />
+                <img
+                  src='user-null.jpg'
+                  className='profile-img-null' />
               </div>
               <div
                 className='profile__info'>
@@ -177,6 +178,12 @@ const ProfileStyle = styled.section`
     cursor: pointer;
   }
 
+  .profile-img-null {
+    height: 160px;
+    width: 160px;
+    border-radius: 70%;
+  }
+
   .profile__info { 
     flex-grow: 3;
     display: flex;
@@ -211,10 +218,6 @@ const ProfileStyle = styled.section`
   .info__btn--set {
     width: 30px;
     height: 30px;
-  }
-
-  .profile-img-null {
-      color: #DDDDDD;
   }
 
   .info__feed {

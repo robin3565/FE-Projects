@@ -112,6 +112,16 @@ code {
   margin: 12rem auto !important;
 }
 
+/* Edit */
+
+.edit-profile {
+  width: 60%;
+  margin: 30px auto;
+  display: flex;
+  border: 1px solid #dbdbdb;
+  background-color: white;
+}
+
 /* Loader */
 
 .loader {
@@ -155,6 +165,10 @@ code {
 @media (max-width: 1199px) {
   .header {
     width: 100%;
+  }
+
+  .edit-profile {
+    width: 90%;
   }
 
 }

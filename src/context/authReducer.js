@@ -20,5 +20,13 @@ export const authReducer = (state, action) => {
                 ...state,
                 error: null,
             }
+        case "UPDATE_USERINFO":
+            return {
+                ...state,
+                name: action.name, 
+                id: action.id, 
+                photoUrl: action.photoUrl,
+                email: action.email
+            }
     }
 }

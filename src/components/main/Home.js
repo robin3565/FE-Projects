@@ -136,8 +136,15 @@ const Home = () => {
                                 <li
                                     className='nav__item'>
                                     <Link to={`/${state.id}`}>
-                                        <FaUserCircle
+                                        {state.photoUrl ? (
+                                            <img
+                                            src={state.photoUrl}
                                             className="nav__item--btn nav__item--profile" />
+                                        ):(
+                                            <img
+                                            src='/user-null.jpg'
+                                            className="nav__item--btn nav__item--profile" />
+                                        )}
                                     </Link>
                                 </li>
                             </ul>
@@ -252,5 +259,7 @@ const HeaderStyle = styled.header`
 
     .nav__item--profile {
         color: #ddd;
+        border-radius: 70%;
+        border: 1px solid #dbdbdb;
     }
 `

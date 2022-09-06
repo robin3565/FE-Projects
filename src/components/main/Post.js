@@ -32,6 +32,8 @@ const Post = () => {
     const photoUrl = state.photoUrl;
     const [isEditing, setEditing] = useState(false);
 
+    console.log(post)
+
     const handleModal = () => {
         document.body.style.overflow = "hidden";
         setEditing(prev => !prev);
@@ -128,11 +130,22 @@ const Post = () => {
                                 className='post__user'>
                                 <div
                                     className='post__user-inner'>
-                                    <img
-                                        src='/user-null.jpg'
-                                        className='post__user-null post__user-img' />
+                                    {
+                                       post.photoUrl ? (
+                                        <img
+                                            src={post.photoUrl}
+                                            className='post__user-null post__user-img'/>
+                                       ) : (
+                                        <img
+                                            src='/user-null.jpg'
+                                            className='post__user-null post__user-img' />
+                                       )
+                                    }
+                                    
                                     <span
-                                        className='post__user-id'>{post.username}</span>
+                                        className='post__user-id'>
+                                            {post.username}
+                                    </span>
                                 </div>
                                 <HiOutlineDotsHorizontal
                                     onClick={handleModal}
@@ -142,11 +155,21 @@ const Post = () => {
                                 className='post__content-inner'>
                                 <div
                                     className='post__user-inner'>
-                                    <img
-                                        src='/user-null.jpg'
-                                        className='post__user-null post__user-img' />
+                                    {
+                                       post.photoUrl ? (
+                                        <img
+                                            src={post.photoUrl}
+                                            className='post__user-null post__user-img'/>
+                                       ) : (
+                                        <img
+                                            src='/user-null.jpg'
+                                            className='post__user-null post__user-img' />
+                                       )
+                                    }
                                     <span
-                                        className='post__user-id'>{post.username}</span>
+                                        className='post__user-id'>
+                                            {post.username}
+                                    </span>
                                 </div>
                                 <article
                                     className='article__content'>
@@ -164,8 +187,17 @@ const Post = () => {
                                                     <div>
                                                         <div
                                                             className='post__user-inner'>
-                                                            <FaUserCircle
-                                                                className='post__user-null post__user-img' />
+                                                            {
+                                                                post.photoUrl ? (
+                                                                    <img
+                                                                        src={post.photoUrl}
+                                                                        className='post__user-null post__user-img'/>
+                                                                ) : (
+                                                                    <img
+                                                                        src='/user-null.jpg'
+                                                                        className='post__user-null post__user-img' />
+                                                                )
+                                                            }
                                                             <span
                                                                 className='post__user-id'>{item.userId}</span>
                                                         </div>
@@ -359,14 +391,11 @@ const PostModalStyle = styled.div`
 
     .post__user-img {
         border: 1px solid #dbdbdb;
-        border-radius: 10em;
+        border-radius: 70%;
         height: 30px;
         width: 30px;
         margin: 0 10px;
         cursor: pointer;
-    }
-    .post__user-null {
-        color: #DDDDDD;
     }
 
     .post__user-id {

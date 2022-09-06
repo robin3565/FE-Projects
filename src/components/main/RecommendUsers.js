@@ -4,29 +4,32 @@ import { Link } from 'react-router-dom';
 
 const RecommendUsers = () => {
     const { state } = useAuthState();
+    console.log(state)
 
     return (
         <RecommendUsersStyle>
             <div
-                className='recommend-wrapper'>
+                className='recommend'>
                 <div
-                    className="main-user-wrapper" />
-                <div
-                    className="main-user-info">
-                    <Link to={`/${state.id}`}>
-                        {state.photoUrl
-                            ? <div
-                                className="main-user-profile" />
-                            : <img
-                                src='user-null.jpg' 
-                                className="main-user-profile-null" />}
-                    </Link>
-                    <StyledLink to="/profile">
-                        {state.id ? state.id : "MyUserName"}
-                    </StyledLink>
+                    className="recommend__user" >
+                    <div
+                        className="recommend__user-info">
+                        <Link to={`/${state.id}`}>
+                            {state.photoUrl
+                                ? <img
+                                    src={state.photoUrl}
+                                    className="user-info--profile" />
+                                : <img
+                                    src='user-null.jpg'
+                                    className="user-info--profile" />}
+                        </Link>
+                        <StyledLink to="/profile">
+                            {state.id ? state.id : "MyUserName"}
+                        </StyledLink>
+                    </div>
+                    <p
+                        className='recommned__user-sub'>전환</p>
                 </div>
-                {/* <p>전환</p> */}
-
                 <div
                     className="main-recommend-line">
                     <span>회원님을 위한 추천</span>
@@ -67,11 +70,12 @@ const StyledLink = styled(Link)`
 `
 
 const RecommendUsersStyle = styled.div`
-    .recommend-wrapper {
+    .recommend {
         max-height: 400px;
         width: 350px;
         margin: 25px;
         margin-top: 43px;
+        font-size: 14px;
     }
 
     #recommed-list {
@@ -97,32 +101,28 @@ const RecommendUsersStyle = styled.div`
         }
     }
 
-    .main-user-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    .recommend__user {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .main-user-info {
-    display: flex;
-    align-items: center;
+    .recommend__user-info {
+        display: flex;
+        align-items: center;
     }
 
-    .main-user-profile {
+    .recommned__user-sub {
+        color: #0095f6;
+        font-weight: 600;
+    }
+
+    .user-info--profile {
         border: 1px solid #dbdbdb;
-        width: 62px;
-        height: 62px;
-        border-radius: 6em;
-        margin-right: 10px;
-        cursor: pointer;
-    }
-
-    .main-user-profile-null {
         width: 62px;
         height: 62px;
         border-radius: 70%;
         margin-right: 10px;
-        color: #DDDDDD;
         cursor: pointer;
     }
 

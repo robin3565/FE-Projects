@@ -1,12 +1,13 @@
-import React from 'react'
 import { useState } from 'react';
 import styled from 'styled-components'
 import { useAuthState } from '../../context/authContext'
 
 const EditProfile = () => {
-    const { state } = useAuthState();
+    const { state, updateUserInfo } = useAuthState();
     const [userUrl, setUserUrl] = useState(state.photoUrl)
-    console.log('userUrl', userUrl)
+    const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState(state.id);
+    const [userEmail, setUserEmail] = useState(state.userInfo.email);
 
     const onFileChange = (e) => {
         const reader = new FileReader();
@@ -16,6 +17,12 @@ const EditProfile = () => {
             setUserUrl(finishedEvent.target.result);
         }
     }
+
+    const handleUserInfo = (e) => {
+        e.preventDefault();
+        updateUserInfo(state, userUrl, userName, userId, userEmail)
+    }
+
     return (
         <EditProfileStyle>
             <div
@@ -42,9 +49,15 @@ const EditProfile = () => {
                             className='form__user'>
                             <aside
                                 className='form__aside'>
-                                <img
-                                    className='form__user--url-null'
-                                    src='/user-null.jpg' />
+                                {userUrl ? (
+                                    <img
+                                        src={userUrl}
+                                        className='form__user--url'/>
+                                ):(
+                                    <img
+                                    src='/user-null.jpg'
+                                    className='form__user--url' />
+                                )}
                             </aside>
                             <div
                                 className='form__user--info'>
@@ -63,7 +76,8 @@ const EditProfile = () => {
                             </div>
                         </div>
                         <form
-                            className='form'>
+                            className='form'
+                            onSubmit={handleUserInfo}>
                             <div
                                 className='form__name'>
                                 <aside
@@ -76,7 +90,8 @@ const EditProfile = () => {
                                     <input
                                         type="text"
                                         placeholder='이름'
-                                        id="name" />
+                                        id="name"
+                                        onChange={(e) => setUserName(e.target.value)} />
                                 </div>
                             </div>
                             <div
@@ -90,7 +105,8 @@ const EditProfile = () => {
                                 <input
                                     type="text"
                                     placeholder='사용자 이름'
-                                    value={state.id}
+                                    value={userId}
+                                    onChange={(e) => setUserId(e.target.value)}
                                     id="id" />
                             </div>
                             <div
@@ -116,7 +132,8 @@ const EditProfile = () => {
                                 <input
                                     type="text"
                                     placeholder='이메일'
-                                    value={state.userInfo.email}
+                                    value={userEmail}
+                                    onChange={(e) => setUserEmail(e.target.value)}
                                     id="email" />
                             </div>
                             <div
@@ -155,14 +172,7 @@ const EditProfileStyle = styled.div`
         width: 45px;
         border-radius: 2px;
         color: white;
-    }
-
-    .edit-profile {
-        width: 50%;
-        margin: 30px auto;
-        display: flex;
-        border: 1px solid #dbdbdb;
-        background-color: white;
+        cursor: pointer;
     }
 
     .edit-profile__menu {
@@ -215,9 +225,11 @@ const EditProfileStyle = styled.div`
         font-size: 1em;
     }
 
-    .form__user--url-null {
+    .form__user--url {
         width: 40px;
         height: 40px;
+        border-radius: 70%;
+        border: 1px solid #dbdbdb;
     }
 
     .form__user--info {

@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
 import { authService } from "../../firebase/config";
 import handleError from "../global/error";
+import { IoLogoFacebook } from "react-icons/io";
 
 const AuthLogin = () => {
     const { state, dispatch } = useAuthState();
@@ -50,11 +51,11 @@ const AuthLogin = () => {
     return (
         <AuthWrapper>
             <div
-                id="flex-login">
+                className="login__img">
                 <div
-                    className="img-phone">
+                    className="login__img--inner">
                     <div
-                        className="img-wrapper">
+                        className="login__img--background">
                         <img
                             src="a.png"
                             className="img-1" />
@@ -70,55 +71,80 @@ const AuthLogin = () => {
                     </div>
                 </div>
                 <div
-                    id="signup-form">
+                    className="login">
                     <div
-                        id="signup-form-top">
+                        className="login--inner">
                         <img
-                            id="img-logo"
+                            className="login--logo"
                             src="logo.png" />
 
                         <form
+                            className="form__login"
                             onSubmit={handleLogin}>
                             <input
-                                // value={state.isAuthenticated ? state.userInfo.email : id}
+                                className="form__input--auth"
                                 type="text"
                                 name="id"
                                 onChange={(e) => setUserInfo({ ...userInfo, "id": e.target.value })}
                                 required
-                                placeholder="전화번호, 사용자 이름 또는 이메일" />
+                                placeholder=" 전화번호, 사용자 이름 또는 이메일" />
                             <input
+                                className="form__input--auth"
                                 type="password"
                                 name="password"
                                 required
                                 onChange={(e) => setUserInfo({ ...userInfo, "password": e.target.value })}
-                                placeholder="비밀번호"
+                                placeholder=" 비밀번호"
                             />
                             <input
+                                className="form__input--submit"
                                 type="submit"
                                 value="로그인" />
                         </form>
 
-                        <p>또는</p>
-                        <button
-                            onClick={facebookLogin}>
-                            Facebook으로 로그인
-                        </button>
+                        <div
+                            className="login__middle">
+                            <div
+                                className="login__middle--break"></div>
+                            <div
+                                className="login__middle-or">또는</div>
+                            <div
+                                className="login__middle--break"></div>
+                        </div>
+                        <div
+                            className="login__facebook">
+                            <IoLogoFacebook
+                                    className="login__facebook--logo"/>
+                            <button
+                                className="login__facebook--btn"
+                                onClick={facebookLogin}>
+                                        Facebook으로 로그인
+                            </button>
+                        </div>
                         <p
-                            id="error-msg">
+                            className="login--error">
                             {state.error && handleError(state.error)}
                         </p>
-                        <p>비밀번호를 잊으셨나요?</p>
+                        <p
+                            className="login__password">비밀번호를 잊으셨나요?</p>
                     </div>
                     <div
-                        id="signup-form-bottom">
+                        className="login__signup">
                         <p>계정이 없으신가요?</p>
-                        <Link to='/signup'><b>가입하기</b></Link>
+                        <Link
+                            to='/signup'
+                            className="login__signup--link"><b>가입하기</b></Link>
                     </div>
-                    <p>앱을 다운로드하세요.</p>
                     <div
-                        id="button-wrapper">
-                        <button>Apple Store</button>
-                        <button>Google Play</button>
+                        className="login__app">
+                        <p>앱을 다운로드하세요.</p>
+                        <div
+                            className="login__app--btn">
+                            <img
+                                src="/apple.png"/>
+                            <img
+                                src="/google.png"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,8 +163,12 @@ const AuthWrapper = styled.div`
     align-items: center;
     flex-direction: column;
 
-    #flex-login .img-phone {
-        // background-color: thistle;
+    .login__img {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .login__img--inner {
         width: 350px;
         height: 550px;
         margin-right: 32px;
@@ -149,7 +179,13 @@ const AuthWrapper = styled.div`
         position: relative;
     }
 
-    #flex-login .img-phone img{
+    .login__img--background {
+        height:100%;
+        width: 100%;
+    }
+    
+
+    .login__img--inner img{
         position: absolute;
         top: 50%;
         left: 50%;
@@ -158,21 +194,13 @@ const AuthWrapper = styled.div`
         width:69%
     }
 
-    #flex-login .img-phone .img-1 {
+    .img-1 {
         animation: fadeIn 4s infinite;
     }
 
-    #flex-login .img-phone .img-2 {
+    .img-2 {
         animation: fadeOut 4s infinite;
     }
-
-    // #flex-login .img-phone .img-3 {
-    //     animation: fadeIn 8s infinite;
-    // }
-
-    // #flex-login .img-phone .img-4 {
-    //     animation: fadeOut 8s infinite;
-    // }
 
     @keyframes fadeIn{
         0% {
@@ -192,27 +220,7 @@ const AuthWrapper = styled.div`
           }
     }
 
-    .img-wrapper {
-        height:100%;
-        width: 100%;
-    }
-
-    #error-msg {
-        color: red;
-        font-size: 0.9em;
-    }
-
-    #img-logo {
-        margin-top: 36px;
-        margin-bottom: 12px;
-    }
-
-    #flex-login {
-        display: flex;
-        flex-direction: row;
-    }
-
-    #signup-form {
+    .login {
         display:flex;
         flex-direction: column;
         align-items: center;
@@ -220,8 +228,9 @@ const AuthWrapper = styled.div`
         height: 550px;
     }
 
-    #signup-form-top {
+    .login--inner {
         background-color: white;
+        padding-bottom: 22px;
         margin-bottom: 10px;
         border: 1px solid #dbdbdb;
         width: 100%;
@@ -230,22 +239,20 @@ const AuthWrapper = styled.div`
         align-items: center;
     }
 
-    #signup-form-top form {
+    .login--logo {
+        margin-top: 36px;
+        margin-bottom: 12px;
+        padding: 20px 0;
+    }
+
+    .form__login {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
     }
 
-    #signup-form-top button {
-        width: 100%;
-        height: 35px;
-        cursor: pointer;
-        background-color: white;
-        border: none;
-    }
-
-    #flex-login input {
+    .form__input--auth {
         width: 70%;
         height: 35px;
         margin-bottom: 5px;
@@ -253,11 +260,73 @@ const AuthWrapper = styled.div`
         border: 1px solid #dbdbdb;
     }
 
-    #flex-login input:last-child {
+    .form__input--submit {
+        width: 70%;
+        height: 30px;
         border: none;
+        background-color: #0095f6;
+        color: white;
+        font-weight: 600;
+        border-radius: 5px;
+        margin: 5px 0;
+        cursor: pointer;
     }
 
-    #signup-form-bottom {
+    .login__middle {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 10px 40px 18px;
+    }
+
+    .login__middle--break {
+        height: 1px;
+        width: 90px;
+        background-color: #8e8e8e;
+    }
+
+    .login__middle-or {
+        font-size: 13px;
+        color: #8e8e8e;
+        font-weight: 600;
+        margin: 0 18px;
+    }
+
+    .login__facebook {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .login__facebook--logo {
+        width: 25px;
+        height: 25px;
+        color: #385185;
+        margin-right: 1px;
+    }
+
+    .login__facebook--btn {
+        width: 100%;
+        height: 35px;
+        cursor: pointer;
+        background-color: white;
+        border: none;
+        font-weight: 600;
+        color: #385185;
+        font-size: 14px;
+    }
+
+    .login__password {
+        font-size: 12px;
+    }
+
+    .login--error {
+        color: red;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    .login__signup {
         background-color: white;
         border: 1px solid #dbdbdb;
         width: 100%;
@@ -265,21 +334,38 @@ const AuthWrapper = styled.div`
         flex-direction: row;
         justify-content: center;
         align-items: center;
+        margin-bottom: 10px;
+        padding: 16px 0;
+        font-size: 14px;
     }
 
-    #button-wrapper {
+    .login__signup--link {
+        text-decoration: none;
+        color: #0095f6;
+        margin-left: 3px;
+    }
+
+    .login__app {
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login__app--btn {
         display:flex;
         width: 100%;
         flex-direction: row;
         justify-content: center;
+        margin-top: 10px;
+        font-size: 14px;
     }
 
-    #button-wrapper button {
-        width: 120px;
-        height: 40px;
-        margin: 5px;
+    .login__app--btn img {
+        width: 140px;
+        margin: 0 5px;
         border: none;
-        border-radius: 10px;
+        cursor: pointer;
     }
 
 `

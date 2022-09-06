@@ -5,7 +5,7 @@ import { useAuthState } from "../../context/authContext"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { authService, dbService } from "../../firebase/config";
 import handleError from '../global/error'
-import { setDoc, doc } from 'firebase/firestore';
+import { setDoc, doc, updateDoc } from 'firebase/firestore';
 
 const AuthSignUp = () => {
     const navigate = useNavigate();
@@ -21,20 +21,16 @@ const AuthSignUp = () => {
                 let token = result?.user.accessToken;
                 let uid = result?.user.uid;  
                 let photoUrl = result?.user.photoURL;
-                dispatch({ type: "SIGNUP", payload: userResult, token: token, uid: uid, id: userInfo?.id, photoUrl: photoUrl})   
-                let user = {};
-                user.id = userInfo.id;
-                user.email = userInfo.email;
-                user.name = userInfo.name;         
-                user.uid = uid;         
-                user.photoUrl = photoUrl;
+                dispatch({ type: "SIGNUP", payload: userResult, token: token, uid: uid, id: userInfo?.id, photoUrl: photoUrl})                 
                 try {
                         await setDoc(doc(dbService, 'userInfo', `${uid}`), {
-                        user: user,
-                        post: [],
+                            id: userInfo.id,
+                            email: userInfo.email,
+                            name: userInfo.name,       
+                            uid: uid,
+                            photoUrl: photoUrl
                     });
                 } catch (e) { 
-                    console.log("Errrr")
                     console.log(e) 
                 };
                 navigate("/");

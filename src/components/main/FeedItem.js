@@ -83,10 +83,12 @@ const FeedItem = ({ item }) => {
               <div
                 className="feed__user--info">
                 {item.data.photoUrl
-                  ? <div className="user--profile" />
+                  ? <img
+                      src={item.data.photoUrl} 
+                      className="user--profile" />
                   : <img 
-                    src='user-null.jpg'
-                    className='user--profile-null user--profile' />
+                      src='/user-null.jpg'
+                      className='user--profile' />
                 }
                 <p>{feeds.username}</p>
               </div>

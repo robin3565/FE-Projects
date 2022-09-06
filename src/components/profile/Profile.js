@@ -9,9 +9,10 @@ import MyFeedItem from './MyFeedItem';
 import { RiSettings4Fill } from "react-icons/ri";
 import { BsCamera } from "react-icons/bs";
 import { usePostState } from '../../context/postContext';
-
+import { useAuthState } from '../../context/authContext';
 
 const Profile = () => {
+  const { state } = useAuthState();
   const { postDispatch } = usePostState();
   const [myfeeds, setMyfeeds] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,9 +52,13 @@ const Profile = () => {
               className='profile__user'>
               <div
                 className='user__img'>
-                <img
-                  src='user-null.jpg'
-                  className='profile-img-null' />
+                  {state.photoUrl
+                    ? <img
+                        src={state.photoUrl}
+                        className="profile-img" />
+                    : <img
+                        src='user-null.jpg' 
+                        className="profile-img profile-img-null" />}
               </div>
               <div
                 className='profile__info'>
@@ -175,13 +180,12 @@ const ProfileStyle = styled.section`
   .profile-img {
     height: 160px;
     width: 160px;
-    cursor: pointer;
+    border-radius: 70%;
+    border: 1px solid #dbdbdb;
   }
 
   .profile-img-null {
-    height: 160px;
-    width: 160px;
-    border-radius: 70%;
+    border: none;
   }
 
   .profile__info { 

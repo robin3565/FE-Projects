@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FaUserCircle } from 'react-icons/fa';
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import { dbService } from '../../firebase/config';
 import Loader from '../global/Loader';
 import { Link, useParams } from 'react-router-dom';
@@ -37,8 +37,17 @@ const Profile = () => {
     setLoading(false);
   })
 
+  // const getUserUrl = useCallback(async () => {
+  //   const q = query(collection(dbService, "userInfo"), where("id", "==", params.userId));
+  //   const querySnapshot = await getDoc(q)
+  //   .then((err) => {
+  //     console.log("querySnapshot", querySnapshot)
+  //   })
+  // })
+
   useEffect(() => {
     getDatas();
+    // getUserUrl();
   }, [])
 
   return (

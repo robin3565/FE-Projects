@@ -14,6 +14,8 @@ const PlusModal = () => {
     const postId = useParams();
     const navigate = useNavigate();
 
+    console.log(state)
+
     const onClose = () => {
         postDispatch({ type: "CLOSE_MODAL"});
         document.body.style.overflow = "unset";
@@ -114,8 +116,16 @@ const PlusModal = () => {
                                     className="form__upload--content">
                                     <div
                                         className='upload__user'>
-                                        <FaUserCircle
-                                            className='upload__user--null upload__user--img' />
+                                    {
+                                        state.photoUrl ? (
+                                            <img
+                                                src={state.photoUrl}
+                                                className='upload__user--null upload__user--img' />
+                                        ) : (
+                                            <FaUserCircle
+                                                className='upload__user--null upload__user--img' />
+                                        )
+                                    }
                                         <span>{state.id}</span>
                                     </div>
                                     <div

@@ -37,7 +37,9 @@ const EditProfile = () => {
                     <div>
                         <p
                             className='menu__explain'>
-                            스토리 및 게시물 공유, 로그인 등 Instagram, Facebook 앱, Messenger 간에 연결된 환경에 대한 설정을 관리하세요.
+                            스토리 및 게시물 공유, 로그인 등 
+                            Instagram, Facebook 앱, Messenger 간에 
+                            연결된 환경에 대한 설정을 관리하세요.
                         </p>
                     </div>
                 </div>
@@ -102,12 +104,13 @@ const EditProfile = () => {
                                         사용자 이름
                                     </label>
                                 </aside>
-                                <input
+                                <div>{userId}</div>
+                                {/* <input
                                     type="text"
                                     placeholder='사용자 이름'
                                     value={userId}
                                     onChange={(e) => setUserId(e.target.value)}
-                                    id="id" />
+                                    id="id" /> */}
                             </div>
                             <div
                                 className='form__intro'>

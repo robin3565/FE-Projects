@@ -32,7 +32,7 @@ const Post = () => {
     const photoUrl = state.photoUrl;
     const [isEditing, setEditing] = useState(false);
 
-    console.log(post)
+    console.log(postComments)
 
     const handleModal = () => {
         document.body.style.overflow = "hidden";
@@ -188,9 +188,9 @@ const Post = () => {
                                                         <div
                                                             className='post__user-inner'>
                                                             {
-                                                                post.photoUrl ? (
+                                                                item.photoUrl ? (
                                                                     <img
-                                                                        src={post.photoUrl}
+                                                                        src={item.photoUrl}
                                                                         className='post__user-null post__user-img'/>
                                                                 ) : (
                                                                     <img

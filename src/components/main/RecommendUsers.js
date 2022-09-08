@@ -1,10 +1,28 @@
 import styled from 'styled-components'
 import { useAuthState } from '../../context/authContext';
 import { Link } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { dbService } from '../../firebase/config';
+import { useCallback, useEffect, useState } from 'react';
 
 const RecommendUsers = () => {
     const { state } = useAuthState();
-    console.log(state)
+    const [users, setUsers] = useState([]);
+
+    const getUserInfo = useCallback(async () => {
+        const querySnapshot = await getDocs(collection(dbService, "userInfo"));
+        const user = []
+        querySnapshot.forEach((doc) => {
+            user.push(doc.data());
+        })
+        setUsers([...users, ...user]);
+    })
+
+    console.log(users)
+
+    useEffect(() => {
+        getUserInfo();
+    }, [])
 
     return (
         <RecommendUsersStyle>
@@ -28,34 +46,50 @@ const RecommendUsers = () => {
                         </StyledLink>
                     </div>
                     <p
-                        className='recommned__user-sub'>전환</p>
+                        className='recommend__user-sub'>전환</p>
                 </div>
                 <div
-                    className="main-recommend-line">
+                    className="recommend__line">
                     <span>회원님을 위한 추천</span>
-                    <span>모두 보기</span>
+                    {/* <span>모두 보기</span> */}
                 </div>
 
                 <div
-                    id="recommed-list">
-                    <div
-                        className="recommend-user-wrapper">
-                        <div
-                            className="recommend-user-profile" />
-                        <div
-                            className="recommend-user-info">
-                            <p>UserName</p>
-                            <p>Instagram 신규 가입</p>
-                        </div>
-                    </div>
-                    <p>팔로우</p>
-
+                    className="recommend__uses-list">
+                    {
+                        users.map(item => {
+                            return (
+                                <>
+                                    <div
+                                        className="recommend__list">
+                                        <div
+                                            className="recommend__item">
+                                            {
+                                                item.photoUrl ?  (
+                                                    <img
+                                                        src={item.photoUrl}
+                                                        className="recommend-user-profile"/>
+                                                ) : (
+                                                    <img
+                                                        src='/user-null.jpg'
+                                                        className="recommend-user-profile" />
+                                                )
+                                            }
+                                            <div
+                                                className="recommend-user-info">
+                                                <p>{item.id}</p>
+                                            </div>
+                                        </div>
+                                        <p>팔로우</p>
+                                    </div>
+                                </>
+                            )
+                        })
+                    }
                 </div>
-                <MainFooterStyle>
-                    <p>
-                        © 2022 INSTAGRAM FROM META
-                    </p>
-                </MainFooterStyle>
+                <footer>
+                    © 2022 INSTAGRAM FROM META
+                </footer>
             </div>
         </RecommendUsersStyle>
     )
@@ -70,35 +104,13 @@ const StyledLink = styled(Link)`
 `
 
 const RecommendUsersStyle = styled.div`
+    font-size: 14px;
+
     .recommend {
         max-height: 400px;
         width: 350px;
         margin: 25px;
         margin-top: 43px;
-        font-size: 14px;
-    }
-
-    #recommed-list {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-
-        .recommend-user-wrapper {
-        display: flex;
-        align-items: center;
-        }
-
-        .recommend-user-profile {
-            border: 1px solid #dbdbdb;
-            width: 30px;
-            height: 30px;
-            border-radius: 6em;
-            margin-right: 10px;
-        }
-
-        .recommend-user-info p{
-        margin: 0;
-        }
     }
 
     .recommend__user {
@@ -112,7 +124,7 @@ const RecommendUsersStyle = styled.div`
         align-items: center;
     }
 
-    .recommned__user-sub {
+    .recommend__user-sub {
         color: #0095f6;
         font-weight: 600;
     }
@@ -126,13 +138,41 @@ const RecommendUsersStyle = styled.div`
         cursor: pointer;
     }
 
-    .main-recommend-line {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    .recommend__line {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
     }
-`
-const MainFooterStyle = styled.footer`
-    font-size: 0.9em;
-    color: gray;
+
+    .recommend__uses-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recommend__list {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+
+        .recommend__item {
+            display: flex;
+            align-items: center;
+        }
+
+        .recommend-user-profile {
+            border: 1px solid #dbdbdb;
+            width: 30px;
+            height: 30px;
+            border-radius: 70%;
+            margin-right: 10px;
+        }
+
+        .recommend-user-info p{
+            margin: 0;
+        }
+    }
+
+    footer {
+        color: gray;
+    }
 `

@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 import { authReducer } from "./authReducer";
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { dbService, storageService } from '../firebase/config'
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
@@ -45,8 +45,11 @@ export const AuthProvider = ({ children }) => {
                     id: docSnap.data()?.id, 
                     photoUrl: docSnap.data()?.photoUrl,
                     email: docSnap.data()?.email})
+            }).then(() => {
+                alert("완료 되었습니다.")
             })
     }
+
 
     const [state, dispatch] = useReducer(authReducer, init);
 

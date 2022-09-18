@@ -37,17 +37,8 @@ const Profile = () => {
     setLoading(false);
   })
 
-  // const getUserUrl = useCallback(async () => {
-  //   const q = query(collection(dbService, "userInfo"), where("id", "==", params.userId));
-  //   const querySnapshot = await getDoc(q)
-  //   .then((err) => {
-  //     console.log("querySnapshot", querySnapshot)
-  //   })
-  // })
-
   useEffect(() => {
     getDatas();
-    // getUserUrl();
   }, [])
 
   return (
@@ -264,6 +255,7 @@ const ProfileStyle = styled.section`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .myfeed_items {
@@ -271,8 +263,7 @@ const ProfileStyle = styled.section`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
-    background-color: tomato;
+    justify-content: space-start;
   }
   
   .myfeed__null {

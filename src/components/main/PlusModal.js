@@ -6,6 +6,7 @@ import { useAuthState } from '../../context/authContext';
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
+import Resizer from "react-image-file-resizer";
 
 const PlusModal = () => {
     const { postState, postDispatch, uploadImg, updateContent } = usePostState();
@@ -14,16 +15,14 @@ const PlusModal = () => {
     const postId = useParams();
     const navigate = useNavigate();
 
-    console.log(state)
-
     const onClose = () => {
-        postDispatch({ type: "CLOSE_MODAL"});
+        postDispatch({ type: "CLOSE_MODAL" });
         document.body.style.overflow = "unset";
     }
 
     const handleImg = (e) => {
         e.preventDefault();
-        if(postState.type === "POSTED") {
+        if (postState.type === "POSTED") {
             uploadImg(postState.imageUrl, state, content)
                 .then(() => onClose());
         } else if (postState.type = "UPDATE_POSTED") {
@@ -35,18 +34,35 @@ const PlusModal = () => {
         }
     }
 
-    const onFileChange = (e) => {
-        const reader = new FileReader();
-        // 받은 파일 중 첫 번째 파일만 가져온다.
-        reader.readAsDataURL(e.target.files[0]);
-        reader.onloadend = (finishedEvent) => {
-            postDispatch({ type: "POSTED_2", uploadPage: postState.uploadPage + 1, imageUrl: finishedEvent.target.result})
+    const resizeFile = (file) =>
+        new Promise((resolve) => {
+            Resizer.imageFileResizer(
+                file,
+                700,
+                700,
+                "JPEG",
+                100,
+                0,
+                (uri) => {
+                    resolve(uri);
+                },
+                "base64"
+            );
+        });
+
+    const onFileChange = async (e) => {
+        try {
+            const file = e.target.files[0];
+            const img = await resizeFile(file);
+            postDispatch({ type: "POSTED_2", uploadPage: postState.uploadPage + 1, imageUrl: img })
+        } catch (err) {
+            console.log(err)
         }
     }
 
     return (
         <ModalStyle>
-             {postState.isModal && postState.uploadPage === 1 ? (
+            {postState.isModal && postState.uploadPage === 1 ? (
                 <FirstModalStyle>
                     <form
                         className='plus-modal-form'>
@@ -82,7 +98,7 @@ const PlusModal = () => {
                         </div>
                     </form>
                 </FirstModalStyle>
-            ): null}
+            ) : null}
             {postState.isModal && postState.uploadPage > 1 ? (
                 <SecondModalStyle>
                     <div
@@ -116,16 +132,16 @@ const PlusModal = () => {
                                     className="form__upload--content">
                                     <div
                                         className='upload__user'>
-                                    {
-                                        state.photoUrl ? (
-                                            <img
-                                                src={state.photoUrl}
-                                                className='upload__user--null upload__user--img' />
-                                        ) : (
-                                            <FaUserCircle
-                                                className='upload__user--null upload__user--img' />
-                                        )
-                                    }
+                                        {
+                                            state.photoUrl ? (
+                                                <img
+                                                    src={state.photoUrl}
+                                                    className='upload__user--null upload__user--img' />
+                                            ) : (
+                                                <FaUserCircle
+                                                    className='upload__user--null upload__user--img' />
+                                            )
+                                        }
                                         <span>{state.id}</span>
                                     </div>
                                     <div

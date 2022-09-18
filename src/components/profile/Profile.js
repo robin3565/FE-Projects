@@ -15,6 +15,7 @@ const Profile = () => {
   const { state } = useAuthState();
   const { postDispatch } = usePostState();
   const [myfeeds, setMyfeeds] = useState([]);
+  const [splitFeeds, setSplitFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
   const params = useParams();
 
@@ -33,9 +34,21 @@ const Profile = () => {
         id: doc.id,
         content: doc.data(),
       }))
+
     setMyfeeds([...myfeeds, ...feed])
+    const length = feed.length;
+    const divide = Math.floor(length / 3) + (Math.floor(length % 3) > 0 ? 1 : 0);
+    const newArray = [];
+    for (let i = 0; i < divide; i++) {
+      newArray.push(feed.splice(0, 3));
+    }
+    setSplitFeeds([...splitFeeds, ...newArray])
+
     setLoading(false);
   })
+
+  console.log('myfeeds', myfeeds)
+  console.log('splitFeeds', splitFeeds)
 
   useEffect(() => {
     getDatas();
@@ -134,13 +147,13 @@ const Profile = () => {
                   ) : (
                     <div
                       className='myfeed_items'>
-                      {
-                        myfeeds?.map((item, idx) => {
-                          return <MyFeedItem
-                            key={idx}
-                            item={item} />
-                        })
-                      }
+                        {
+                          splitFeeds?.map((items, idx) => {
+                            return <MyFeedItem
+                              key={idx}
+                              items={items} />
+                          })
+                        }
                     </div>
                   )
                 }
@@ -250,20 +263,16 @@ const ProfileStyle = styled.section`
   }
 
   .myfeed {
+    display: flex;
+    justify-content: center;
     padding-top: 10px;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
   .myfeed_items {
-    width: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-start;
+    flex-direction: column;
+    position: absolute;
   }
   
   .myfeed__null {

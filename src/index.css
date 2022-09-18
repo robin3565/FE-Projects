@@ -89,16 +89,13 @@ code {
   width: 50%;
 }
 
-.my-feed__wrapper {
-  
-}
-
 .my-feed__img {
-  width: 315px;
-  height: 315px;
+  position: relative;
+  width: 310px;
+  height: 310px;
   object-fit: cover;
   border-radius: 10px;
-  margin: 5px;
+  margin: 7px;
 }
 
 .user--profile {

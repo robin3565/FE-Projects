@@ -28,11 +28,9 @@ const Post = () => {
     const [postComments, setPostComments] = useState([]);
     const [post, setPost] = useState({});
     const [newComment, setNewComment] = useState("")
+    const [photoUrl, setPhotoUrl] = useState("");
     const userId = state.id;
-    const photoUrl = state.photoUrl;
     const [isEditing, setEditing] = useState(false);
-
-    console.log(postComments)
 
     const handleModal = () => {
         document.body.style.overflow = "hidden";
@@ -87,6 +85,12 @@ const Post = () => {
         }
     })
 
+    const getUserInfo = useCallback(async () => {
+        const docRef = doc(dbService, "userInfo", post.uid);
+        const docSnap = await getDoc(docRef);
+        setPhotoUrl(docSnap.data().photoUrl);
+      })
+
     const removeComment = useCallback(async (e) => {
         if (window.confirm("정말 삭제할까요?")) {
             const newPostComment = postComments.filter(item => (
@@ -102,6 +106,7 @@ const Post = () => {
 
     useEffect(() => {
         getPostData();
+        getUserInfo();
     }, [])
 
 
@@ -131,9 +136,9 @@ const Post = () => {
                                 <div
                                     className='post__user-inner'>
                                     {
-                                       post.photoUrl ? (
+                                       photoUrl ? (
                                         <img
-                                            src={post.photoUrl}
+                                            src={photoUrl}
                                             className='post__user-null post__user-img'/>
                                        ) : (
                                         <img
@@ -156,9 +161,9 @@ const Post = () => {
                                 <div
                                     className='post__user-inner'>
                                     {
-                                       post.photoUrl ? (
+                                       photoUrl ? (
                                         <img
-                                            src={post.photoUrl}
+                                            src={photoUrl}
                                             className='post__user-null post__user-img'/>
                                        ) : (
                                         <img

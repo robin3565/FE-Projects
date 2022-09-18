@@ -61,13 +61,13 @@ const Profile = () => {
               className='profile__user'>
               <div
                 className='user__img'>
-                  {state.photoUrl
-                    ? <img
-                        src={state.photoUrl}
-                        className="profile-img" />
-                    : <img
-                        src='user-null.jpg' 
-                        className="profile-img profile-img-null" />}
+                {state.photoUrl
+                  ? <img
+                    src={state.photoUrl}
+                    className="profile-img" />
+                  : <img
+                    src='user-null.jpg'
+                    className="profile-img profile-img-null" />}
               </div>
               <div
                 className='profile__info'>
@@ -141,11 +141,16 @@ const Profile = () => {
                       </div>
                     </div>
                   ) : (
-                    myfeeds?.map((item, idx) => {
-                      return <MyFeedItem
-                        key={idx}
-                        item={item} />
-                    })
+                    <div
+                      className='myfeed_items'>
+                      {
+                        myfeeds?.map((item, idx) => {
+                          return <MyFeedItem
+                            key={idx}
+                            item={item} />
+                        })
+                      }
+                    </div>
                   )
                 }
               </div>
@@ -161,11 +166,14 @@ export default Profile
 
 const ProfileStyle = styled.section`
   width: 100wh;
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex: 1;
   
   .profile {
-    width: 980px;
-    padding: 30px;
+    max-width: 980px;
+    width: 100%;
+    padding-top: 30px;
     display: flex;
     flex-direction: column;
   }
@@ -251,12 +259,20 @@ const ProfileStyle = styled.section`
   }
 
   .myfeed {
+    padding-top: 10px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding-top: 20px;
-    justify-content: space-between;
+  }
+
+  .myfeed_items {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: tomato;
   }
   
   .myfeed__null {

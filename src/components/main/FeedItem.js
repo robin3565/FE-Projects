@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
@@ -15,14 +15,16 @@ import { v4 as uuid } from 'uuid';
 import { usePostState } from '../../context/postContext';
 import EditModal from './EditModal';
 import { EditModalPortal } from '../../app/Portal';
+import { dbService } from '../../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
 
 const FeedItem = ({ item }) => {
   const { state } = useAuthState();
   const { updateComment, updateLike } = usePostState();
   const [feeds, setFeeds] = useState(item.data);
   const [newComment, setNewComment] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
   const user = state.id;
-  const photoUrl = state.photoUrl;
   const [isEditing, setEditing] = useState(false);
 
   let likes = [];
@@ -48,6 +50,12 @@ const FeedItem = ({ item }) => {
       })
   }
 
+  const getUserInfo = useCallback(async () => {
+    const docRef = doc(dbService, "userInfo", item.data.uid);
+    const docSnap = await getDoc(docRef);
+    setPhotoUrl(docSnap.data().photoUrl);
+  })
+
   const handleModal = () => {
     document.body.style.overflow = "hidden";
     setEditing(prev => !prev);
@@ -71,6 +79,10 @@ const FeedItem = ({ item }) => {
     }
   }
 
+  useEffect(() => {
+    getUserInfo();
+  }, [])
+
   return (
     <>
       <FeedItemStyle>
@@ -82,13 +94,13 @@ const FeedItem = ({ item }) => {
             <StyledLink1 to={`/${feeds.username}`}>
               <div
                 className="feed__user--info">
-                {item.data.photoUrl
+                {photoUrl
                   ? <img
-                      src={item.data.photoUrl} 
-                      className="user--profile" />
-                  : <img 
-                      src='/user-null.jpg'
-                      className='user--profile' />
+                    src={photoUrl}
+                    className="user--profile" />
+                  : <img
+                    src='/user-null.jpg'
+                    className='user--profile' />
                 }
                 <p>{feeds.username}</p>
               </div>
@@ -209,16 +221,16 @@ const FeedItem = ({ item }) => {
           </div>
         </div>
       </FeedItemStyle>
-    {
-      isEditing && (
-        <EditModalPortal>
-          <EditModal
-            modalType={"feed"}
-            setEditing={setEditing}
-            item={item.id}/>
-        </EditModalPortal>
-      )
-    }
+      {
+        isEditing && (
+          <EditModalPortal>
+            <EditModal
+              modalType={"feed"}
+              setEditing={setEditing}
+              item={item.id} />
+          </EditModalPortal>
+        )
+      }
     </>
   )
 }

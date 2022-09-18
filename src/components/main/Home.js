@@ -33,14 +33,15 @@ const Home = () => {
         const querySnapshot = await getDocs(collection(dbService, "userInfo"));
         let arr = [];
         querySnapshot.forEach((doc) => {
-            const { photoUrl, id } = doc.data().user;
+            const { photoUrl, id } = doc.data();
             let userObj = {};
             userObj.id = id;
             userObj.photoUrl = photoUrl;
             arr.push(userObj);
+            setUserInfo(arr);
         })
-        setUserInfo(arr);
     });
+
 
     const filterUser = (e) => {
         setSearchedId(e.target.value);
@@ -89,7 +90,9 @@ const Home = () => {
                                             <li
                                                 className='search__user'>
                                                 {item.photoUrl
-                                                    ? <div className="user--profile" />
+                                                    ? <img
+                                                        src={item.photoUrl}
+                                                        className="user--profile" />
                                                     : <FaUserCircle
                                                         className='user--profile-null user--profile' />
                                                 }

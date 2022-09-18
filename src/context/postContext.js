@@ -11,6 +11,15 @@ export const usePostState = () => {
 }
 
 export const PostProvider = ({ children }) => {
+
+    const init = {
+        isModal: false,
+        posted: false,
+        uploadPage: 1,
+        imageUrl: null,
+        content: "",
+    }
+
     const uploadImg = async (fileUrl, state, content) => {
         const time = new Date().getTime();
         const imgRef = ref(storageService, `posts/${state.uid}${time}/image`);
@@ -19,6 +28,7 @@ export const PostProvider = ({ children }) => {
                 const downloadUrl = await getDownloadURL(imgRef)
                 await setDoc(doc(dbService, "posts", `${state.uid}${time}`), {
                     username: state.id,
+                    uid: state.uid,
                     photoUrl: state.photoUrl,
                     timestamp: time,
                     contents: content,
@@ -63,13 +73,6 @@ export const PostProvider = ({ children }) => {
         await updateDoc(doc(dbService, "posts", postId), {
             "likes": likes,
         })
-    }
-    const init = {
-        isModal: false,
-        posted: false,
-        uploadPage: 1,
-        imageUrl: null,
-        content: "",
     }
 
     const [postState, postDispatch] = useReducer(postReducer, init);

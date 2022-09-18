@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components'
 import { useAuthState } from '../../context/authContext'
 
@@ -31,7 +32,9 @@ const EditProfile = () => {
                     className='edit-profile__menu'>
                     <ul
                         className='menu__list'>
-                        <li>프로필 편집</li>
+                        <Link
+                            className='menu__list--link'
+                            to="/accouts/edit"><li>프로필 편집</li></Link>
                         <li>비밀번호 변경</li>
                     </ul>
                     <div>
@@ -152,7 +155,8 @@ const EditProfile = () => {
                                     placeholder='전화번호'
                                     id="phone" />
                             </div>
-                            <div>
+                            <div
+                                className='form__submit--inner'>
                                 <input
                                     type="submit"
                                     className='form__submit' />
@@ -168,11 +172,17 @@ const EditProfile = () => {
 export default EditProfile
 
 const EditProfileStyle = styled.div`
+    .form__submit--inner {
+        width: 100%;
+    }
+
     .form__submit {
+        margin-left: 40%;
+        margin-bottom: 20px;
         background-color: #0095f6;
         border: none;
-        height: 30px;
-        width: 45px;
+        height: 35px;
+        width: 70px;
         border-radius: 2px;
         color: white;
         cursor: pointer;
@@ -187,6 +197,12 @@ const EditProfileStyle = styled.div`
         list-style:none;
         padding: 20px;
         border-bottom: 1px solid #dbdbdb;
+    }
+
+    .menu__list--link {
+        text-decoration: none;
+        color: #0095f6;
+        font-weight: 600;
     }
 
     .edit-profile__menu li {

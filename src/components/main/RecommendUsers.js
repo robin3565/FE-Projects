@@ -18,8 +18,6 @@ const RecommendUsers = () => {
         setUsers([...users, ...user]);
     })
 
-    console.log(users)
-
     useEffect(() => {
         getUserInfo();
     }, [])
@@ -57,7 +55,7 @@ const RecommendUsers = () => {
                 <div
                     className="recommend__uses-list">
                     {
-                        users.map(item => {
+                        users.map((item, idx) => {
                             return (
                                 <>
                                     <div

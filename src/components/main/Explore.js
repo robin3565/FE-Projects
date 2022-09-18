@@ -59,15 +59,23 @@ const ExploreStyle = styled.div`
 
     .explore-wrapper {
         margin: auto;
-        width: 50%;
+        width: 980px;
         padding-top: 30px;
+    }
+
+    .explore-feed {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
     }
 
 
     .explore-img {
         width: 300px;
         height: 300px;
-        padding: 7.5px;
+        padding: 10px;
         object-fit: cover;
     }
 

@@ -90,7 +90,6 @@ code {
 }
 
 .myfeed__img {
-  position: relative;
   width: 310px;
   height: 310px;
   object-fit: cover;

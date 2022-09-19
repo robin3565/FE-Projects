@@ -3,14 +3,14 @@ import { PlusModalPortal } from '../../app/Portal';
 import PlusModal from "./PlusModal";
 import { FaUserCircle } from 'react-icons/fa';
 import {
-    MdOutlineKeyboardArrowDown,
     MdOutlineMailOutline,
     MdHomeFilled,
     MdOutlineExplore,
     MdFavoriteBorder,
-    MdAddCircleOutline
+    MdAddCircleOutline,
+    MdOutlineAddCircle
 } from "react-icons/md";
-import { Link, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { usePostState } from '../../context/postContext';
 import { useAuthState } from '../../context/authContext';
 import { useCallback, useEffect, useState } from 'react';
@@ -28,7 +28,7 @@ const Home = () => {
         postDispatch({ type: "POP_MODAL", uploadPage: 1 });
         document.body.style.overflow = "hidden";
     }
-
+    
     const getUserData = useCallback(async () => {
         const querySnapshot = await getDocs(collection(dbService, "userInfo"));
         let arr = [];
@@ -64,13 +64,12 @@ const Home = () => {
                         className="header">
                         <div
                             className="header__logo">
-                            <Link to="/">
+                            <Link
+                                to="/">
                                 <img
                                     className='logo'
                                     src='logo.png' />
                             </Link>
-                            <MdOutlineKeyboardArrowDown
-                                className="logo__btn" />
                         </div>
                         <div
                             className='header__search'>
@@ -106,13 +105,14 @@ const Home = () => {
                         <nav>
                             <ul
                                 className='nav__list'>
-                                <li
-                                    className='nav__item'>
-                                    <Link to="/">
+                                <NavLink
+                                    to="/">
+                                    <li
+                                        className='nav__item'>
                                         <MdHomeFilled
                                             className="nav__item--btn" />
-                                    </Link>
-                                </li>
+                                    </li>
+                                </NavLink>
                                 <li
                                     className='nav__item'>
                                     <MdOutlineMailOutline
@@ -124,32 +124,33 @@ const Home = () => {
                                         className="nav__item--btn"
                                         onClick={onToggle} />
                                 </li>
-                                <li
-                                    className='nav__item'>
-                                    <Link to="/explore">
+                                <NavLink
+                                    to="/explore">
+                                    <li
+                                        className='nav__item'>
                                         <MdOutlineExplore
                                             className="nav__item--btn" />
-                                    </Link>
-                                </li>
+                                    </li>
+                                </NavLink>
                                 <li
                                     className='nav__item'>
                                     <MdFavoriteBorder
                                         className="nav__item--btn" />
                                 </li>
-                                <li
-                                    className='nav__item'>
-                                    <Link to={`/${state.id}`}>
+                                <NavLink to={`/${state.id}`}>
+                                    <li
+                                        className='nav__item'>
                                         {state.photoUrl ? (
                                             <img
-                                            src={state.photoUrl}
-                                            className="nav__item--btn nav__item--profile" />
-                                        ):(
+                                                src={state.photoUrl}
+                                                className="nav__item--btn nav__item--profile" />
+                                        ) : (
                                             <img
-                                            src='/user-null.jpg'
-                                            className="nav__item--btn nav__item--profile" />
+                                                src='/user-null.jpg'
+                                                className="nav__item--btn nav__item--profile" />
                                         )}
-                                    </Link>
-                                </li>
+                                    </li>
+                                </NavLink>
                             </ul>
                         </nav>
                     </div>
@@ -190,22 +191,10 @@ const HeaderStyle = styled.header`
         text-align: center;
     }
 
-    
     .logo {
         width: 6.5rem;
         display: inline-block;
         position: relative;
-    }
-
-    .logo__btn{
-        width: 20px;
-        height: 20px;
-        margin-top: 3px;
-        cursor: pointer;
-    }
-
-    .header__search {
-
     }
 
     .search__input {

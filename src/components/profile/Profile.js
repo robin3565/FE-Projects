@@ -5,113 +5,93 @@ import { useAuthState } from '../../context/authContext';
 import Myfeed from './Myfeed';
 import Mysaved from './Mysaved';
 import { IoAppsSharp, IoBookmark } from "react-icons/io5";
+import UserProfile from './UserProfile';
 
 
 const Profile = () => {
   const { state } = useAuthState();
-  const [myfeeds, setMyfeeds] = useState([]);
   const params = useParams();
   let location = useLocation();
   let activeStyle = {
     color: 'black'
   }
-  
-  if(params.userId === state.id) {
+
+  if (params.userId === state.id) {
     return (
       <ProfileStyle>
         <div
           className='profile'>
           <div
             className='profile__inner'>
-            <div
-              className='profile__user'>
-              <div
-                className='user__img'>
-                {state.photoUrl
-                  ? <img
-                    src={state.photoUrl}
-                    className="profile-img" />
-                  : <img
-                    src='user-null.jpg'
-                    className="profile-img profile-img-null" />}
-              </div>
-              <div
-                className='profile__info'>
-                <div
-                  className='info__user'>
-                  <p
-                    className='info__username'>
-                    {params?.userId}
-                  </p>
-                  <Link to="/accouts/edit"
-                    className='info__btn--edit'>
-                    프로필 편집
-                  </Link>
-                </div>
-                <ul
-                  className='info__feed'>
-                  <li>
-                    <span>게시물</span>
-                    <span
-                      className='info__feed--num'>
-                      {myfeeds.length}
-                    </span>
-                  </li>
-                  <li>
-                    <span>팔로워</span>
-                    <span
-                      className='info__feed--num'>
-                      0
-                    </span>
-                  </li>
-                  <li>
-                    <span>팔로잉</span>
-                    <span
-                      className='info__feed--num'>
-                      0
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-  
+            <UserProfile />
             <div
               className='profile__nav'>
-                <Link
-                  className='profile__navlink'
-                  to={`/${params.userId}`}>
-                  <div
-                    className='profile__nav-item'>
-                    <IoAppsSharp
-                      className='profile__nav-icon' />
-                    <span>게시물</span>
-                  </div>
-                </Link>
-                
-                <NavLink
-                  className='profile__navlink'
-                  style={({ isActive }) =>
-                    isActive ? activeStyle : undefined
-                  }
-                  to='saved'>
-                  <div
-                    className='profile__nav-item'>
-                    <IoBookmark
-                      className='profile__nav-icon'/>
-                    <span>저장됨</span>
-                  </div>
-                  </NavLink>
-              </div>
+              <Link
+                className='profile__navlink'
+                to={`/${params.userId}`}>
+                <div
+                  className='profile__nav-item'>
+                  <IoAppsSharp
+                    className='profile__nav-icon' />
+                  <span>게시물</span>
+                </div>
+              </Link>
+
+              <NavLink
+                className='profile__navlink'
+                style={({ isActive }) =>
+                  isActive ? activeStyle : undefined
+                }
+                to='saved'>
+                <div
+                  className='profile__nav-item'>
+                  <IoBookmark
+                    className='profile__nav-icon' />
+                  <span>저장됨</span>
+                </div>
+              </NavLink>
             </div>
+          </div>
         </div>
-        {
-          location.pathname === `/${params.userId}` ? (<Myfeed />) :
-            location.pathname === `/${params.userId}/saved` && (<Mysaved />)
-        }
+        <div
+          className="profile__feeds">
+          {
+            location.pathname === `/${params.userId}` ? (<Myfeed />) :
+              location.pathname === `/${params.userId}/saved` && (<Mysaved />)
+          }
+        </div>
       </ProfileStyle>
     )
   }
- 
+
+  return (
+    <ProfileStyle>
+      <div
+        className='profile'>
+        <div
+          className='profile__inner'>
+          <UserProfile />
+          <div
+            className='profile__nav'>
+            <Link
+              className='profile__navlink'
+              to={`/${params.userId}`}>
+              <div
+                className='profile__nav-item'>
+                <IoAppsSharp
+                  className='profile__nav-icon' />
+                <span>게시물</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div
+        className="profile__feeds">
+        <Myfeed />
+      </div>
+    </ProfileStyle>
+  )
 }
 
 export default Profile
@@ -231,4 +211,7 @@ const ProfileStyle = styled.section`
     margin-left: 3px;
   }
 
+  .profile__feeds{
+    margin: auto;
+  }
 `

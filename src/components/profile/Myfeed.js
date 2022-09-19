@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useState } from 'react'
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { dbService } from '../../firebase/config';
 import Loader from '../global/Loader';
 import { BsCamera } from "react-icons/bs";
 import { useAuthState } from '../../context/authContext';
 import { Link, useParams } from 'react-router-dom';
 import { usePostState } from '../../context/postContext';
+import { IoChatbubbleSharp, IoHeartSharp } from "react-icons/io5";
 import styled from 'styled-components';
 
 const Myfeed = () => {
@@ -32,14 +33,14 @@ const Myfeed = () => {
                 content: doc.data(),
             }))
 
-        setMyfeeds([...myfeeds, ...feed])
+        setMyfeeds([...feed])
         const length = feed.length;
         const divide = Math.floor(length / 3) + (Math.floor(length % 3) > 0 ? 1 : 0);
         const newArray = [];
         for (let i = 0; i < divide; i++) {
-            newArray.push(feed.splice(0, 3));
+            newArray.push(feed.reverse().splice(0, 3));
         }
-        setSplitFeeds([...splitFeeds, ...newArray])
+        setSplitFeeds([...newArray])
 
         setLoading(false);
     }
@@ -79,7 +80,7 @@ const Myfeed = () => {
                         </div>
                     ) : (
                         <div
-                            className='myfeed_items'>
+                            className='myfeed__items'>
                             {
                                 splitFeeds?.map((items, idx) => (
                                     <div
@@ -88,15 +89,42 @@ const Myfeed = () => {
                                         {
                                             items.map((item, id) => {
                                                 return (
-                                                    <Link
-                                                        key={id}
-                                                        to={`/posts/${item.id}`}>
-                                                        <div className='myfeed__inner'>
-                                                            <img
-                                                                className='myfeed__img'
-                                                                src={item.content.image} />
-                                                        </div>
-                                                    </Link>
+                                                    <>
+                                                        <Link
+                                                            className='myfeed__items-link'
+                                                            key={id}
+                                                            to={`/posts/${item.id}`}>
+                                                            <div
+                                                                className='myfeed__inner'>
+                                                                <img
+                                                                    className='myfeed__img'
+                                                                    src={item.content.image}
+                                                                    loading="lazy" />
+                                                                <div
+                                                                    className='myfeed__hover-img'>
+                                                                    <div
+                                                                        className='myfeed__hover-items'>
+                                                                        <div
+                                                                            className='myfeed__hover-item'>
+                                                                            <IoHeartSharp
+                                                                                className='myfeed__hover-icon' />
+                                                                            <span>
+                                                                                {item.content.likes.length}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div
+                                                                            className='myfeed__hover-item'>
+                                                                            <IoChatbubbleSharp
+                                                                                className='myfeed__hover-icon' />
+                                                                            <span>
+                                                                                {item.content.comments.length}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    </>
                                                 )
                                             })
                                         }
@@ -117,8 +145,8 @@ const MyfeedStyle = styled.div`
   .myfeed {
     display: flex;
     padding-top: 10px;
-    width: 100%;
-    justify-content: center;
+    width: 980px;
+    justify-content: start;
   }
 
   .myfeed__items-wrapper {
@@ -126,7 +154,53 @@ const MyfeedStyle = styled.div`
     flex: 1;
   }
 
-  .myfeed_items {
+  .myfeed__items-link {
+    text-decoration: none;
+    color: white;
+  }
+
+  .myfeed__inner {
+    position: relative;
+  }
+
+  .myfeed__img {
+    display: block;
+  }
+
+  .myfeed__inner:hover .myfeed__hover-img {
+    opacity: 1;
+  }
+
+  .myfeed__hover-img {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .myfeed__hover-items {
+    width: 310px;
+    height: 310px;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+  }
+
+  .myfeed__hover-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+  }
+
+  .myfeed__hover-icon {
+    padding-right: 3px;
+  }
+
+  .myfeed__items {
     display: flex;
     flex-direction: column;
     position: absolute;

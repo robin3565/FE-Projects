@@ -10,12 +10,13 @@ import { IoChatbubbleSharp, IoHeartSharp } from "react-icons/io5";
 import styled from 'styled-components';
 
 const Myfeed = () => {
-    const { state } = useAuthState();
     const { postDispatch } = usePostState();
     const [myfeeds, setMyfeeds] = useState([]);
     const [splitFeeds, setSplitFeeds] = useState([]);
     const [loading, setLoading] = useState(true);
     const params = useParams();
+
+    console.log(splitFeeds)
 
     const onToggle = () => {
         postDispatch({ type: "POP_MODAL", uploadPage: 1 });
@@ -35,13 +36,18 @@ const Myfeed = () => {
 
         setMyfeeds([...feed])
         const length = feed.length;
-        const divide = Math.floor(length / 3) + (Math.floor(length % 3) > 0 ? 1 : 0);
+        let output = Math.floor(length % 3);
+        const divide = Math.floor(length / 3) + (output > 0 ? 1 : 0);
+        if (output > 0) {
+            for (let i = 0; i <= output; i++) {
+                feed.push(0);
+            }
+        }
         const newArray = [];
         for (let i = 0; i < divide; i++) {
-            newArray.push(feed.reverse().splice(0, 3));
+            newArray.push(feed.splice(0, 3));
         }
         setSplitFeeds([...newArray])
-
         setLoading(false);
     }
 
@@ -80,50 +86,66 @@ const Myfeed = () => {
                         </div>
                     ) : (
                         <div
-                            className='myfeed__items'>
+                            className='myfeed__items-wrapper'>
                             {
                                 splitFeeds?.map((items, idx) => (
                                     <div
-                                        className='myfeed__items-wrapper'
+                                        className='myfeed__items'
                                         key={idx}>
                                         {
-                                            items.map((item, id) => {
+                                            items.map((item, index) => {
                                                 return (
                                                     <>
-                                                        <Link
-                                                            className='myfeed__items-link'
-                                                            key={id}
-                                                            to={`/posts/${item.id}`}>
-                                                            <div
-                                                                className='myfeed__inner'>
-                                                                <img
-                                                                    className='myfeed__img'
-                                                                    src={item.content.image}
-                                                                    loading="lazy" />
-                                                                <div
-                                                                    className='myfeed__hover-img'>
+                                                        {
+                                                            item.content ? (
+                                                                <Link
+                                                                    className='myfeed__items-link'
+                                                                    key={index}
+                                                                    to={`/posts/${item.id}`}>
                                                                     <div
-                                                                        className='myfeed__hover-items'>
+                                                                        className='myfeed__inner'>
+                                                                        <img
+                                                                            className='myfeed__img'
+                                                                            src={item.content.image}
+                                                                            loading="lazy" />
                                                                         <div
-                                                                            className='myfeed__hover-item'>
-                                                                            <IoHeartSharp
-                                                                                className='myfeed__hover-icon' />
-                                                                            <span>
-                                                                                {item.content.likes.length}
-                                                                            </span>
+                                                                            className='myfeed__hover-img'>
+                                                                            <div
+                                                                                className='myfeed__hover-items'>
+                                                                                <div
+                                                                                    className='myfeed__hover-item'>
+                                                                                    <IoHeartSharp
+                                                                                        className='myfeed__hover-icon' />
+                                                                                    <span>
+                                                                                        {item.content.likes.length}
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div
+                                                                                    className='myfeed__hover-item'>
+                                                                                    <IoChatbubbleSharp
+                                                                                        className='myfeed__hover-icon' />
+                                                                                    <span>
+                                                                                        {item.content.comments.length}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
+                                                                    </div>
+                                                                </Link>
+                                                            ) : (
+                                                                <div
+                                                                    className='myfeed__items-link'>
+                                                                    <div
+                                                                        className='myfeed__inner'>
                                                                         <div
-                                                                            className='myfeed__hover-item'>
-                                                                            <IoChatbubbleSharp
-                                                                                className='myfeed__hover-icon' />
-                                                                            <span>
-                                                                                {item.content.comments.length}
-                                                                            </span>
+                                                                            className='myfeed__img' />
+                                                                        <div
+                                                                            className='myfeed__hover-img'>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </Link>
+                                                            )
+                                                        }
                                                     </>
                                                 )
                                             })
@@ -145,34 +167,56 @@ const MyfeedStyle = styled.div`
   .myfeed {
     display: flex;
     padding-top: 10px;
-    width: 980px;
-    justify-content: start;
   }
 
   .myfeed__items-wrapper {
+    width: 100%;
+    height: 100%;
+    max-width: 980px;
     display: flex;
-    flex: 1;
+    flex-direction: column;
+    position: absolute;
+  }
+
+  .myfeed__items {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 10px 0;
+    justify-content: center;
   }
 
   .myfeed__items-link {
-    text-decoration: none;
     color: white;
+    max-height: 300px;
+    max-width: 300px;
+    padding: 0 10px;
+    width: 100%;
+    height: 100%;
   }
 
   .myfeed__inner {
     position: relative;
+    width: 100%;
+    height: 100%;
   }
 
   .myfeed__img {
-    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-
+  
   .myfeed__inner:hover .myfeed__hover-img {
     opacity: 1;
   }
 
   .myfeed__hover-img {
     opacity: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+    max-width: 300px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -182,8 +226,8 @@ const MyfeedStyle = styled.div`
   }
 
   .myfeed__hover-items {
-    width: 310px;
-    height: 310px;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     background-color: rgba(0, 0, 0, 0.3);
@@ -200,11 +244,6 @@ const MyfeedStyle = styled.div`
     padding-right: 3px;
   }
 
-  .myfeed__items {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-  }
   
   .myfeed__null {
     width: 100%;

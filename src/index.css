@@ -89,12 +89,14 @@ code {
   width: 50%;
 }
 
-.myfeed__img {
+/* .myfeed__img {
+  position: relative;
   width: 310px;
   height: 310px;
   object-fit: cover;
+  border-radius: 10px;
   margin: 7px;
-}
+} */
 
 .user--profile {
   border: 1px solid #dbdbdb;

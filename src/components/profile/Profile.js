@@ -213,5 +213,7 @@ const ProfileStyle = styled.section`
 
   .profile__feeds{
     margin: auto;
+    width: 100%;
+    max-width: 980px;
   }
 `

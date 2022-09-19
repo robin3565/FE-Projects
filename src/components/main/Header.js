@@ -28,7 +28,7 @@ const Home = () => {
         postDispatch({ type: "POP_MODAL", uploadPage: 1 });
         document.body.style.overflow = "hidden";
     }
-    
+
     const getUserData = useCallback(async () => {
         const querySnapshot = await getDocs(collection(dbService, "userInfo"));
         let arr = [];
@@ -57,114 +57,112 @@ const Home = () => {
 
 
     return (
-        <div>
-            <HomeStyle>
-                <HeaderStyle>
+        <HomeStyle>
+            <HeaderStyle>
+                <div
+                    className="header">
                     <div
-                        className="header">
-                        <div
-                            className="header__logo">
-                            <Link
-                                to="/">
-                                <img
-                                    className='logo'
-                                    src='logo.png' />
-                            </Link>
-                        </div>
-                        <div
-                            className='header__search'>
-                            <input
-                                className='search__input'
-                                type="text"
-                                placeholder="검색"
-                                onChange={filterUser} />
-                            <ul
-                                className='search__info'>
-                                {
-                                    filteredId.map((item, idx) => (
-                                        <Link
-                                            className='search__link'
-                                            to={`/${item.id}`}
-                                            key={idx}>
-                                            <li
-                                                className='search__user'>
-                                                {item.photoUrl
-                                                    ? <img
-                                                        src={item.photoUrl}
-                                                        className="user--profile" />
-                                                    : <FaUserCircle
-                                                        className='user--profile-null user--profile' />
-                                                }
-                                                <p>{item.id}</p>
-                                            </li>
-                                        </Link>
-                                    ))
-                                }
-                            </ul>
-                        </div>
-                        <nav>
-                            <ul
-                                className='nav__list'>
-                                <NavLink
-                                    to="/">
-                                    <li
-                                        className='nav__item'>
-                                        <MdHomeFilled
-                                            className="nav__item--btn" />
-                                    </li>
-                                </NavLink>
-                                <li
-                                    className='nav__item'>
-                                    <MdOutlineMailOutline
-                                        className="nav__item--btn" />
-                                </li>
-                                <li
-                                    className='nav__item'>
-                                    <MdAddCircleOutline
-                                        className="nav__item--btn"
-                                        onClick={onToggle} />
-                                </li>
-                                <NavLink
-                                    to="/explore">
-                                    <li
-                                        className='nav__item'>
-                                        <MdOutlineExplore
-                                            className="nav__item--btn" />
-                                    </li>
-                                </NavLink>
-                                <li
-                                    className='nav__item'>
-                                    <MdFavoriteBorder
-                                        className="nav__item--btn" />
-                                </li>
-                                <NavLink to={`/${state.id}`}>
-                                    <li
-                                        className='nav__item'>
-                                        {state.photoUrl ? (
-                                            <img
-                                                src={state.photoUrl}
-                                                className="nav__item--btn nav__item--profile" />
-                                        ) : (
-                                            <img
-                                                src='/user-null.jpg'
-                                                className="nav__item--btn nav__item--profile" />
-                                        )}
-                                    </li>
-                                </NavLink>
-                            </ul>
-                        </nav>
+                        className="header__logo">
+                        <Link
+                            to="/">
+                            <img
+                                className='logo'
+                                src='logo.png' />
+                        </Link>
                     </div>
-                </HeaderStyle>
-                {
-                    postState.isModal && (
-                        <PlusModalPortal>
-                            <PlusModal />
-                        </PlusModalPortal>
-                    )
-                }
-                <Outlet />
-            </HomeStyle>
-        </div>
+                    <div
+                        className='header__search'>
+                        <input
+                            className='search__input'
+                            type="text"
+                            placeholder="검색"
+                            onChange={filterUser} />
+                        <ul
+                            className='search__info'>
+                            {
+                                filteredId.map((item, idx) => (
+                                    <Link
+                                        className='search__link'
+                                        to={`/${item.id}`}
+                                        key={idx}>
+                                        <li
+                                            className='search__user'>
+                                            {item.photoUrl
+                                                ? <img
+                                                    src={item.photoUrl}
+                                                    className="user--profile" />
+                                                : <FaUserCircle
+                                                    className='user--profile-null user--profile' />
+                                            }
+                                            <p>{item.id}</p>
+                                        </li>
+                                    </Link>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    <nav>
+                        <ul
+                            className='nav__list'>
+                            <NavLink
+                                to="/">
+                                <li
+                                    className='nav__item'>
+                                    <MdHomeFilled
+                                        className="nav__item--btn" />
+                                </li>
+                            </NavLink>
+                            <li
+                                className='nav__item'>
+                                <MdOutlineMailOutline
+                                    className="nav__item--btn" />
+                            </li>
+                            <li
+                                className='nav__item'>
+                                <MdAddCircleOutline
+                                    className="nav__item--btn"
+                                    onClick={onToggle} />
+                            </li>
+                            <NavLink
+                                to="/explore">
+                                <li
+                                    className='nav__item'>
+                                    <MdOutlineExplore
+                                        className="nav__item--btn" />
+                                </li>
+                            </NavLink>
+                            <li
+                                className='nav__item'>
+                                <MdFavoriteBorder
+                                    className="nav__item--btn" />
+                            </li>
+                            <NavLink to={`/${state.id}`}>
+                                <li
+                                    className='nav__item'>
+                                    {state.photoUrl ? (
+                                        <img
+                                            src={state.photoUrl}
+                                            className="nav__item--btn nav__item--profile" />
+                                    ) : (
+                                        <img
+                                            src='/user-null.jpg'
+                                            className="nav__item--btn nav__item--profile" />
+                                    )}
+                                </li>
+                            </NavLink>
+                        </ul>
+                    </nav>
+                </div>
+            </HeaderStyle>
+            {
+                postState.isModal && (
+                    <PlusModalPortal>
+                        <PlusModal />
+                    </PlusModalPortal>
+                )
+            }
+            <Outlet />
+        </HomeStyle>
     )
 }
 
@@ -178,7 +176,6 @@ const HomeStyle = styled.section`
 const HeaderStyle = styled.header`
     border-bottom: 1px solid #d6d6d6;
     background-color: white;
-    width: 100%;
 
     .search__link {
         text-decoration-line: none;

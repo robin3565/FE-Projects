@@ -98,8 +98,7 @@ const PlusModal = () => {
                         </div>
                     </form>
                 </FirstModalStyle>
-            ) : null}
-            {postState.isModal && postState.uploadPage > 1 ? (
+            ) :  (
                 <SecondModalStyle>
                     <div
                         className='plus-modal-next-form'>
@@ -158,7 +157,7 @@ const PlusModal = () => {
                         </form>
                     </div>
                 </SecondModalStyle>
-            ) : null}
+            )}
         </ModalStyle>
     )
 }

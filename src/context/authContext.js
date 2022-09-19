@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 import { authReducer } from "./authReducer";
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { dbService, storageService } from '../firebase/config'
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 

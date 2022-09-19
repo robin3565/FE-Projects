@@ -24,7 +24,7 @@ export const PostProvider = ({ children }) => {
         const time = new Date().getTime();
         const imgRef = ref(storageService, `posts/${state.uid}${time}/image`);
         await uploadString(imgRef, fileUrl, "data_url")
-            .then(async (snapshot) => {
+            .then(async () => {
                 const downloadUrl = await getDownloadURL(imgRef)
                 await setDoc(doc(dbService, "posts", `${state.uid}${time}`), {
                     username: state.id,
@@ -41,7 +41,6 @@ export const PostProvider = ({ children }) => {
                         postDispatch({ type: "REMOVE_POSTED" });
                     }, 2000);
                 })
-                // console.log(downloadUrl);
             });
     }
 

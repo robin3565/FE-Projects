@@ -1,61 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { FaUserCircle } from 'react-icons/fa';
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
-import { dbService } from '../../firebase/config';
-import Loader from '../global/Loader';
-import { Link, useParams } from 'react-router-dom';
-import MyFeedItem from './MyFeedItem';
-import { RiSettings4Fill } from "react-icons/ri";
-import { BsCamera } from "react-icons/bs";
-import { usePostState } from '../../context/postContext';
+import { Link, NavLink, useLocation, useParams } from 'react-router-dom';
 import { useAuthState } from '../../context/authContext';
+import Myfeed from './Myfeed';
+import Mysaved from './Mysaved';
+import { IoAppsSharp, IoBookmark } from "react-icons/io5";
+
 
 const Profile = () => {
   const { state } = useAuthState();
-  const { postDispatch } = usePostState();
   const [myfeeds, setMyfeeds] = useState([]);
-  const [splitFeeds, setSplitFeeds] = useState([]);
-  const [loading, setLoading] = useState(true);
   const params = useParams();
-
-  const onToggle = () => {
-    postDispatch({ type: "POP_MODAL", uploadPage: 1 });
-    document.body.style.overflow = "hidden";
+  let location = useLocation();
+  let activeStyle = {
+    color: 'black'
   }
-
-  const getDatas = useCallback(async () => {
-    const postsRef = collection(dbService, "posts");
-    const q = query(postsRef, where("username", "==", params.userId));
-    const querySnapshot = await getDocs(q)
-    const feed = [];
-    querySnapshot.forEach(doc =>
-      feed.push({
-        id: doc.id,
-        content: doc.data(),
-      }))
-
-    setMyfeeds([...myfeeds, ...feed])
-    const length = feed.length;
-    const divide = Math.floor(length / 3) + (Math.floor(length % 3) > 0 ? 1 : 0);
-    const newArray = [];
-    for (let i = 0; i < divide; i++) {
-      newArray.push(feed.splice(0, 3));
-    }
-    setSplitFeeds([...splitFeeds, ...newArray])
-
-    setLoading(false);
-  })
-
-  console.log('myfeeds', myfeeds)
-  console.log('splitFeeds', splitFeeds)
-
-  useEffect(() => {
-    getDatas();
-  }, [])
-
-  return (
-    <>
+  
+  if(params.userId === state.id) {
+    return (
       <ProfileStyle>
         <div
           className='profile'>
@@ -85,8 +47,6 @@ const Profile = () => {
                     className='info__btn--edit'>
                     프로필 편집
                   </Link>
-                  <RiSettings4Fill
-                    className='info__btn--set' />
                 </div>
                 <ul
                   className='info__feed'>
@@ -114,56 +74,44 @@ const Profile = () => {
                 </ul>
               </div>
             </div>
-
+  
             <div
-              className='profile__myfeed'>
-              <div
-                className='myfeed'>
-                {
-                  loading ? (
-                    <Loader />
-                  ) : myfeeds.length === 0 ? (
-                    <div
-                      className='myfeed__null'>
-                      <div
-                        className='myfeed__null--inner'>
-                        <BsCamera
-                          className='myfeed__btn' />
-                        <p
-                          className='myfeed__title'>
-                          사진 공유
-                        </p>
-                        <p
-                          className='myfeed__subtitle'>
-                          사진을 공유하면 회원님의 프로필에 표시됩니다.
-                        </p>
-                        <p
-                          onClick={onToggle}
-                          className='myfeed__file'>
-                          첫 사진 공유하기
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      className='myfeed_items'>
-                        {
-                          splitFeeds?.map((items, idx) => {
-                            return <MyFeedItem
-                              key={idx}
-                              items={items} />
-                          })
-                        }
-                    </div>
-                  )
-                }
+              className='profile__nav'>
+                <Link
+                  className='profile__navlink'
+                  to={`/${params.userId}`}>
+                  <div
+                    className='profile__nav-item'>
+                    <IoAppsSharp
+                      className='profile__nav-icon' />
+                    <span>게시물</span>
+                  </div>
+                </Link>
+                
+                <NavLink
+                  className='profile__navlink'
+                  style={({ isActive }) =>
+                    isActive ? activeStyle : undefined
+                  }
+                  to='saved'>
+                  <div
+                    className='profile__nav-item'>
+                    <IoBookmark
+                      className='profile__nav-icon'/>
+                    <span>저장됨</span>
+                  </div>
+                  </NavLink>
               </div>
             </div>
-          </div>
         </div>
+        {
+          location.pathname === `/${params.userId}` ? (<Myfeed />) :
+            location.pathname === `/${params.userId}/saved` && (<Mysaved />)
+        }
       </ProfileStyle>
-    </>
-  )
+    )
+  }
+ 
 }
 
 export default Profile
@@ -171,16 +119,41 @@ export default Profile
 const ProfileStyle = styled.section`
   width: 100wh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   flex: 1;
-  
+
   .profile {
     max-width: 980px;
     width: 100%;
     padding-top: 30px;
     display: flex;
     flex-direction: column;
+    margin: auto;
   }
+
+  .profile__nav {
+    padding: 14px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .profile__nav-item {
+    padding: 0 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .profile__navlink {
+    text-decoration: none;
+    color: gray;
+  }
+  
+
+  .profile__nav-icon {
+    margin-right: 4px;
+  }
+
 
   .profile__inner {
     width: 100%;
@@ -256,58 +229,6 @@ const ProfileStyle = styled.section`
   .info__feed--num {
     font-weight: 600;
     margin-left: 3px;
-  }
-
-  .profile__myfeed {
-    width: 100%;
-  }
-
-  .myfeed {
-    display: flex;
-    justify-content: center;
-    padding-top: 10px;
-    width: 100%;
-  }
-
-  .myfeed_items {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-  }
-  
-  .myfeed__null {
-    width: 100%;
-    margin: auto;
-  }
-
-  .myfeed__null--inner {
-    margin: auto;
-    width: 48%;
-    text-align: center;
-  }
-
-  .myfeed__btn {
-    height: 80px;
-    width: 80px;
-    padding-top: 70px;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-
-  .myfeed__title {
-    font-size: 2em;
-    font-weight: 100;
-    margin-bottom: 10px;
-  }
-
-  .myfeed__subtitle {
-    margin-bottom: 10px;
-  }
-
-  .myfeed__file {
-    color: #0095f6;
-    font-weight: 900;
-    cursor: pointer;
   }
 
 `

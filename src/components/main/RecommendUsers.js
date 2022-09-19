@@ -39,7 +39,7 @@ const RecommendUsers = () => {
                                     src='user-null.jpg'
                                     className="user-info--profile" />}
                         </Link>
-                        <StyledLink to="/profile">
+                        <StyledLink to={`/${state.id}`}>
                             {state.id ? state.id : "MyUserName"}
                         </StyledLink>
                     </div>

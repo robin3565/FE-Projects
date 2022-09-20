@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { PlusModalPortal } from '../../app/Portal';
-import PlusModal from "./PlusModal";
+import PlusModal from "../global/Modal/PlusModal"
 import { FaUserCircle } from 'react-icons/fa';
 import {
     MdOutlineMailOutline,

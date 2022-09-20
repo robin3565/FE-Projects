@@ -14,12 +14,19 @@ export const postReducer = (state, action) => {
                 imageUrl: null,
                 content: ""
             }
+        case "CROP_POSTED":
+            return {
+                ...state,
+                imageUrl: action.imageUrl,
+                showImg: action.showImg,
+                uploadPage: action.uploadPage
+            }
         case "UPDATE_POSTED":
             return {
                 ...state,
                 type: "UPDATE_POSTED",
                 isModal: true,
-                uploadPage: 2,
+                uploadPage: 3,
                 imageUrl: action.imageUrl,
                 content: action.content
             }
@@ -30,7 +37,7 @@ export const postReducer = (state, action) => {
                 uploadPage: action.uploadPage,
             }
         
-        case "POSTED_2":
+        case "ON_POST_FILE":
             return {
                 ...state,
                 type: "POSTED",

@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { postReducer } from "./postReducer";
 import { dbService, storageService } from "../firebase/config"
-import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadString, uploadBytes } from "firebase/storage";
 import { setDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 const PostContext = createContext();
@@ -23,8 +23,8 @@ export const PostProvider = ({ children }) => {
     const uploadImg = async (fileUrl, state, content) => {
         const time = new Date().getTime();
         const imgRef = ref(storageService, `posts/${state.uid}${time}/image`);
-        await uploadString(imgRef, fileUrl, "data_url")
-            .then(async () => {
+        await uploadBytes(imgRef, fileUrl)
+            .then(async (snapshot) => {
                 const downloadUrl = await getDownloadURL(imgRef)
                 await setDoc(doc(dbService, "posts", `${state.uid}${time}`), {
                     username: state.id,

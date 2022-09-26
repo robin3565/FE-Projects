@@ -11,6 +11,7 @@ export const useAuthState = () => {
 }
 
 export const AuthProvider = ({ children }) => {
+    /* // test init
     const init = {
         error: null,
         isAuthenticated: true,
@@ -24,13 +25,28 @@ export const AuthProvider = ({ children }) => {
             uid: "8lRT9L7g2qP1tnZmntiN7lExkEr1",
         },
         token: "da9sd8af8ad1qada01fb3baasa",
+    }; */
+
+    const init = {
+        error: null,
+        isAuthenticated: false,
+        id: "",
+        uid: "",
+        email: "",
+        photoUrl: null,
+        userInfo: {
+            id: "",
+            email: "",
+            uid: "",
+        },
+        token: "",
     };
 
     const updateUserInfo = async (state, fileUrl, userName, userId, userEmail) => {
         const imgRef = ref(storageService, `users/${state.uid}/image`);
         const docRef = doc(dbService, 'userInfo', state.uid);
         await uploadString(imgRef, fileUrl, "data_url")
-            .then(async() => {
+            .then(async () => {
                 const downloadUrl = await getDownloadURL(imgRef)
                 await updateDoc(docRef, {
                     photoUrl: downloadUrl,
@@ -38,13 +54,15 @@ export const AuthProvider = ({ children }) => {
                     name: userName,
                     email: userEmail
                 });
-            }).then(async() => {
+            }).then(async () => {
                 const docSnap = await getDoc(docRef);
-                dispatch({ type: "UPDATE_USERINFO", 
-                    name: docSnap.data()?.name, 
-                    id: docSnap.data()?.id, 
+                dispatch({
+                    type: "UPDATE_USERINFO",
+                    name: docSnap.data()?.name,
+                    id: docSnap.data()?.id,
                     photoUrl: docSnap.data()?.photoUrl,
-                    email: docSnap.data()?.email})
+                    email: docSnap.data()?.email
+                })
             }).then(() => {
                 alert("완료 되었습니다.")
             })
@@ -54,8 +72,8 @@ export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, init);
 
     return (
-        <AuthContext.Provider value={{state, dispatch, updateUserInfo}}>
-                {children}
+        <AuthContext.Provider value={{ state, dispatch, updateUserInfo }}>
+            {children}
         </AuthContext.Provider>
     )
 }

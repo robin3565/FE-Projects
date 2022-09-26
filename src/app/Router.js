@@ -8,7 +8,6 @@ import AuthSignUp from '../components/auth/AuthSignUp'
 import Explore from '../components/main/Explore';
 import EditProfile from '../components/profile/EditProfile';
 import Profile from '../components/profile/Profile';
-import TestImg from '../components/crop/TestImg';
 import Home from '../components/main/Home';
 
 const Router = () => {
@@ -20,7 +19,6 @@ const Router = () => {
                         <Home />
                     </PrivateRoute>}>
                     <Route path="/" element={<Feed />} />
-                    <Route path='/test' element={<TestImg/>}/>
                     <Route path="/:userId/" element={<Profile />}>
                         <Route path="/:userId/saved" element={<Profile />}/>
                     </Route>

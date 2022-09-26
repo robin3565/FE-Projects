@@ -51,12 +51,15 @@
   --fontSize-5: 2.074rem;
   --fontSize-6: 2.488rem;
   --fontSize-7: 2.986rem;
-  --color-primary: #005b99;
+  --color-primary: #0095f6;
+  --color-disabled: #b2dffc;
   --color-text: #2e353f;
-  --color-text-light: #4f5969;
   --color-heading: #1a202c;
   --color-heading-black: black;
-  --color-accent: #d1dce5;
+  --color-background-white: white;
+  --color-border: #dbdbdb;
+  --color-facebook: #385185;
+  --color-auth: #8e8e8e;
 }
 
 /* HTML elements */
@@ -66,9 +69,15 @@
   padding: 0;
 }
 
+html {
+  line-height: var(--lineHeight-normal);
+  font-size: var(--fontSize-root);
+}
+
 body {
-  margin: 0;
   font-family: var(--font-body);
+  color: var(--color-text);
+  font-size: var(--fontSize-0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
@@ -77,6 +86,62 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+
+/* Custom classes */
+
+/* auth */
+.auth-break-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.auth-break {
+  height: 1px;
+  width: 90px;
+  background-color: var(--color-border);
+}
+
+.auth-break-or {
+  font-size: 13px;
+  color: var(--color-auth);
+  font-weight: 600;
+  margin: 0 18px;
+}
+
+/* auth - app */
+.login--app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login--app-btn {
+  display:flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.login--app-btn img {
+  width: 140px;
+  margin: 0 5px;
+  border: none;
+  cursor: pointer;
 }
 
 .header {
@@ -89,17 +154,8 @@ code {
   width: 50%;
 }
 
-/* .myfeed__img {
-  position: relative;
-  width: 310px;
-  height: 310px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin: 7px;
-} */
-
 .user--profile {
-  border: 1px solid #dbdbdb;
+  border: 1px solid var(--color-border);
   border-radius: 10em;
   height: 30px;
   width: 30px;
@@ -120,7 +176,7 @@ code {
   width: 60%;
   margin: 30px auto;
   display: flex;
-  border: 1px solid #dbdbdb;
+  border: 1px solid var(--color-border);
   background-color: white;
 }
 

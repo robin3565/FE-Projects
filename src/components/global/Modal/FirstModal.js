@@ -3,10 +3,11 @@ import { MdImage } from "react-icons/md";
 import Resizer from "react-image-file-resizer";
 import styled from 'styled-components';
 import { usePostState } from '../../../context/postContext';
-import ModalNav from './utils/ModalNav';
+import { IoCloseOutline } from "react-icons/io5";
 
+// 1: 이미지 업로드 모달창
 const FirstModal = () => {
-    const { postState, postDispatch } = usePostState();
+    const { postState, postDispatch, onClose } = usePostState();
 
     const resizeFile = (file) =>
         new Promise((resolve) => {
@@ -28,10 +29,11 @@ const FirstModal = () => {
         try {
             const file = e.target.files[0];
             const img = await resizeFile(file);
-            postDispatch({ 
-                type: "ON_POST_FILE", 
-                uploadPage: postState.uploadPage + 1, 
-                imageUrl: img })
+            postDispatch({
+                type: "ON_POST_FILE",
+                uploadPage: postState.uploadPage + 1,
+                imageUrl: img
+            })
         } catch (err) {
             console.log(err)
         }
@@ -41,8 +43,13 @@ const FirstModal = () => {
         <FirstModalStyle>
             <form
                 className='plus-modal-form'>
-                <ModalNav
-                    content={"새 게시물 만들기"}/>
+                <div
+                    className="plus-modal__nav">
+                    <p>새 게시물 만들기</p>
+                    <IoCloseOutline
+                        className="plus-modal__btn plus-modal__btn-right"
+                        onClick={onClose} />
+                </div>
 
                 <div
                     className="plus-modal__file">
@@ -109,4 +116,29 @@ const FirstModalStyle = styled.div`
         color: white;
         cursor: pointer;
       }
+      
+    .plus-modal__nav {
+        border-bottom: 1px solid gray;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .plus-modal__nav p {
+        flex-grow: 1;
+        padding: 15px;
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+
+    .plus-modal__btn {
+        color: #262626;
+        width: 26px;
+        height: 26px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
 `

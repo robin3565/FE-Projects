@@ -14,6 +14,13 @@ export const postReducer = (state, action) => {
                 imageUrl: null,
                 content: ""
             }
+        case "ON_POST_FILE":
+            return {
+                ...state,
+                init: 'POSTED',
+                uploadPage: action.uploadPage,
+                imageUrl: action.imageUrl,
+            }    
         case "CROP_POSTED":
             return {
                 ...state,
@@ -24,7 +31,7 @@ export const postReducer = (state, action) => {
         case "UPDATE_POSTED":
             return {
                 ...state,
-                type: "UPDATE_POSTED",
+                init: "UPDATE_POSTED",
                 isModal: true,
                 uploadPage: 3,
                 imageUrl: action.imageUrl,
@@ -34,15 +41,8 @@ export const postReducer = (state, action) => {
             return {
                 ...state,
                 posted: true,
-                uploadPage: action.uploadPage,
-            }
-        
-        case "ON_POST_FILE":
-            return {
-                ...state,
-                type: "POSTED",
-                uploadPage: action.uploadPage,
-                imageUrl: action.imageUrl,
+                uploadPage: 1,
+                init: ''
             }
         case "REMOVE_POSTED":
             return {
@@ -53,6 +53,10 @@ export const postReducer = (state, action) => {
             return {
                 ...state,
                 posted: true,
+            }
+        case "PREV_ORDER" : 
+            return {
+                uploadPage: action.uploadPage
             }
     }
 }

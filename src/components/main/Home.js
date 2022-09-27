@@ -1,254 +1,287 @@
-import styled from 'styled-components'
-import { PlusModalPortal } from '../../app/Portal';
-import PlusModal from "../global/Modal/PlusModal"
-import { FaUserCircle } from 'react-icons/fa';
-import {
-    MdOutlineMailOutline,
-    MdHomeFilled,
-    MdOutlineExplore,
-    MdFavoriteBorder,
-    MdAddCircleOutline,
-    MdOutlineAddCircle
-} from "react-icons/md";
-import { Link, NavLink, Outlet } from 'react-router-dom'
-import { usePostState } from '../../context/postContext';
-import { useAuthState } from '../../context/authContext';
-import { useCallback, useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { dbService } from '../../firebase/config';
+import { useCallback, useEffect, useState } from "react"
+import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase/firestore";
+import { dbService } from "../../firebase/config"
+import styled from "styled-components"
+import { usePostState } from "../../context/postContext"
+import Loader from "../global/Loader"
+import FeedItem from "./FeedItem"
+import throttle from "lodash.throttle";
+import { Link } from "react-router-dom";
+import { useAuthState } from "../../context/authContext";
 
-const Home = () => {
-    const { postState, postDispatch } = usePostState();
-    const { state } = useAuthState();
-    const [userInfo, setUserInfo] = useState([]);
-    const [searchedId, setSearchedId] = useState("");
-    const [filteredId, setFiltetedId] = useState([]);
+const Feed = () => {
+    const [loading, setLoading] = useState(true);
+    const { postState } = usePostState();
+    const { getAllUsersData, getUserData, dispatch } = useAuthState();
+    const [feedData, setFeedData] = useState([]);
+    const [filterUser, setFilterUser] = useState([]);
+    const state = JSON.parse(localStorage.getItem('userInfo'));
+    const [users, setUsers] = useState([]);
+    const [myInfo, setMyInfo] = useState([]);
 
-    const onToggle = () => {
-        postDispatch({ type: "POP_MODAL", uploadPage: 1 });
-        document.body.style.overflow = "hidden";
+    // 무한스크롤 기능 구현
+    let handleScroll = () => {
+        const { innerHeight } = window;
+        const { scrollHeight } = document.body;
+        const { scrollTop } = document.documentElement;
+        if (innerHeight + scrollTop + 100 >= scrollHeight) {
+            getDatas();
+        }
     }
 
-    const getUserData = useCallback(async () => {
-        const querySnapshot = await getDocs(collection(dbService, "userInfo"));
-        let arr = [];
-        querySnapshot.forEach((doc) => {
-            const { photoUrl, id } = doc.data();
-            let userObj = {};
-            userObj.id = id;
-            userObj.photoUrl = photoUrl;
-            arr.push(userObj);
-            setUserInfo(arr);
-        })
-    });
+    handleScroll = throttle(handleScroll, 1000)
 
-
-    const filterUser = (e) => {
-        setSearchedId(e.target.value);
-        if (e.target.value == "") setFiltetedId([]);
-        else {
-            setFiltetedId(userInfo.filter((user) => user.id.toLowerCase().includes(searchedId.toLowerCase())));
+    let lastDoc = null;
+    const getQuery = (postRef, lastDoc) => {
+        if (lastDoc === null) {
+            return query(postRef,
+                orderBy("timestamp", "desc"),
+                limit(5));
+        } else {
+            return query(postRef,
+                orderBy("timestamp", "desc"),
+                startAfter(lastDoc),
+                limit(5));
         }
     }
 
     useEffect(() => {
-        getUserData();
+        setFeedData([]);
+        getDatas();
+    }, [postState.posted])
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
     }, [])
 
+    // 전체 피드 데이터 가져오기
+    const getDatas = useCallback(async () => {
+        const postRef = collection(dbService, "posts");
+        const q = getQuery(postRef, lastDoc);
+        const querySnapshot = await getDocs(q)
+            .then(setLoading(false))
+
+        let posts = [];
+        querySnapshot.forEach(doc =>
+            posts.push({
+                id: doc.id,
+                data: doc.data(),
+            }));
+
+        setFeedData(prev => [...prev, ...posts])
+        lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+        if (querySnapshot.empty) {
+            console.log('empty')
+            window.removeEventListener('scroll', handleScroll)
+        }
+    });
+
+    const getFeedData = useCallback(async () => {
+         // 전체 유저 데이터 가져오기
+        await getAllUsersData()
+            .then((user) => {
+                setFilterUser(user.filter((item) => item.id !== state.id))
+                setUsers([...users, ...filterUser]);
+            })
+
+        // userId에 해당하는 유저 데이터 가져오기
+        await getUserData(state.id)
+        .then((data) => {
+            setMyInfo(...data);
+            dispatch({ type: "SET_USERINFO", photoUrl: data[0].photoUrl});
+        })
+    })
+
+    useEffect(() => {
+        getFeedData();
+    }, [])
 
     return (
-        <HomeStyle>
-            <HeaderStyle>
+        <FeedStyle>
+            <div
+                className="main__feed">
                 <div
-                    className="header">
-                    <div
-                        className="header__logo">
-                        <Link
-                            to="/">
-                            <img
-                                className='logo'
-                                src='logo.png' />
-                        </Link>
-                    </div>
-                    <div
-                        className='header__search'>
-                        <input
-                            className='search__input'
-                            type="text"
-                            placeholder="검색"
-                            onChange={filterUser} />
-                        <ul
-                            className='search__info'>
-                            {
-                                filteredId.map((item, idx) => (
-                                    <Link
-                                        className='search__link'
-                                        to={`/${item.id}`}
-                                        key={idx}>
-                                        <li
-                                            className='search__user'>
-                                            {item.photoUrl
-                                                ? <img
-                                                    src={item.photoUrl}
-                                                    className="user--profile" />
-                                                : <FaUserCircle
-                                                    className='user--profile-null user--profile' />
-                                            }
-                                            <p>{item.id}</p>
-                                        </li>
-                                    </Link>
-                                ))
-                            }
-                        </ul>
-                    </div>
-                    <nav>
-                        <ul
-                            className='nav__list'>
-                            <NavLink
-                                to="/">
-                                <li
-                                    className='nav__item'>
-                                    <MdHomeFilled
-                                        className="nav__item--btn" />
-                                </li>
-                            </NavLink>
-                            <li
-                                className='nav__item'>
-                                <MdOutlineMailOutline
-                                    className="nav__item--btn" />
-                            </li>
-                            <li
-                                className='nav__item'>
-                                <MdAddCircleOutline
-                                    className="nav__item--btn"
-                                    onClick={onToggle} />
-                            </li>
-                            <NavLink
-                                to="/explore">
-                                <li
-                                    className='nav__item'>
-                                    <MdOutlineExplore
-                                        className="nav__item--btn" />
-                                </li>
-                            </NavLink>
-                            <li
-                                className='nav__item'>
-                                <MdFavoriteBorder
-                                    className="nav__item--btn" />
-                            </li>
-                            <NavLink to={`/${state.id}`}>
-                                <li
-                                    className='nav__item'>
-                                    {state.photoUrl ? (
-                                        <img
-                                            src={state.photoUrl}
-                                            className="nav__item--btn nav__item--profile" />
-                                    ) : (
-                                        <img
-                                            src='/user-null.jpg'
-                                            className="nav__item--btn nav__item--profile" />
-                                    )}
-                                </li>
-                            </NavLink>
-                        </ul>
-                    </nav>
+                    className="feed__list">
+                    {loading ?
+                        (
+                            <div
+                                className="feed__loader">
+                                <Loader />
+                            </div>
+                        )
+                        : (
+                            feedData?.map((item, idx) => {
+                                return <FeedItem
+                                    key={idx}
+                                    item={item}
+                                    state={state} />
+                            })
+                        )}
                 </div>
-            </HeaderStyle>
-            {
-                postState.isModal && (
-                    <PlusModalPortal>
-                        <PlusModal />
-                    </PlusModalPortal>
-                )
-            }
-            <Outlet />
-        </HomeStyle>
+
+                {/* recommend user */}
+                <div
+                    className='recommend'>
+                    <div
+                        className="recommend__user" >
+                        <div
+                            className="recommend__user-info">
+                            <Link to={`/${state.id}`}>
+                                <img src={myInfo.photoUrl
+                                    ? myInfo.photoUrl : 'user-null.jpg'}
+                                    className="user-info--profile" />
+                            </Link>
+                            <StyledLink to={`/${state.id}`}>
+                                {state.id ? state.id : "MyUserName"}
+                            </StyledLink>
+                        </div>
+                        <p
+                            className='recommend__user-sub'>전환</p>
+                    </div>
+                    <div
+                        className="recommend__line">
+                        <span>회원님을 위한 추천</span>
+                    </div>
+
+                    <div
+                        className="recommend__uses-list">
+                        {
+                            users.map((item, idx) => {
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="recommend__list">
+                                        <div
+                                            className="recommend__item">
+                                            {
+                                                item.photoUrl ? (
+                                                    <img
+                                                        src={item.photoUrl}
+                                                        className="recommend-user-profile" />
+                                                ) : (
+                                                    <img
+                                                        src='/user-null.jpg'
+                                                        className="recommend-user-profile" />
+                                                )
+                                            }
+                                            <div
+                                                className="recommend-user-info">
+                                                <p>{item.id}</p>
+                                            </div>
+                                        </div>
+                                        <p
+                                            className='recommend__user-sub'>
+                                            팔로우
+                                        </p>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <footer>
+                        © 2022 INSTAGRAM FROM META
+                    </footer>
+                </div>
+            </div>
+        </FeedStyle>
     )
 }
 
-export default Home
+export default Feed
 
-const HomeStyle = styled.section`
-    display: flex;
-    flex-direction: column;
-`
+const FeedStyle = styled.main`
+    width: 100wh;
 
-const HeaderStyle = styled.header`
-    border-bottom: 1px solid #d6d6d6;
-    background-color: white;
-
-    .search__link {
-        text-decoration-line: none;
-        color: #2d2d2d;
-    }
-
-    .header__logo {
+    .main__feed {
         display: flex;
-        flex-direction: row;
-        text-align: center;
-    }
-
-    .logo {
-        width: 6.5rem;
-        display: inline-block;
-        position: relative;
-    }
-
-    .search__input {
-        width: 250px;
-        height: 35px;
-        border-radius: 10px;
-        border: none;
-        outline: none;
-        background-color: #efefef;
-        padding-left: 10px;
-        margin-left: 100px;
-    }
-
-    .search__info {
-        background-color: white;
-        display: block;
-        margin: 0.9em 3.2em;
-        position: absolute;
-        list-style-type: none;
-        width: 350px;
-        border-radius: 4px;
-        max-height: 20em;
-        overflow-x: hidden;
-        overflow-y: scroll;
-    }
-
-    .search__user {
-        display: flex;
-        padding: 10px 0;
-        font-weight: 500;
-    }
-
-    nav {
-        margin-right: 20px;
-    }
-
-
-    .nav__list {
-        display: flex;
-        justify-content: space-between;
-        list-style: none;
-    }
-
-    .nav__item {
-        padding: 8px;
     }
     
-    .nav__item--btn {
-        width: 26px;
-        height: 26px;
-        cursor: pointer;
-        color: #262626;
+    .feed__list {
+        width: 470px;
+        margin-top: 40px;
     }
 
-    .nav__item--profile {
-        color: #ddd;
-        border-radius: 70%;
-        border: 1px solid #dbdbdb;
+    .feed__loader {
+        margin: 0 auto;
+        width: 50px;
+        height: 50px;
+      }
+
+    //   recommend user
+    .recommend {
+        max-height: 400px;
+        width: 350px;
+        margin: 25px;
+        margin-top: 43px;
     }
+
+    .recommend__user {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .recommend__user-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .recommend__user-sub {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .user-info--profile {
+        border: 1px solid #dbdbdb;
+        width: 62px;
+        height: 62px;
+        border-radius: 70%;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .recommend__line {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .recommend__uses-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recommend__list {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+
+        .recommend__item {
+            display: flex;
+            align-items: center;
+        }
+
+        .recommend-user-profile {
+            border: 1px solid #dbdbdb;
+            width: 30px;
+            height: 30px;
+            border-radius: 70%;
+            margin-right: 10px;
+        }
+
+        .recommend-user-info p{
+            margin: 0;
+        }
+    }
+
+    footer {
+        color: gray;
+    }
+`
+
+const StyledLink = styled(Link)`
+    text-decoration-line: none;
+    color: #2D2D2D;
+    font-weight: 500;
 `

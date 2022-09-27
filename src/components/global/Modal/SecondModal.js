@@ -3,15 +3,13 @@ import styled from 'styled-components'
 import Cropper from 'react-easy-crop'
 import { useState } from 'react';
 import { usePostState } from '../../../context/postContext';
-import ModalNav from './utils/ModalNav';
 import getCroppedImg from '../Modal/utils/cropImage'
 import { IoCloseOutline } from "react-icons/io5";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
-
+// 2: 이미지 크롭 모달창
 const SecondModal = () => {
-    const [fileUrl, setFileUrl] = useState('')
-    const { postState, postDispatch } = usePostState();
+    const { postState, postDispatch, onClose } = usePostState();
     const [crop, setCrop] = useState({
         x: 0,
         y: 0
@@ -22,14 +20,9 @@ const SecondModal = () => {
         setCroppedAreaPixels(croppedAreaPixels);
     }
 
-    const onClose = () => {
-        postDispatch({ type: "CLOSE_MODAL" });
-        document.body.style.overflow = "unset";
-    }
-
     const onPrev = () => {
         postDispatch({
-            type: "CHANGE_ORDER",
+            type: "PREV_ORDER",
             uploadPage: 1
         });
     }

@@ -4,11 +4,12 @@ import styled from 'styled-components'
 import { useAuthState } from '../../context/authContext'
 
 const EditProfile = () => {
-    const { state, updateUserInfo } = useAuthState();
+    const state = JSON.parse(localStorage.getItem('userInfo'));
+    const { updateUserInfo } = useAuthState();
     const [userUrl, setUserUrl] = useState(state.photoUrl)
     const [userName, setUserName] = useState('');
-    const [userId, setUserId] = useState(state.id);
-    const [userEmail, setUserEmail] = useState(state.userInfo.email);
+    const [userId] = useState(state.id);
+    const [userEmail, setUserEmail] = useState(state.email);
 
     const onFileChange = (e) => {
         const reader = new FileReader();
@@ -40,8 +41,8 @@ const EditProfile = () => {
                     <div>
                         <p
                             className='menu__explain'>
-                            스토리 및 게시물 공유, 로그인 등 
-                            Instagram, Facebook 앱, Messenger 간에 
+                            스토리 및 게시물 공유, 로그인 등
+                            Instagram, Facebook 앱, Messenger 간에
                             연결된 환경에 대한 설정을 관리하세요.
                         </p>
                     </div>
@@ -54,15 +55,9 @@ const EditProfile = () => {
                             className='form__user'>
                             <aside
                                 className='form__aside'>
-                                {userUrl ? (
-                                    <img
-                                        src={userUrl}
-                                        className='form__user--url'/>
-                                ):(
-                                    <img
-                                    src='/user-null.jpg'
+                                <img
+                                    src={userUrl ? userUrl : '/user-null.jpg'}
                                     className='form__user--url' />
-                                )}
                             </aside>
                             <div
                                 className='form__user--info'>
@@ -76,7 +71,7 @@ const EditProfile = () => {
                                     <input
                                         type="file"
                                         id='on-file'
-                                        onChange={onFileChange}/>
+                                        onChange={onFileChange} />
                                 </div>
                             </div>
                         </div>
@@ -108,12 +103,6 @@ const EditProfile = () => {
                                     </label>
                                 </aside>
                                 <div>{userId}</div>
-                                {/* <input
-                                    type="text"
-                                    placeholder='사용자 이름'
-                                    value={userId}
-                                    onChange={(e) => setUserId(e.target.value)}
-                                    id="id" /> */}
                             </div>
                             <div
                                 className='form__intro'>

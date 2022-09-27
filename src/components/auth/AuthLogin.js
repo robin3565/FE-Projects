@@ -17,12 +17,17 @@ const AuthLogin = () => {
         try {
             await signInWithEmailAndPassword(authService, userInfo.id, userInfo.password)
                 .then(result => {
-                    let userResult = result?.user;
-                    let token = result?.user.accessToken;
-                    let uid = result?.user.uid;
-                    let photoUrl = result?.user.photoURL;
-                    dispatch({ type: "SIGNUP", payload: userResult, token: token, uid: uid, id: userInfo?.id, photoUrl: photoUrl })
-                    navigate("/");
+                    console.log('result', result)
+                    dispatch({ type: "LOGIN", 
+                    token: result.user.accessToken,
+                    id: result.user.email.split('@')[0],
+                    uid: result.user.uid,
+                    email: result.user.email,
+                    photoUrl: null
+                    })
+                    alert('로그인 되었습니다.')
+                    console.log('state', state)
+                    window.location.href = "/";
                 })
         } catch (error) { dispatch({ type: "SET_ERROR", payload: error.code }) }
     }
@@ -33,10 +38,15 @@ const AuthLogin = () => {
         try {
             await signInWithPopup(authService, provider)
                 .then(result => {
-                    const user = result?.user;
                     const credential = FacebookAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    dispatch({ type: "SIGNUP", payload: user, token: token })
+                    dispatch({ type: "LOGIN", 
+                    token: credential.accessToken,
+                    isAuthenticated: true,
+                    id: result.user.email.split('@')[0],
+                    uid: result.user.uid,
+                    email: result.user.email,
+                    photoUrl: null,
+                    })
                 })
         } catch (error) {
             dispatch({ type: "SET_ERROR", payload: error.code });

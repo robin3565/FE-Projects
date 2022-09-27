@@ -121,10 +121,9 @@ const Explore = () => {
 
 export default Explore
 
-const ExploreStyle = styled.div`
+const ExploreStyle = styled.main`
     max-width: 980px;
     width: 100%;
-    margin: auto;
 
     .explore__items-wrapper {
         position: absolute;
@@ -133,13 +132,12 @@ const ExploreStyle = styled.div`
         width: 100%;
         height: 100%;
         max-width: 980px;
-        padding-top: 30px;
+        margin-top: 20px;
     }
 
     .explore__items {
         display: flex;
         width: 100%;
-        height: 100%;
         padding: 10px 0;
         justify-content: center;
     }

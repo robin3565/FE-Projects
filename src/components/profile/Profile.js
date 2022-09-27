@@ -1,68 +1,57 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Link, NavLink, useLocation, useParams } from 'react-router-dom';
-import { useAuthState } from '../../context/authContext';
+import { Link, useParams } from 'react-router-dom';
 import Myfeed from './Myfeed';
-import Mysaved from './Mysaved';
-import { IoAppsSharp, IoBookmark } from "react-icons/io5";
-import UserProfile from './UserProfile';
-
+import { IoAppsSharp } from "react-icons/io5";
+import { usePostState } from '../../context/postContext';
+import { useAuthState } from '../../context/authContext';
 
 const Profile = () => {
-  const { state } = useAuthState();
+  const { getPostDataByUserId } = usePostState();
+  const { getUserData } = useAuthState();
+  const [loading, setLoading] = useState(true);
+  const [myfeeds, setMyfeeds] = useState([]);
+  const [userInfo, setUserInfo] = useState('');
+  const [splitFeeds, setSplitFeeds] = useState([]);
+  const state = JSON.parse(localStorage.getItem('userInfo'));
   const params = useParams();
-  let location = useLocation();
-  let activeStyle = {
-    color: 'black'
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    window.location.href = '/';
   }
 
-  if (params.userId === state.id) {
-    return (
-      <ProfileStyle>
-        <div
-          className='profile'>
-          <div
-            className='profile__inner'>
-            <UserProfile />
-            <div
-              className='profile__nav'>
-              <Link
-                className='profile__navlink'
-                to={`/${params.userId}`}>
-                <div
-                  className='profile__nav-item'>
-                  <IoAppsSharp
-                    className='profile__nav-icon' />
-                  <span>게시물</span>
-                </div>
-              </Link>
+  const getDatas = async () => {
+    // userId에 해당하는 유저정보 가져오기
+    await getUserData(params.userId)
+      .then((data) => {
+        setUserInfo(...data)
+      })
 
-              <NavLink
-                className='profile__navlink'
-                style={({ isActive }) =>
-                  isActive ? activeStyle : undefined
-                }
-                to='saved'>
-                <div
-                  className='profile__nav-item'>
-                  <IoBookmark
-                    className='profile__nav-icon' />
-                  <span>저장됨</span>
-                </div>
-              </NavLink>
-            </div>
-          </div>
-        </div>
-        <div
-          className="profile__feeds">
-          {
-            location.pathname === `/${params.userId}` ? (<Myfeed />) :
-              location.pathname === `/${params.userId}/saved` && (<Mysaved />)
+    // userId에 해당하는 이미지 가져오기
+    await getPostDataByUserId(params.userId)
+      .then((feed) => {
+        setMyfeeds([...feed]);
+        const length = feed.length;
+        let output = Math.floor(length % 3);
+        const divide = Math.floor(length / 3) + (output > 0 ? 1 : 0);
+        if (output > 0) {
+          for (let i = 0; i <= output; i++) {
+            feed.push(0);
           }
-        </div>
-      </ProfileStyle>
-    )
+        }
+        const newArray = [];
+        for (let i = 0; i < divide; i++) {
+          newArray.push(feed.splice(0, 3));
+        }
+        setSplitFeeds([...newArray]);
+        setLoading(false);
+      })
   }
+
+  useEffect(() => {
+    getDatas();
+  }, [params.userId])
 
   return (
     <ProfileStyle>
@@ -70,7 +59,69 @@ const Profile = () => {
         className='profile'>
         <div
           className='profile__inner'>
-          <UserProfile />
+
+          {/* My Profile */}
+          <div
+            className='profile__user'>
+            <div
+              className='user__img'>
+              <img
+                src={userInfo.photoUrl ? userInfo.photoUrl : 'user-null.jpg'}
+                className="profile-img" />
+            </div>
+            <div
+              className='profile__info'>
+              <div
+                className='info__user'>
+                <p
+                  className='info__username'>
+                  {params?.userId}
+                </p>
+                {
+                  userInfo.id === state.id && (
+                    <div
+                      className='info__btn--group'>
+                      <Link to="/accouts/edit"
+                        className='info__btn--edit'>
+                        프로필 편집
+                      </Link>
+                      <button
+                        className='info__btn--edit'
+                        onClick={handleLogOut}>
+                        로그아웃
+                      </button>
+                    </div>
+                  )
+                }
+              </div>
+              <ul
+                className='info__feed'>
+                <li>
+                  <span>게시물</span>
+                  <span
+                    className='info__feed--num'>
+                    {myfeeds.length}
+                  </span>
+                </li>
+                <li>
+                  <span>팔로워</span>
+                  <span
+                    className='info__feed--num'>
+                    0
+                  </span>
+                </li>
+                <li>
+                  <span>팔로잉</span>
+                  <span
+                    className='info__feed--num'>
+                    0
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* My Nav */}
           <div
             className='profile__nav'>
             <Link
@@ -86,9 +137,14 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* My Feeds */}
       <div
         className="profile__feeds">
-        <Myfeed />
+        <Myfeed
+          loading={loading}
+          myfeeds={myfeeds}
+          splitFeeds={splitFeeds} />
       </div>
     </ProfileStyle>
   )
@@ -126,7 +182,7 @@ const ProfileStyle = styled.section`
 
   .profile__navlink {
     text-decoration: none;
-    color: gray;
+    color: var(--color-auth);
   }
   
 
@@ -143,7 +199,7 @@ const ProfileStyle = styled.section`
     display: flex;
     flex-direction: row;
     padding: 0 20px 30px 50px;
-    border-bottom: 1px solid #DDDDDD;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .user__img {
@@ -155,7 +211,7 @@ const ProfileStyle = styled.section`
     height: 160px;
     width: 160px;
     border-radius: 70%;
-    border: 1px solid #dbdbdb;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   }
 
   .profile-img-null {
@@ -172,31 +228,38 @@ const ProfileStyle = styled.section`
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    width: 45%;
+    width: 60%;
     justify-content: space-between;
     margin-bottom: 20px;
   }
 
   .info__username {
     font-size: 2em;
-    font-weight: 100;
+    font-weight: var(--fontWeight-thin);
+  }
+
+  .info__btn--group {
+    display: flex;
   }
 
   .info__btn--edit {
     font-size: 0.9em;
-    border: 1px solid #dbdbdb;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     padding: 6px 12px;
     background-color: transparent;
-    font-weight: 600;
+    font-weight: var(--fontWeight-semibold);
     text-decoration-line: none;
     color: black;
+    cursor: pointer;
+    margin: 0 2px;
   }
 
   .info__btn--set {
     width: 30px;
     height: 30px;
   }
+
 
   .info__feed {
     list-style: none;

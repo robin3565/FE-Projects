@@ -4,12 +4,13 @@ import FirstModal from './FirstModal';
 import SecondModal from './SecondModal';
 import ThirdModal from './ThirdModal';
 
+// uploadPage에 따라 띄워지는 모달창이 다르다.
 const PlusModal = () => {
     const { postState } = usePostState();
 
     return (
         <ModalStyle>
-            {postState.isModal && postState.uploadPage === 1 ? (
+            {postState.uploadPage === 1 ? (
                 <FirstModal />
             ) : postState.uploadPage === 2 ? (
                 <SecondModal />

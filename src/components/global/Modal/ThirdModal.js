@@ -1,31 +1,43 @@
-import React from 'react'
 import styled from 'styled-components'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { usePostState } from '../../../context/postContext';
-import { useAuthState } from '../../../context/authContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoCloseOutline } from "react-icons/io5";
 
+// 3: 이미지 업로드 모달창
 const ThirdModal = () => {
-    const { postState, postDispatch, uploadImg, updateContent } = usePostState();
-    const { state } = useAuthState();
+    const { postState,  uploadImg, updateContent, getPostDataByPostId, onClose } = usePostState();
+    const state = JSON.parse(localStorage.getItem('userInfo'));
     const [content, setContent] = useState(postState.content ? postState.content : "");
-    
+    const [postData, setPostData] = useState('');
     const postId = useParams();
     const navigate = useNavigate();
-
-    const onClose = () => {
-        postDispatch({ type: "CLOSE_MODAL" });
-        document.body.style.overflow = "unset";
+    // 수정 -> postId에 해당되는 이미지 데이터 가져오기
+    const getData = async () => {
+        await getPostDataByPostId(postId.postId)
+        .then((data) => {
+            setPostData(data)
+            console.log('data', data)
+            setContent(data.contents)
+        })
     }
 
+    useEffect(() => {
+        // postId가 있는 경우 -> 수정
+        // postId가 없는 경우 -> 새로 생성
+        postId && getData();
+    }, [])
+
+    // 이미지 업로드
     const handleSubmitImg = (e) => {
         e.preventDefault();
-        if (postState.type === "POSTED") {
+        // 새로 생성하는 경우
+        if (postState.init === "POSTED") {
             uploadImg(postState.imageUrl, state, content)
                 .then(() => onClose());
-        } else if (postState.type = "UPDATE_POSTED") {
+        // 내용 수정하는 경우
+        } else if (postState.init = "UPDATE_POSTED") {
             updateContent(content, postId.postId)
                 .then(() => {
                     onClose();
@@ -59,14 +71,13 @@ const ThirdModal = () => {
                             className="form__upload--img">
                             <img
                                 className="uploaded-img"
-                                src={postState.showImg} />
+                                src={postId.postId ? postData.image : postState.showImg} />
                         </div>
                         <div
                             className="form__upload--content">
                             <div
                                 className='upload__user'>
-                                {
-                                    state.photoUrl ? (
+                                { state.photoUrl ? (
                                         <img
                                             src={state.photoUrl}
                                             className='upload__user--null upload__user--img' />

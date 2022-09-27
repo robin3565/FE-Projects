@@ -3,12 +3,23 @@ export const authReducer = (state, action) => {
         case "SIGNUP":
             return {
                 ...state,
-                isAuthenticated: true,
-                userInfo: action.payload,
+                isSignUpAuthenticated: true,
+            }
+        case "LOGIN":
+            return {
+                ...state,
                 token: action.token,
-                uid: action.uid,
                 id: action.id,
-                photoUrl: action.photoUrl
+                uid: action.uid,
+                token: action.token,
+                email: action.email,
+                isAuthenticated: true,
+                photoUrl: null,
+            }
+        case "SET_USERINFO":
+            return {
+                ...state,
+                photoUrl: action.photoUrl,
             }
         case "SET_ERROR":
             return {
@@ -23,10 +34,10 @@ export const authReducer = (state, action) => {
         case "UPDATE_USERINFO":
             return {
                 ...state,
-                name: action.name, 
-                id: action.id, 
+                id: action.id,
+                email: action.email,
+                name: action.name,
                 photoUrl: action.photoUrl,
-                email: action.email
             }
     }
 }

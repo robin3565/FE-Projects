@@ -10,7 +10,6 @@ import {
   IoBookmarkOutline
 } from "react-icons/io5";
 import { VscSmiley } from "react-icons/vsc";
-import { useAuthState } from '../../context/authContext'
 import { v4 as uuid } from 'uuid';
 import { usePostState } from '../../context/postContext';
 import EditModal from './EditModal';
@@ -18,8 +17,7 @@ import { EditModalPortal } from '../../app/Portal';
 import { dbService } from '../../firebase/config';
 import { doc, getDoc } from 'firebase/firestore';
 
-const FeedItem = ({ item }) => {
-  const { state } = useAuthState();
+const FeedItem = ({ item, state }) => {
   const { updateComment, updateLike } = usePostState();
   const [feeds, setFeeds] = useState(item.data);
   const [newComment, setNewComment] = useState("");
@@ -133,22 +131,22 @@ const FeedItem = ({ item }) => {
                     ? (
                       <IoHeart
                         onClick={handleLikes}
-                        className='content__icon' />
+                        className='icon--btn icon--heart' />
                     )
                     : (
                       <IoHeartOutline
                         onClick={handleLikes}
-                        className='content__icon' />
+                        className='icon--btn' />
                     )}
                   <Link to={`/posts/${item.id}`}>
                     <IoChatbubbleOutline
-                      className='content__icon' />
+                      className='icon--btn' />
                   </Link>
                   <IoPaperPlaneOutline
-                    className='content__icon' />
+                    className='icon--btn' />
                 </div>
                 <IoBookmarkOutline
-                  className='content__icon content__bookmark--icon' />
+                  className='icon--btn content__bookmark--icon' />
               </div>
 
               <div
@@ -204,7 +202,7 @@ const FeedItem = ({ item }) => {
               className='feed__comment--form'
               onSubmit={submitComment}>
               <VscSmiley
-                className='content__icon' />
+                className='icon--btn' />
               <input
                 className='feed__comment--input'
                 placeholder='댓글 달기'
@@ -303,14 +301,6 @@ const FeedItemStyle = styled.article`
     display: flex;
     flex-direction: row;
     text-align: center;
-  }
-  
-  .content__icon {
-    color: #262626;
-    width: 26px;
-    height: 26px;
-    cursor: pointer;
-    margin-right: 10px;
   }
   
   .content__bookmark--icon {

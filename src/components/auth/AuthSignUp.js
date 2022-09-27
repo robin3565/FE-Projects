@@ -27,32 +27,28 @@ const AuthSignUp = () => {
         }
     }, [userInfo]);
 
-    console.log({ ...userInfo })
 
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
             await createUserWithEmailAndPassword(authService, userInfo.email, userInfo.password)
                 .then(async result => {
-                    let userResult = result?.user;
-                    let token = result?.user.accessToken;
-                    let uid = result?.user.uid;
-                    let photoUrl = null;
-                    dispatch({ type: "SIGNUP", payload: userResult, token: token, uid: uid, id: userInfo?.id, photoUrl: photoUrl });
+                    if (result?.user.accessToken) {
+                        alert('회원가입 되었습니다.');
+                        dispatch({ type: "SIGNUP"});
+                    } else {
+                        throw new Error('signUp error');
+                    }
                     localStorage.setItem("userInfo", JSON.stringify(userInfo));
                     setUserInfo([null]);
-                    try {
-                        await setDoc(doc(dbService, 'userInfo', `${uid}`), {
-                            id: userInfo.id,
-                            email: userInfo.email,
-                            name: userInfo.name,
-                            uid: uid,
-                            photoUrl: photoUrl
-                        });
-                    } catch (e) {
-                        console.log(e)
-                    };
-                    navigate("/");
+                    await setDoc(doc(dbService, 'userInfo', `${result?.user.uid}`), {
+                        id: userInfo.id,
+                        email: userInfo.email,
+                        name: userInfo.name,
+                        uid: result?.user.uid,
+                        photoUrl: null,
+                    });
+                    navigate("/login");
                 })
         } catch (error) {
             console.log(error)
@@ -246,6 +242,7 @@ const AuthSignUpStyle = styled.div`
 
     .form__signup sub {
         margin: 16px 0;
+        
     }
 
     .signup--login {

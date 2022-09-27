@@ -1,59 +1,44 @@
-import React, { useEffect, useState } from 'react'
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { dbService } from '../../firebase/config';
 import Loader from '../global/Loader';
 import { BsCamera } from "react-icons/bs";
-import { useAuthState } from '../../context/authContext';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { usePostState } from '../../context/postContext';
 import { IoChatbubbleSharp, IoHeartSharp } from "react-icons/io5";
 import styled from 'styled-components';
 
-const Myfeed = () => {
+const Myfeed = ({loading, splitFeeds, myfeeds}) => {
     const { postDispatch } = usePostState();
-    const [myfeeds, setMyfeeds] = useState([]);
-    const [splitFeeds, setSplitFeeds] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const params = useParams();
-
-    console.log(splitFeeds)
-
     const onToggle = () => {
         postDispatch({ type: "POP_MODAL", uploadPage: 1 });
         document.body.style.overflow = "hidden";
     }
 
-    const getDatas = async () => {
-        const postsRef = collection(dbService, "posts");
-        const q = query(postsRef, where("username", "==", params.userId));
-        const querySnapshot = await getDocs(q)
-        const feed = [];
-        querySnapshot.forEach(doc =>
-            feed.push({
-                id: doc.id,
-                content: doc.data(),
-            }))
-
-        setMyfeeds([...feed])
-        const length = feed.length;
-        let output = Math.floor(length % 3);
-        const divide = Math.floor(length / 3) + (output > 0 ? 1 : 0);
-        if (output > 0) {
-            for (let i = 0; i <= output; i++) {
-                feed.push(0);
-            }
-        }
-        const newArray = [];
-        for (let i = 0; i < divide; i++) {
-            newArray.push(feed.splice(0, 3));
-        }
-        setSplitFeeds([...newArray])
-        setLoading(false);
+    if (myfeeds.length === 0) {
+        return (
+            <MyfeedStyle>
+                <div
+                    className='myfeed__null'>
+                    <div
+                        className='myfeed__null--inner'>
+                        <BsCamera
+                            className='myfeed__btn' />
+                        <p
+                            className='myfeed__title'>
+                            사진 공유
+                        </p>
+                        <p
+                            className='myfeed__subtitle'>
+                            사진을 공유하면 회원님의 프로필에 표시됩니다.
+                        </p>
+                        <p
+                            onClick={onToggle}
+                            className='myfeed__file'>
+                            첫 사진 공유하기
+                        </p>
+                    </div>
+                </div>
+            </MyfeedStyle>
+        )
     }
-
-    useEffect(() => {
-        getDatas();
-    }, [params.userId])
 
     return (
         <MyfeedStyle>
@@ -62,102 +47,75 @@ const Myfeed = () => {
                 {
                     loading ? (
                         <Loader />
-                    ) : myfeeds.length === 0 ? (
-                        <div
-                            className='myfeed__null'>
-                            <div
-                                className='myfeed__null--inner'>
-                                <BsCamera
-                                    className='myfeed__btn' />
-                                <p
-                                    className='myfeed__title'>
-                                    사진 공유
-                                </p>
-                                <p
-                                    className='myfeed__subtitle'>
-                                    사진을 공유하면 회원님의 프로필에 표시됩니다.
-                                </p>
-                                <p
-                                    onClick={onToggle}
-                                    className='myfeed__file'>
-                                    첫 사진 공유하기
-                                </p>
-                            </div>
-                        </div>
                     ) : (
-                        <div
-                            className='myfeed__items-wrapper'>
-                            {
-                                splitFeeds?.map((items, idx) => (
-                                    <div
-                                        className='myfeed__items'
-                                        key={idx}>
-                                        {
-                                            items.map((item, index) => {
-                                                return (
-                                                    <>
-                                                        {
-                                                            item.content ? (
-                                                                <Link
-                                                                    className='myfeed__items-link'
-                                                                    key={index}
-                                                                    to={`/posts/${item.id}`}>
-                                                                    <div
-                                                                        className='myfeed__inner'>
-                                                                        <img
-                                                                            className='myfeed__img'
-                                                                            src={item.content.image}
-                                                                            loading="lazy" />
-                                                                        <div
-                                                                            className='myfeed__hover-img'>
-                                                                            <div
-                                                                                className='myfeed__hover-items'>
-                                                                                <div
-                                                                                    className='myfeed__hover-item'>
-                                                                                    <IoHeartSharp
-                                                                                        className='myfeed__hover-icon' />
-                                                                                    <span>
-                                                                                        {item.content.likes.length}
-                                                                                    </span>
-                                                                                </div>
-                                                                                <div
-                                                                                    className='myfeed__hover-item'>
-                                                                                    <IoChatbubbleSharp
-                                                                                        className='myfeed__hover-icon' />
-                                                                                    <span>
-                                                                                        {item.content.comments.length}
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </Link>
-                                                            ) : (
+                        <div className='myfeed__items-wrapper'>
+                            {splitFeeds?.map((items, idx) => (
+                                <div key={idx}
+                                    className='myfeed__items'>
+                                    {items.map((item, index) => {
+                                        return (
+                                            <>
+                                                {item.content ? (
+                                                    <Link
+                                                        className='myfeed__items-link'
+                                                        key={index}
+                                                        to={`/posts/${item.id}`}>
+                                                        <div
+                                                            className='myfeed__inner'>
+                                                            <img
+                                                                className='myfeed__img'
+                                                                src={item.content.image}
+                                                                loading="lazy" />
+                                                            <div
+                                                                className='myfeed__hover-img'>
                                                                 <div
-                                                                    className='myfeed__items-link'>
+                                                                    className='myfeed__hover-items'>
                                                                     <div
-                                                                        className='myfeed__inner'>
-                                                                        <div
-                                                                            className='myfeed__img' />
-                                                                        <div
-                                                                            className='myfeed__hover-img'>
-                                                                        </div>
+                                                                        className='myfeed__hover-item'>
+                                                                        <IoHeartSharp
+                                                                            className='myfeed__hover-icon' />
+                                                                        <span>
+                                                                            {item.content.likes.length}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div
+                                                                        className='myfeed__hover-item'>
+                                                                        <IoChatbubbleSharp
+                                                                            className='myfeed__hover-icon' />
+                                                                        <span>
+                                                                            {item.content.comments.length}
+                                                                        </span>
                                                                     </div>
                                                                 </div>
-                                                            )
-                                                        }
-                                                    </>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                ) : (
+                                                    <div
+                                                        className='myfeed__items-link'>
+                                                        <div
+                                                            className='myfeed__inner'>
+                                                            <div
+                                                                className='myfeed__img' />
+                                                            <div
+                                                                className='myfeed__hover-img'>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 )
-                                            })
-                                        }
-                                    </div>
-                                ))
+                                                }
+                                            </>
+                                        )
+                                    })
+                                    }
+                                </div>
+                            ))
                             }
                         </div>
                     )
                 }
             </div>
-        </MyfeedStyle>
+        </MyfeedStyle >
     )
 }
 
@@ -180,7 +138,6 @@ const MyfeedStyle = styled.div`
 
   .myfeed__items {
     width: 100%;
-    height: 100%;
     display: flex;
     padding: 10px 0;
     justify-content: center;

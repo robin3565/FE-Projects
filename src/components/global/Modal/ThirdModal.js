@@ -70,6 +70,7 @@ const ThirdModal = () => {
                         <div
                             className="form__upload--img">
                             <img
+                                alt='uploaded-img'
                                 className="uploaded-img"
                                 src={postId.postId ? postData.image : postState.showImg} />
                         </div>

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from "react-router-dom";
 import PrivateRoute from './PrivateRoute';
 import Home from '../components/main/Home'

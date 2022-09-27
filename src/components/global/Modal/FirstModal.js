@@ -1,4 +1,3 @@
-import React from 'react'
 import { MdImage } from "react-icons/md";
 import Resizer from "react-image-file-resizer";
 import styled from 'styled-components';

@@ -63,6 +63,7 @@ const Myfeed = ({loading, splitFeeds, myfeeds}) => {
                                                         <div
                                                             className='myfeed__inner'>
                                                             <img
+                                                                alt='feed-img'
                                                                 className='myfeed__img'
                                                                 src={item.content.image}
                                                                 loading="lazy" />

@@ -61,6 +61,7 @@ const EditProfile = () => {
                             <aside
                                 className='form__aside'>
                                 <img
+                                    alt='user-profile'
                                     src={userUrl ? userUrl : '/user-null.jpg'}
                                     className='form__user--url' />
                             </aside>

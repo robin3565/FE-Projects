@@ -66,6 +66,7 @@ const Profile = () => {
             <div
               className='user__img'>
               <img
+                alt='user-profile'
                 src={userInfo.photoUrl ? userInfo.photoUrl : 'user-null.jpg'}
                 className="profile-img" />
             </div>

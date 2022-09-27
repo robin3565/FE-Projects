@@ -66,9 +66,11 @@ const AuthLogin = () => {
                     <div
                         className="login--img-background">
                         <img
+                            alt="phone-1"
                             src="b.png"
                             className="img-1" />
                         <img
+                            alt="phone-2"
                             src="d.png"
                             className="img-2" />
                     </div>
@@ -78,6 +80,7 @@ const AuthLogin = () => {
                     <div
                         className="login-inner">
                         <img
+                            alt="logo"
                             className="login-logo"
                             src="logo.png" />
 
@@ -144,8 +147,10 @@ const AuthLogin = () => {
                         <div
                             className="login--app-btn">
                             <img
+                                alt="apple-app"
                                 src="/apple.png" />
                             <img
+                                alt="google-app"
                                 src="/google.png" />
                         </div>
                     </div>

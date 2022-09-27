@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom'
 const PrivateRoute = ({ children }) => {
     const localState = JSON.parse(localStorage.getItem('userInfo'));

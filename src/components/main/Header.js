@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { PlusModalPortal } from '../../app/Portal';
 import PlusModal from "../global/Modal/PlusModal"
-import { FaUserCircle } from 'react-icons/fa';
 import {
     MdOutlineMailOutline,
     MdHomeFilled,
@@ -60,12 +59,12 @@ const Home = () => {
             <HeaderStyle>
                 <div
                     className="header">
-
                     <div
                         className="header__logo">
                         <Link
                             to="/">
                             <img
+                                alt='logo'
                                 className='logo'
                                 src='Instagram_logo.svg' />
                         </Link>
@@ -89,6 +88,7 @@ const Home = () => {
                                         <li
                                             className='search__user'>
                                             <img
+                                                alt='user-profile'
                                                 className="user--profile"
                                                 src={item.photoUrl ? item.photoUrl : 'user-null.jpg'}/>
                                             <p>{item.id}</p>
@@ -138,6 +138,7 @@ const Home = () => {
                                 <li
                                     className='nav__item'>
                                     <img
+                                        alt='user-profile'
                                         src={state.photoUrl ? state.photoUrl : '/user-null.jpg'}
                                         className="nav__item--btn nav__item--profile" />
                                 </li>

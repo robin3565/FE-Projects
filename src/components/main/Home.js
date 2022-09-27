@@ -128,8 +128,9 @@ const Feed = () => {
                         <div
                             className="recommend__user-info">
                             <Link to={`/${state.id}`}>
-                                <img src={myInfo.photoUrl
-                                    ? myInfo.photoUrl : 'user-null.jpg'}
+                                <img 
+                                    alt="user-profile"
+                                    src={myInfo.photoUrl ? myInfo.photoUrl : 'user-null.jpg'}
                                     className="user-info--profile" />
                             </Link>
                             <StyledLink to={`/${state.id}`}>

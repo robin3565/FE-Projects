@@ -8,13 +8,11 @@ import handleError from '../global/error'
 import { setDoc, doc } from 'firebase/firestore';
 import { IoLogoFacebook } from "react-icons/io";
 
-
 const AuthSignUp = () => {
     const navigate = useNavigate();
     const { state, dispatch } = useAuthState();
     const [userInfo, setUserInfo] = useState([]);
     const [isValid, setValid] = useState(false);
-
 
     useEffect(() => {
         // 정규표현식 유효성 검사
@@ -63,6 +61,7 @@ const AuthSignUp = () => {
                 <div
                     className='signup--inner'>
                     <img
+                        alt='logo'
                         className="signup--logo"
                         src="logo.png" />
                     <p className='signup--title'>
@@ -145,8 +144,10 @@ const AuthSignUp = () => {
                 <div
                     className="login--app-btn">
                     <img
+                        alt='apple-app'
                         src="/apple.png" />
                     <img
+                        alt='google-app'
                         src="/google.png" />
                 </div>
             </div>

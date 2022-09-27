@@ -92,14 +92,11 @@ const FeedItem = ({ item, state }) => {
             <StyledLink1 to={`/${feeds.username}`}>
               <div
                 className="feed__user--info">
-                {photoUrl
-                  ? <img
-                    src={photoUrl}
-                    className="user--profile" />
-                  : <img
-                    src='/user-null.jpg'
-                    className='user--profile' />
-                }
+                  <img 
+                    alt='user-profile'
+                    className="user--profile"
+                    src={photoUrl ? photoUrl : '/user-null.jpg'}
+                    />
                 <p>{feeds.username}</p>
               </div>
             </StyledLink1>
@@ -112,6 +109,7 @@ const FeedItem = ({ item, state }) => {
           <div
             className='feed__item'>
             <img
+              alt='feed-img'
               width={470}
               height={470}
               src={feeds.image}

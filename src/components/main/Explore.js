@@ -64,6 +64,7 @@ const Explore = () => {
                                                     <div
                                                         className='explore-feed-inner'>
                                                         <img
+                                                            alt='feed-img'
                                                             className='explore__img'
                                                             src={item.content.image}
                                                             loading="lazy" />

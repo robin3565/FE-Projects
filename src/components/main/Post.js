@@ -136,6 +136,7 @@ const Post = () => {
                             <div
                                 className="post__img">
                                 <img
+                                    alt='post-img'
                                     width={840}
                                     height={840}
                                     className="post__uploaded-img"
@@ -167,6 +168,7 @@ const Post = () => {
                                     <div
                                         className='post__user-inner'>
                                         <img
+                                            alt='user-profile'
                                             src={postUser.photoUrl ? postUser.photoUrl : '/user-null.jpg'}
                                             className='post__user-null post__user-img' />
                                         <span
@@ -191,6 +193,7 @@ const Post = () => {
                                                             <div
                                                                 className='post__user-inner'>
                                                                 <img
+                                                                    alt='user-profile'
                                                                     src={item.photoUrl ? item.photoUrl : '/user-null.jpg'}
                                                                     className='post__user-null post__user-img' />
                                                                 <span

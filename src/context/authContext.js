@@ -56,8 +56,8 @@ export const AuthProvider = ({ children }) => {
         return user;
     }
 
-    // user 정보 업데이트 (수정)
-    const updateUserInfo = async (state, fileUrl, userName, userId, userEmail) => {
+    // user 정보 업데이트 (수정) with 프로필 사진
+    const updateUserImg = async (state, fileUrl, userName, userId, userEmail) => {
         const imgRef = ref(storageService, `users/${state.uid}/image`);
         const docRef = doc(dbService, 'userInfo', state.uid);
         await uploadString(imgRef, fileUrl, "data_url")
@@ -84,8 +84,36 @@ export const AuthProvider = ({ children }) => {
             })
     }
 
+    // user 정보 업데이트 (수정) without 프로필 사진
+    const updateUserInfo = async (state, photoUrl, userName, userId, userEmail) => {
+        const docRef = doc(dbService, 'userInfo', state.uid)
+        await updateDoc(docRef, {
+            photoUrl: photoUrl,
+            id: userId,
+            name: userName,
+            email: userEmail
+        }).then(async () => {
+            const docSnap = await getDoc(docRef);
+            dispatch({
+                type: "UPDATE_USERINFO",
+                id: docSnap.data()?.id,
+                email: docSnap.data()?.email,
+                name: docSnap.data()?.name,
+                photoUrl: docSnap.data()?.photoUrl,
+            })
+        }).then(() => {
+            alert("완료 되었습니다.")
+            navigate('/')
+        })
+    }
+
     return (
-        <AuthContext.Provider value={{ state, dispatch, updateUserInfo, getUserData, getAllUsersData }}>
+        <AuthContext.Provider value={
+            {
+                state, dispatch, updateUserInfo,
+                updateUserImg, getUserData, getAllUsersData
+            }
+        }>
             {children}
         </AuthContext.Provider>
     )

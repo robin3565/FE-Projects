@@ -5,7 +5,7 @@ import { useAuthState } from '../../context/authContext'
 
 const EditProfile = () => {
     const state = JSON.parse(localStorage.getItem('userInfo'));
-    const { updateUserInfo } = useAuthState();
+    const { updateUserInfo, updateUserImg } = useAuthState();
     const [userUrl, setUserUrl] = useState(state.photoUrl)
     const [userName, setUserName] = useState('');
     const [userId] = useState(state.id);
@@ -22,7 +22,12 @@ const EditProfile = () => {
 
     const handleUserInfo = (e) => {
         e.preventDefault();
-        updateUserInfo(state, userUrl, userName, userId, userEmail)
+        state.photoUrl === userUrl ? (
+            updateUserInfo(state, userUrl, userName, userId, userEmail)
+        ) : (
+            updateUserImg(state, userUrl, userName, userId, userEmail)
+        )
+        
     }
 
     return (

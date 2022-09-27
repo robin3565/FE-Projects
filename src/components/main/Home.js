@@ -136,14 +136,12 @@ const Feed = () => {
                                 {state.id ? state.id : "MyUserName"}
                             </StyledLink>
                         </div>
-                        <p
-                            className='recommend__user-sub'>전환</p>
+                        {/* <p className='recommend__user-sub'>전환</p> */}
                     </div>
-                    <div
+                    {/* <div
                         className="recommend__line">
                         <span>회원님을 위한 추천</span>
                     </div>
-
                     <div
                         className="recommend__uses-list">
                         {
@@ -178,7 +176,7 @@ const Feed = () => {
                                 )
                             })
                         }
-                    </div>
+                    </div> */}
                     <footer>
                         © 2022 INSTAGRAM FROM META
                     </footer>

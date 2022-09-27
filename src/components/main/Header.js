@@ -88,13 +88,9 @@ const Home = () => {
                                         key={idx}>
                                         <li
                                             className='search__user'>
-                                            {item.photoUrl
-                                                ? <img
-                                                    src={item.photoUrl}
-                                                    className="user--profile" />
-                                                : <FaUserCircle
-                                                    className='user--profile-null user--profile' />
-                                            }
+                                            <img
+                                                className="user--profile"
+                                                src={item.photoUrl ? item.photoUrl : 'user-null.jpg'}/>
                                             <p>{item.id}</p>
                                         </li>
                                     </Link>
@@ -211,6 +207,10 @@ const HeaderStyle = styled.header`
         align-items: center;
         padding: 10px 0;
         font-weight: var(--fontWeight-medium);
+    }
+
+    .search__user p {
+        color: var(--color-text);
     }
 
     .nav__list {

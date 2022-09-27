@@ -103,7 +103,7 @@ const Profile = () => {
                     {myfeeds.length}
                   </span>
                 </li>
-                <li>
+                {/* <li>
                   <span>팔로워</span>
                   <span
                     className='info__feed--num'>
@@ -116,7 +116,7 @@ const Profile = () => {
                     className='info__feed--num'>
                     0
                   </span>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

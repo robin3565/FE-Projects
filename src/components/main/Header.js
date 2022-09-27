@@ -67,7 +67,7 @@ const Home = () => {
                             to="/">
                             <img
                                 className='logo'
-                                src='logo.png' />
+                                src='Instagram_logo.svg' />
                         </Link>
                     </div>
 

@@ -1,70 +1,44 @@
-# Getting Started with Create React App
+## [8월 | 프로젝트] 모티베이션 웹 어플리케이션
+[사이트 바로가기](https://robin3565.github.io/motivation-app/)\
+매달 하나씩 진행하는 월간 프로젝트!\
+8월 첫 번째 프로젝트로 `모티베이션 웹`을 만들어 보았습니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 목차
+[1.프로젝트 소개](#프로젝트-소개)\
+[2.사용 기술](#사용-기술)
 
-## Available Scripts
+## 프로젝트 소개
+<img width="959" alt="캡쳐" src="https://user-images.githubusercontent.com/107474891/183911570-f9ad852a-44a5-469e-80b0-57b410bee04a.PNG">
 
-In the project directory, you can run:
+### 기간
+2022.08.01 ~ 2022.08.05
 
-### `npm start`
+### 목적
+강의를 보고 따라하는 클론코딩에서 벗어나서 배운 내용을 바탕으로 스스로 코드를 짜고, 수정하고, 배포해보는 경험을 해보고 싶었습니다. 간단하지만 유용한 모티베이션 웹을 만들며, API 호출과 CRUD 기능을 구현해보고자 했습니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 구조
+<img width="380" alt="캡처2" src="https://user-images.githubusercontent.com/107474891/183912118-0a66dac1-6f63-4a3b-99cd-62a095ee2521.PNG">
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 사용 기술
+- View (React with JavaScript, Styled-components)
+- Build Tool (Create React App)
 
-### `npm test`
+![8월 프로젝트 - 설명](https://user-images.githubusercontent.com/107474891/183917946-7cb32de6-fd0b-49db-b8d7-1725cbd3bdd6.jpg)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 1. 시계
+- Date 객체를 활용해 현재 시간이 업데이트 되는 시계를 만들었습니다 :D
+### 2. 배경화면 (Unsplash API)
+- Unsplash API를 활용해 랜덤 이미지를 불러 옵니다.
+- 세로 대비 가로가 긴 이미지만 저장합니다.
+### 3. 배경화면 변경 버튼
+- 버튼 클릭 시 런던, 파리, 한국의 이미지로 변경이 가능합니다.
+### 4. 모티베이션 문장
+- 하루에 영감을 줄 수 있는 모티베이션 문장을 제공합니다.
+- 웹에 방문할 때마다 다른 문장을 볼 수 있습니다.
+### 5. 한글/영어 버전 버튼
+- 버튼 클릭 시 현재 모티베이션 문장의 영어 버전을 제공합니다.
+- 다시 버튼을 누르면 원래의 한글 버전으로 돌아옵니다.
+### 6. 북마크 기능 (CRUD / LocalStorage API)
+- 바로가기 추가를 통해 자주 가는 사이트를 북마크 할 수 있습니다.
+- 북마크는 수정 및 삭제가 가능합니다.
+- LocalStorage에 추가한 사이트가 저장됩니다.

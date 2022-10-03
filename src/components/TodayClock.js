@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import getCurrentTime from '../utils/getCurrentTime';
+import { getCurrentTime } from '../utils/functions'
 import styled from 'styled-components';
 
 export default function TodayClock() {

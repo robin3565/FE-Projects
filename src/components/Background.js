@@ -3,15 +3,12 @@ import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { stateContext } from '../utils/stateContext'
 
+// background 이미지를 바꾸는 컴포넌트
 const Background = () => {
     const [backImgUrl, setBackImgUrl] = useState("");
     const { query } = useContext(stateContext);
 
-    useEffect(() => {
-        fetchData();
-    }, [query]);
-
-    const callback = (imgData) => {
+    const changeImgSize = (imgData) => {
         let index = 0;
         while (true) {
             if (imgData[index].width / imgData[index].height > 1) {
@@ -22,14 +19,20 @@ const Background = () => {
         }
     }
 
+    // API 이미지 가져오기
     const fetchData = async () => {
         const imgData = await axios.get('', {
             params: {
                 query: { query }
             }
         });
-        callback(imgData.data);
+        changeImgSize(imgData.data);
     };
+    
+    useEffect(() => {
+        fetchData();
+    }, [query]);
+
 
     return (
         <>
@@ -47,14 +50,13 @@ const Background = () => {
 export default Background;
 
 const BackgroundImg = styled.div`
+    width: 100%;
+    height: 100%;
     background-size:cover;
     background-repeat: no-repeat;
     position: absolute;
-    max-height: 100%;
     margin:0;
     padding:0;
-    width: 100vw;
-    height: 100vh;
     z-index: -1;
     opacity: 0.8;
 `

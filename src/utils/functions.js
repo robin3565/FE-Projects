@@ -24,9 +24,10 @@ const getEngVer = (motivations, ver, num) => {
     return [todayMotivation_, todayName_]
 }
 
+// LocalStorage Functions
 const setItem = (key, value) => {
     try {
-        localStorage.setItem(key, JSON.stringify(value));
+        setItem(key, JSON.stringify(value));
     } catch (e) {
         console.log('데이터 저장에 실패했습니다.');
     }
@@ -34,7 +35,7 @@ const setItem = (key, value) => {
 
 const getItem = (key, defaultValue) => {
     try {
-        const value = localStorage.getItem(key)
+        const value = getItem(key)
         if (!value) {
             return defaultValue;
         }

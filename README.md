@@ -2,9 +2,7 @@
 ![02](https://user-images.githubusercontent.com/107474891/193537039-84dde6b9-4588-47a0-ab3a-9c96fac2cfa7.jpg)
 
 **Keywords:** API 호출, localStorage
-
 **Duration:** 2022.08.01 ~ 2022.08.05
-
 **Tool:** React, Styled-components, Axios
 
 자주가는 사이트를 북마크 해놓아 매번 주소를 입력하지 않고 사이트를 방문할 수 있는 기능과 함께, 웹을 방문할 때마다 영감을 줄 수 있는 문장을 제공해주는 웹 사이트가 있으면 어떨까요? 문장을 영어로도 볼 수 있고, 문장과도 잘 어울리는 배경은 랜덤으로 매번 달라져 유저가 매일 방문하더라도 지루하지 않도록 만들어주는 효과가 있는 모티베이션 웹 어플리케이션을 만들어보았습니다.
@@ -24,7 +22,7 @@
 북마크 기능의 데이터는 화면 창을 끄더라도 남아있도록 localStorage에 저장하였습니다. 그리고 배경화면은 Unsplash API를 활용해 이미지를 랜덤으로 가져와 렌더링합니다. DB는 따로 구현하지 않고, 내부에 더미 데이터를 활용해 사용되는 이미지와 데이터를 렌더링했습니다.
 
 ## 구현한 기능
-![explain-motivation](https://user-images.githubusercontent.com/107474891/193537385-36190a9c-b2e2-4ea1-80d2-8d9fdcdf6fc3.jpg)
+<img width="380" alt="moti-plan" src="https://user-images.githubusercontent.com/107474891/193537385-36190a9c-b2e2-4ea1-80d2-8d9fdcdf6fc3.jpg">
 
 - 자주가는 사이트 북마크 기능
 - 버튼을 누름에 따라 바뀌는 랜덤 배경화면

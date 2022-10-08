@@ -67,7 +67,7 @@ const Profile = () => {
               className='user__img'>
               <img
                 alt='user-profile'
-                src={userInfo.photoUrl ? userInfo.photoUrl : 'user-null.jpg'}
+                src={userInfo?.photoUrl ? userInfo?.photoUrl : 'user-null.jpg'}
                 className="profile-img" />
             </div>
             <div
@@ -79,7 +79,7 @@ const Profile = () => {
                   {params?.userId}
                 </p>
                 {
-                  userInfo.id === state.id && (
+                  userInfo?.id === state?.id && (
                     <div
                       className='info__btn--group'>
                       <Link to="/accouts/edit"
@@ -101,7 +101,7 @@ const Profile = () => {
                   <span>게시물</span>
                   <span
                     className='info__feed--num'>
-                    {myfeeds.length}
+                    {myfeeds?.length}
                   </span>
                 </li>
                 {/* <li>

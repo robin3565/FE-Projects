@@ -89,7 +89,7 @@ const Feed = () => {
         await getUserData(state.id)
         .then((data) => {
             setMyInfo(...data);
-            dispatch({ type: "SET_USERINFO", photoUrl: data[0].photoUrl});
+            dispatch({ type: "SET_USERINFO", photoUrl: data[0]?.photoUrl});
         })
     })
 
@@ -130,7 +130,7 @@ const Feed = () => {
                             <Link to={`/${state.id}`}>
                                 <img 
                                     alt="user-profile"
-                                    src={myInfo.photoUrl ? myInfo.photoUrl : 'user-null.jpg'}
+                                    src={myInfo?.photoUrl ? myInfo?.photoUrl : 'user-null.jpg'}
                                     className="user-info--profile" />
                             </Link>
                             <StyledLink to={`/${state.id}`}>

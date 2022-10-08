@@ -18,7 +18,6 @@ const ThirdModal = () => {
         await getPostDataByPostId(postId.postId)
         .then((data) => {
             setPostData(data)
-            console.log('data', data)
             setContent(data.contents)
         })
     }

@@ -10,6 +10,7 @@ const Profile = () => {
   const { getPostDataByUserId } = usePostState();
   const { getUserData } = useAuthState();
   const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(false);
   const [myfeeds, setMyfeeds] = useState([]);
   const [userInfo, setUserInfo] = useState('');
   const [splitFeeds, setSplitFeeds] = useState([]);
@@ -26,6 +27,7 @@ const Profile = () => {
     await getUserData(params.userId)
       .then((data) => {
         setUserInfo(...data)
+        setLoadingProfile(true);
       })
 
     // userId에 해당하는 이미지 가져오기
@@ -55,56 +57,58 @@ const Profile = () => {
 
   return (
     <ProfileStyle>
-      <div
-        className='profile'>
-        <div
-          className='profile__inner'>
-
-          {/* My Profile */}
+      {loadingProfile && (
+        <>
           <div
-            className='profile__user'>
+            className='profile'>
             <div
-              className='user__img'>
-              <img
-                alt='user-profile'
-                src={userInfo?.photoUrl ? userInfo?.photoUrl : 'user-null.jpg'}
-                className="profile-img" />
-            </div>
-            <div
-              className='profile__info'>
+              className='profile__inner'>
+
+              {/* My Profile */}
               <div
-                className='info__user'>
-                <p
-                  className='info__username'>
-                  {params?.userId}
-                </p>
-                {
-                  userInfo?.id === state?.id && (
-                    <div
-                      className='info__btn--group'>
-                      <Link to="/accouts/edit"
-                        className='info__btn--edit'>
-                        프로필 편집
-                      </Link>
-                      <button
-                        className='info__btn--edit'
-                        onClick={handleLogOut}>
-                        로그아웃
-                      </button>
-                    </div>
-                  )
-                }
-              </div>
-              <ul
-                className='info__feed'>
-                <li>
-                  <span>게시물</span>
-                  <span
-                    className='info__feed--num'>
-                    {myfeeds?.length}
-                  </span>
-                </li>
-                {/* <li>
+                className='profile__user'>
+                <div
+                  className='user__img'>
+                  <img
+                    alt='user-profile'
+                    src={userInfo?.photoUrl ? userInfo?.photoUrl : 'user-null.jpg'}
+                    className="profile-img" />
+                </div>
+                <div
+                  className='profile__info'>
+                  <div
+                    className='info__user'>
+                    <p
+                      className='info__username'>
+                      {params?.userId}
+                    </p>
+                    {
+                      userInfo?.id === state?.id && (
+                        <div
+                          className='info__btn--group'>
+                          <Link to="/accouts/edit"
+                            className='info__btn--edit'>
+                            프로필 편집
+                          </Link>
+                          <button
+                            className='info__btn--edit'
+                            onClick={handleLogOut}>
+                            로그아웃
+                          </button>
+                        </div>
+                      )
+                    }
+                  </div>
+                  <ul
+                    className='info__feed'>
+                    <li>
+                      <span>게시물</span>
+                      <span
+                        className='info__feed--num'>
+                        {myfeeds?.length}
+                      </span>
+                    </li>
+                    {/* <li>
                   <span>팔로워</span>
                   <span
                     className='info__feed--num'>
@@ -118,35 +122,37 @@ const Profile = () => {
                     0
                   </span>
                 </li> */}
-              </ul>
+                  </ul>
+                </div>
+              </div>
+
+              {/* My Nav */}
+              <div
+                className='profile__nav'>
+                <Link
+                  className='profile__navlink'
+                  to={`/${params.userId}`}>
+                  <div
+                    className='profile__nav-item'>
+                    <IoAppsSharp
+                      className='profile__nav-icon' />
+                    <span>게시물</span>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
 
-          {/* My Nav */}
+          {/* My Feeds */}
           <div
-            className='profile__nav'>
-            <Link
-              className='profile__navlink'
-              to={`/${params.userId}`}>
-              <div
-                className='profile__nav-item'>
-                <IoAppsSharp
-                  className='profile__nav-icon' />
-                <span>게시물</span>
-              </div>
-            </Link>
+            className="profile__feeds">
+            <Myfeed
+              loading={loading}
+              myfeeds={myfeeds}
+              splitFeeds={splitFeeds} />
           </div>
-        </div>
-      </div>
-
-      {/* My Feeds */}
-      <div
-        className="profile__feeds">
-        <Myfeed
-          loading={loading}
-          myfeeds={myfeeds}
-          splitFeeds={splitFeeds} />
-      </div>
+        </>
+      )}
     </ProfileStyle>
   )
 }

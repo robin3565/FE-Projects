@@ -37,7 +37,7 @@ const SecondModal = () => {
                 uploadPage: 3
             })
         } catch (err) {
-            console.log(err)
+            throw new Error(err)
         }
     }
 

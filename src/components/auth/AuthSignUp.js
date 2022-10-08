@@ -33,7 +33,7 @@ const AuthSignUp = () => {
                 .then(async result => {
                     if (result?.user.accessToken) {
                         alert('회원가입 되었습니다.');
-                        dispatch({ type: "SIGNUP"});
+                        dispatch({ type: "SIGNUP" });
                     } else {
                         throw new Error('signUp error');
                     }
@@ -49,8 +49,9 @@ const AuthSignUp = () => {
                     navigate("/login");
                 })
         } catch (error) {
-            console.log(error)
             dispatch({ type: "SET_ERROR", payload: error.code });
+            throw new Error(error)
+
         }
     };
 

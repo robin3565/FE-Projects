@@ -36,8 +36,6 @@ const Explore = () => {
         setLoading(false)
     }
 
-    console.log(splitExploreFeeds)
-
     useEffect(() => {
         getFeedDatas();
     }, [])

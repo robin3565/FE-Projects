@@ -17,7 +17,6 @@ const AuthLogin = () => {
         try {
             await signInWithEmailAndPassword(authService, userInfo.id, userInfo.password)
                 .then(result => {
-                    console.log('result', result)
                     dispatch({ type: "LOGIN", 
                     token: result.user.accessToken,
                     id: result.user.email.split('@')[0],
@@ -26,7 +25,6 @@ const AuthLogin = () => {
                     photoUrl: null
                     })
                     alert('로그인 되었습니다.')
-                    console.log('state', state)
                     window.location.href = "/";
                 })
         } catch (error) { dispatch({ type: "SET_ERROR", payload: error.code }) }

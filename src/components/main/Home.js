@@ -72,7 +72,6 @@ const Feed = () => {
         lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
 
         if (querySnapshot.empty) {
-            console.log('empty')
             window.removeEventListener('scroll', handleScroll)
         }
     });

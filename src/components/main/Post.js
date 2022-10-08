@@ -47,7 +47,6 @@ const Post = () => {
         // postId에 해당되는 이미지 데이터
         await getPostDataByPostId(postId)
             .then(async (post) => {
-                // console.log('post', post)
                 setPost(post)
                 setPostComments(post.comments);
                 // postId에 해당되는 유저 데이터

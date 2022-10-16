@@ -1,4 +1,4 @@
-# [8월 | 프로젝트] Motivation 웹 어플리케이션
+# Motivation 웹 어플리케이션
 ![02](https://user-images.githubusercontent.com/107474891/193537039-84dde6b9-4588-47a0-ab3a-9c96fac2cfa7.jpg)
 
 **Keywords:** API 호출, localStorage

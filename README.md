@@ -11,8 +11,8 @@
 ### 그리고 React Router 라이브러리를 통해 SPA(Single Page Application) 방식으로 웹을 만들어보고, Firebase를 이용해보며 NoSQL에 대해 이해하며 직접 DB를 구현해보았습니다.
 
 ## 프로젝트 소개
-
-**사이트 바로가기**
+### **[Instagram Clone 바로가기 👉](https://instagram-clone-rho-six.vercel.app/)**
+### **[Instagram Clone Github 페이지](https://github.com/robin3565/instagram-clone/)**
 매달 하나씩 진행하는 월간 프로젝트!
 9월 프로젝트로 **Firebase를 활용한** **인스타그램**을 클론코딩 해보았습니다. 
 

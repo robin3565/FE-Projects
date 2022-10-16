@@ -9,7 +9,9 @@
 
 ## 프로젝트 소개
 
-[**Motivation Demo 바로가기 👉**](https://robin3565.github.io/motivation-app/)
+### **[Motivation Demo 바로가기 👉](https://robin3565.github.io/motivation-app/)**
+
+### **[Motivation Github 페이지](https://github.com/robin3565/motivation-app/)**
 
 매달 하나씩 진행하는 월간 프로젝트! 
 8월의 첫 번째 프로젝트로 모티베이션 웹을 만들어 보았습니다.

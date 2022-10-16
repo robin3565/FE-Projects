@@ -1,9 +1,9 @@
 # Motivation 웹 어플리케이션
 ![02](https://user-images.githubusercontent.com/107474891/193537039-84dde6b9-4588-47a0-ab3a-9c96fac2cfa7.jpg)
 
-**Keywords:** API 호출, localStorage
-**Duration:** 2022.08.01 ~ 2022.08.05
-**Tool:** React, Styled-components, Axios
+**Keywords:** API 호출, localStorage**
+**Duration:** 2022.08.01 ~ 2022.08.05**
+**Tool:** React, Styled-components, Axios**
 
 자주가는 사이트를 북마크 해놓아 매번 주소를 입력하지 않고 사이트를 방문할 수 있는 기능과 함께, 웹을 방문할 때마다 영감을 줄 수 있는 문장을 제공해주는 웹 사이트가 있으면 어떨까요? 문장을 영어로도 볼 수 있고, 문장과도 잘 어울리는 배경은 랜덤으로 매번 달라져 유저가 매일 방문하더라도 지루하지 않도록 만들어주는 효과가 있는 모티베이션 웹 어플리케이션을 만들어보았습니다.
 

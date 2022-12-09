@@ -1,0 +1,251 @@
+body {
+    height: 100vh;
+    background-color: #141414;
+}
+
+
+/* nav */
+nav {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-left,
+.nav-right {
+    display: flex;
+}
+
+.nav-left img {
+    width: 100px;
+    height: 27.2px;
+    margin-left: 50px;
+    margin-top: 15px;
+}
+
+ul.menu-list {
+    margin: 15px 0 5px 0;
+}
+
+li.menu-left {
+    font-size: 0.9em;
+    list-style: none;
+    float: left;
+    margin-right: 15px;
+}
+
+li.menu-left a,
+li.menu-right a {
+    text-decoration: none;
+    color: white;
+}
+
+li.menu-left:first-child {
+    font-weight: bold;
+}
+
+/* menu-right */
+ul.menu-list-right {
+    margin: 10px 50px 5px 0;
+}
+
+li.menu-right {
+    font-size: 1.4em;
+    list-style: none;
+    float: left;
+    margin-right: 18px;
+}
+
+li.menu-right {
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+li.menu-right img {
+    border-radius: 5px;
+}
+
+/* ad-img */
+#ad-mv {
+    color: #fff;
+    width: 100%;
+    height: 700px;
+}
+
+#ad-mv div:first-child {
+    display: flex;
+    margin: 100px 0 0 50px;
+    flex-direction: column;
+    width: 40%;
+}
+
+#ad-img {
+    opacity: 0.2;
+    background-size: cover;
+    width: 100%;
+    height: 850px;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+#ad-mv div p:first-child {
+    font-size: 4em;
+}
+
+#ad-mv div p:nth-child(2) {
+    font-size: 1.2em;
+}
+
+/* 영화 소개 부분 버튼 */
+#ad-mv button {
+    display: block;
+    position: relative;
+    float: left;
+    width: 150px;
+    padding: 0;
+    margin: 8px 20px 8px 0;
+    text-align: center;
+    border-radius: 5px;
+    transition: all 0.2s;
+    line-height: 50px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#ad-mv button span {
+    font-weight: 600;
+    font-size: 1.4em;
+}
+
+#ad-mv button:first-child {
+    background: #fff;
+}
+
+#ad-mv button:first-child span {
+    color: #000;
+}
+
+#ad-mv button:last-child {
+    background: #ced4da;
+}
+
+#ad-mv button:last-child span {
+    color: #fff;
+}
+
+/* contents */
+.content-container {
+    height: 250px;
+    width: 100%;
+}
+
+.content-container p {
+    font-size: 1.7em;
+    font-weight: bold;
+    margin: 0 0 15px 10px;
+    color: #fff;
+}
+
+/* 공통 */
+div.contents1,
+div.contents2,
+div.contents3 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+div.items {
+    width: 100%;
+    margin: 0 0 0 60px;
+}
+
+.item {
+    width: 250px;
+    height: 150px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    width: 42px;
+    height: 42px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    outline: none;
+    color: #fff;
+    opacity: .5;
+    cursor: pointer;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+    border: 2px solid #141414;
+    background-color: #141414;
+    color: #fff;
+    opacity: .5;
+    cursor: pointer;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: #000;
+}
+
+/* footer */
+footer {
+    width: 100%;
+    height: 400px;
+    color: #fff;
+    opacity: .5;
+    font-size: 0.8em;
+}
+
+.footer-nav {
+    width: 100%;
+    height: 15%;
+    color: #fff;
+}
+
+.footer-box {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.footer-box ul {
+    width: 25%;
+}
+
+.footer-container {
+    width: 70%;
+    margin: auto;
+}
+
+.footer-box ul li {
+    list-style-type: none;
+    margin-bottom: 1em;
+    cursor: pointer;
+}
+
+.footer-last {
+    margin: 15px 40px 0 40px;
+}
+
+.footer-last p {
+    margin: 0;
+}
+
+/* swiper */
+.swiper {
+    width: 600px;
+    height: 300px;
+}
